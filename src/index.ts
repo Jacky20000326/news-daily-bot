@@ -8,6 +8,7 @@ import { deduplicate } from "./deduplicator";
 import { analyze, generateExecutiveSummary } from "./analyzer";
 import { generateReport } from "./reporter";
 import { sendReport, sendAlertEmail } from "./mailer";
+import { getReportPageUrl, publishToGitHubPages } from "./publisher";
 
 // ─── 所有 NewsCategory 值（確保 categorizedStories 含全部 9 個 key） ────────
 const ALL_CATEGORIES: NewsCategory[] = [
@@ -82,9 +83,13 @@ export async function runDailyPipeline(): Promise<DailyReport> {
   // ── 步驟 9：取不重複的來源名稱清單 ──
   const sources = [...new Set(analyzedItems.map((item) => item.sourceName))];
 
-  // ── 步驟 10：組裝 DailyReport ──
+  // ── 步驟 10：預先計算 GitHub Pages URL（URL 結構固定，不需等發布完成）──
+  const dateStr = getReportDateString();
+  const mdReportUrl = getReportPageUrl(dateStr) ?? undefined;
+
+  // ── 步驟 11：組裝 DailyReport（含 mdReportUrl，讓 Email 模板可嵌入按鈕）──
   const report: DailyReport = {
-    reportDate: getReportDateString(),
+    reportDate: dateStr,
     generatedAt: new Date(),
     timeWindowFrom: timeWindow.from,
     timeWindowTo: timeWindow.to,
@@ -94,12 +99,16 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     categorizedStories,
     executiveSummary,
     sources,
+    mdReportUrl,
   };
 
-  // ── 步驟 11：產生 HTML 報告 ──
+  // ── 步驟 12：產生 HTML 報告 ──
   const html = generateReport(report);
 
-  // ── 步驟 12：發送（或 dryRun 跳過） ──
+  // ── 步驟 13：發布 HTML 至 GitHub Pages ──
+  await publishToGitHubPages(html, dateStr);
+
+  // ── 步驟 14：發送（或 dryRun 跳過） ──
   if (config.app.dryRun) {
     logger.info("dryRun 模式：跳過 Email 發送", {
       reportDate: report.reportDate,
@@ -108,7 +117,7 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     await sendReport(report, html);
   }
 
-  // ── 步驟 13：記錄整體耗時 ──
+  // ── 步驟 15：記錄整體耗時 ──
   const durationMs = Date.now() - pipelineStart;
   logger.info("每日報告流程完成", {
     reportDate: report.reportDate,

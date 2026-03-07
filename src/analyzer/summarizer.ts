@@ -1,15 +1,16 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerateContentResult } from '@google/generative-ai';
 import { NewsItem, AnalyzedNewsItem } from '../types';
 import { config } from '../config';
 import { logger } from '../utils/logger';
-import { withRetry } from '../utils/retry';
+import { withRetry, NonRetryableError } from '../utils/retry';
 import { buildSummaryPrompt, buildExecutiveSummaryPrompt } from './prompts/summary';
 
 // ─── 常數 ─────────────────────────────────────────────────────────────────────
 
-const CONCURRENCY_LIMIT = 5;
+// Gemini 免費層上限 15 RPM，降低並行數避免觸發 429
+const CONCURRENCY_LIMIT = 2;
 const RETRY_COUNT = 2;
-const RETRY_DELAY_MS = 2000;
+const RETRY_DELAY_MS = 3000;
 
 // ─── Promise Pool（並行數量控制）─────────────────────────────────────────────
 
@@ -41,15 +42,40 @@ async function promisePool<T>(
 
 // ─── AI 客戶端工廠 ────────────────────────────────────────────────────────────
 
-function createModel() {
+function createModel(maxOutputTokens: number) {
   const genAI = new GoogleGenerativeAI(config.ai.apiKey);
   return genAI.getGenerativeModel({
     model: config.ai.model,
     generationConfig: {
       temperature: config.ai.temperature,
-      maxOutputTokens: 512,
+      maxOutputTokens,
     },
   });
+}
+
+/**
+ * 安全地從 Gemini 回應中取得文字內容。
+ * 當安全篩選器攔截時，`.text()` 會直接拋出例外，此函式改為先檢查 candidates
+ * 並在被攔截時拋出 NonRetryableError（避免無意義的重試）。
+ */
+function safeGetText(result: GenerateContentResult): string {
+  const candidate = result.response.candidates?.[0];
+
+  if (!candidate) {
+    const blockReason = result.response.promptFeedback?.blockReason;
+    throw new NonRetryableError(
+      `Gemini 安全篩選器阻擋請求（blockReason: ${blockReason ?? '未知'}）`
+    );
+  }
+
+  const finishReason = candidate.finishReason as string | undefined;
+  if (finishReason === 'SAFETY' || finishReason === 'RECITATION') {
+    throw new NonRetryableError(
+      `Gemini 拒絕生成內容（finishReason: ${finishReason}）`
+    );
+  }
+
+  return result.response.text().trim();
 }
 
 // ─── 單則新聞摘要 ─────────────────────────────────────────────────────────────
@@ -59,7 +85,7 @@ function createModel() {
  * 失敗時回傳空字串
  */
 export async function summarizeItem(item: NewsItem): Promise<string> {
-  const model = createModel();
+  const model = createModel(512);
 
   try {
     const summary = await withRetry(
@@ -67,7 +93,7 @@ export async function summarizeItem(item: NewsItem): Promise<string> {
         const prompt = buildSummaryPrompt(item);
 
         const result = await model.generateContent(prompt);
-        const text = result.response.text().trim();
+        const text = safeGetText(result);
 
         if (!text) {
           throw new Error('AI 回傳空白摘要');
@@ -123,14 +149,7 @@ export async function summarizeItems(items: NewsItem[]): Promise<string[]> {
  * 失敗時回傳空字串
  */
 export async function generateExecutiveSummary(topItems: AnalyzedNewsItem[]): Promise<string> {
-  const genAI = new GoogleGenerativeAI(config.ai.apiKey);
-  const model = genAI.getGenerativeModel({
-    model: config.ai.model,
-    generationConfig: {
-      temperature: config.ai.temperature,
-      maxOutputTokens: 1024,
-    },
-  });
+  const model = createModel(1024);
 
   try {
     const executiveSummary = await withRetry(
@@ -138,7 +157,7 @@ export async function generateExecutiveSummary(topItems: AnalyzedNewsItem[]): Pr
         const prompt = buildExecutiveSummaryPrompt(topItems);
 
         const result = await model.generateContent(prompt);
-        const text = result.response.text().trim();
+        const text = safeGetText(result);
 
         if (!text) {
           throw new Error('AI 回傳空白總覽');

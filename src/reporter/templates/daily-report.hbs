@@ -29,6 +29,14 @@
                       加密貨幣日報
                     </h1>
                     <p style="margin:10px 0 0 0;font-size:18px;font-weight:400;color:#a8d8ea;letter-spacing:1px;">{{reportDate}}</p>
+                    {{#if mdReportUrl}}
+                    <p style="margin:16px 0 0 0;">
+                      <a href="{{mdReportUrl}}" target="_blank"
+                         style="display:inline-block;padding:8px 20px;background-color:#f39c12;color:#ffffff;text-decoration:none;border-radius:6px;font-size:13px;font-weight:600;letter-spacing:0.3px;">
+                        Top 6 線上 MD 報告 &rarr;
+                      </a>
+                    </p>
+                    {{/if}}
                   </td>
                 </tr>
               </table>

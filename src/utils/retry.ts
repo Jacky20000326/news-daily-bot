@@ -22,6 +22,21 @@ axiosRetry(httpClient, {
   },
 });
 
+/**
+ * 不可重試的錯誤（如 AI 安全篩選器攔截），拋出此類型後 withRetry 直接放棄
+ */
+export class NonRetryableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'NonRetryableError';
+  }
+}
+
+function isRateLimitError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return msg.includes('429') || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Too Many Requests');
+}
+
 // 通用重試函式（非 HTTP 用途）
 export async function withRetry<T>(
   fn: () => Promise<T>,
@@ -37,13 +52,24 @@ export async function withRetry<T>(
     try {
       return await fn();
     } catch (err) {
+      // 安全篩選器攔截等不可重試錯誤，直接拋出
+      if (err instanceof NonRetryableError) {
+        throw err;
+      }
+
       lastError = err;
       if (attempt <= options.retries) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        // 速率限制錯誤使用更長的等待時間
+        const waitMs = isRateLimitError(err) ? options.delayMs * 15 : options.delayMs;
+
         logger.warn(`${options.label ?? '操作'}失敗，準備重試`, {
           attempt,
           maxRetries: options.retries,
+          error: errMsg,
+          waitMs,
         });
-        await delay(options.delayMs);
+        await delay(waitMs);
       }
     }
   }

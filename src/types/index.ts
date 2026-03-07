@@ -68,10 +68,11 @@ export interface DailyReport {
   timeWindowTo: Date;
   totalCollected: number;        // 收集總數
   afterDedup: number;            // 去重後數量
-  topStories: AnalyzedNewsItem[];     // 重要度前 5
+  topStories: AnalyzedNewsItem[];     // 重要度前 15
   categorizedStories: Record<NewsCategory, AnalyzedNewsItem[]>;
   executiveSummary: string;      // AI 整體摘要（300 字內）
   sources: string[];             // 使用的來源清單
+  mdReportUrl?: string;          // GitHub Gist 線上 MD 報告連結（選填）
 }
 
 // ─── 收集結果 ─────────────────────────────────────────────────────────

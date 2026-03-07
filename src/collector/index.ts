@@ -1,11 +1,10 @@
-import type { RawNewsItem, TimeWindow, SourceType } from '../types';
-import { AllSourcesFailedError } from '../types';
-import { logger } from '../utils/logger';
-import { config } from '../config';
-import { fetchNewsAPI } from './newsapi';
-import { fetchCryptoPanic } from './cryptopanic';
-import { fetchRSSFeeds } from './rss';
-import { fetchCoinGeckoEvents } from './coingecko';
+import type { RawNewsItem, TimeWindow, SourceType } from "../types";
+import { AllSourcesFailedError } from "../types";
+import { logger } from "../utils/logger";
+import { config } from "../config";
+import { fetchNewsAPI } from "./newsapi";
+import { fetchCryptoPanic } from "./cryptopanic";
+import { fetchRSSFeeds } from "./rss";
 
 // ─── 來源定義型別 ─────────────────────────────────────────────────────────────
 
@@ -27,30 +26,25 @@ interface SourceDefinition {
 export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
   const sources: SourceDefinition[] = [
     {
-      name: 'newsapi',
+      name: "newsapi",
       enabled: true,
       fetch: fetchNewsAPI,
     },
     {
-      name: 'cryptopanic',
+      name: "cryptopanic",
       enabled: true,
       fetch: fetchCryptoPanic,
     },
     {
-      name: 'rss',
+      name: "rss",
       enabled: config.sources.enableRss,
       fetch: fetchRSSFeeds,
-    },
-    {
-      name: 'coingecko',
-      enabled: config.sources.enableCoinGecko,
-      fetch: fetchCoinGeckoEvents,
     },
   ];
 
   const enabledSources = sources.filter((s) => s.enabled);
 
-  logger.info('開始並行收集所有新聞來源', {
+  logger.info("開始並行收集所有新聞來源", {
     enabledSources: enabledSources.map((s) => s.name),
     from: timeWindow.from.toISOString(),
     to: timeWindow.to.toISOString(),
@@ -78,11 +72,11 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
     const source = enabledSources[i];
     const durationMs = Date.now() - startTimes[source.name];
 
-    if (result.status === 'fulfilled') {
+    if (result.status === "fulfilled") {
       successCount++;
       const itemCount = result.value.length;
 
-      logger.info('來源收集成功', {
+      logger.info("來源收集成功", {
         source: source.name,
         itemCount,
         durationMs,
@@ -92,9 +86,11 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
     } else {
       failureCount++;
       const errorMessage =
-        result.reason instanceof Error ? result.reason.message : String(result.reason);
+        result.reason instanceof Error
+          ? result.reason.message
+          : String(result.reason);
 
-      logger.warn('來源收集失敗', {
+      logger.warn("來源收集失敗", {
         source: source.name,
         error: errorMessage,
         durationMs,
@@ -104,7 +100,7 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
 
   const totalDurationMs = Date.now() - globalStart;
 
-  logger.info('所有來源收集完成', {
+  logger.info("所有來源收集完成", {
     totalItems: allItems.length,
     successSources: successCount,
     failedSources: failureCount,

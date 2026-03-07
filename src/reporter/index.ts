@@ -143,6 +143,7 @@ export function generateReport(report: DailyReport): string {
     topStories,
     categorizedStories,
     allStoriesByImportance,
+    mdReportUrl: report.mdReportUrl ?? '',
   };
 
   const html = template(templateData);

@@ -39,30 +39,29 @@ pnpm format
 
 複製 `.env.example` 為 `.env`。必要環境變數（缺少任一項啟動即拋出 `ConfigValidationError`）：
 
-| 變數 | 說明 |
-|---|---|
-| `ANTHROPIC_API_KEY` | Anthropic API 金鑰 |
-| `NEWSAPI_KEY` | NewsAPI 金鑰 |
-| `SENDER_EMAIL` | 寄件者 Email |
-| `EMAIL_RECIPIENTS` | 收件者（逗號分隔） |
-| `SMTP_USER` | SMTP 帳號 |
-| `SMTP_PASS` | SMTP 密碼（Gmail 請使用應用程式密碼） |
+| 變數                | 說明                                  |
+| ------------------- | ------------------------------------- |
+| `ANTHROPIC_API_KEY` | Anthropic API 金鑰                    |
+| `NEWSAPI_KEY`       | NewsAPI 金鑰                          |
+| `SENDER_EMAIL`      | 寄件者 Email                          |
+| `EMAIL_RECIPIENTS`  | 收件者（逗號分隔）                    |
+| `SMTP_USER`         | SMTP 帳號                             |
+| `SMTP_PASS`         | SMTP 密碼（Gmail 請使用應用程式密碼） |
 
 選填環境變數：
 
-| 變數 | 預設值 | 說明 |
-|---|---|---|
-| `AI_MODEL` | `claude-sonnet-4-6` | 指定 Anthropic 模型 |
-| `SMTP_HOST` | `smtp.gmail.com` | SMTP 伺服器主機 |
-| `SMTP_PORT` | `587` | SMTP 埠號 |
-| `CRYPTOPANIC_TOKEN` | 空（停用） | CryptoPanic API Token |
-| `COINGECKO_API_KEY` | 空（免費層） | CoinGecko API 金鑰 |
-| `ENABLE_RSS` | `true` | 設 `false` 停用 RSS 來源 |
-| `ENABLE_COINGECKO` | `true` | 設 `false` 停用 CoinGecko 來源 |
-| `ALERT_EMAIL` | 空 | 流程失敗時的警示收件者 |
-| `REPORT_HOUR` | `9` | 排程觸發小時（24h，台北時間） |
-| `DRY_RUN` | `false` | 設 `true` 跳過 Email 寄送（本地測試用） |
-| `LOG_LEVEL` | `info` | 日誌層級 |
+| 變數                | 預設值              | 說明                                    |
+| ------------------- | ------------------- | --------------------------------------- |
+| `AI_MODEL`          | `claude-sonnet-4-6` | 指定 Anthropic 模型                     |
+| `SMTP_HOST`         | `smtp.gmail.com`    | SMTP 伺服器主機                         |
+| `SMTP_PORT`         | `587`               | SMTP 埠號                               |
+| `CRYPTOPANIC_TOKEN` | 空（停用）          | CryptoPanic API Token                   |
+| `ENABLE_RSS`        | `true`              | 設 `false` 停用 RSS 來源                |
+| `ENABLE_COINGECKO`  | `true`              | 設 `false` 停用 CoinGecko 來源          |
+| `ALERT_EMAIL`       | 空                  | 流程失敗時的警示收件者                  |
+| `REPORT_HOUR`       | `9`                 | 排程觸發小時（24h，台北時間）           |
+| `DRY_RUN`           | `false`             | 設 `true` 跳過 Email 寄送（本地測試用） |
+| `LOG_LEVEL`         | `info`              | 日誌層級                                |
 
 `dotenv` 僅在非 production 環境載入（`NODE_ENV !== 'production'`）。
 
@@ -98,6 +97,7 @@ pnpm format
 ### 型別系統
 
 所有核心型別定義在 `src/types/index.ts`：
+
 - `RawNewsItem` → 收集原始資料
 - `NewsItem` → 標準化後
 - `AnalyzedNewsItem extends NewsItem` → AI 分析後（含 `importanceScore`、`category`、`aiSummary`、`sentiment`）
@@ -106,6 +106,7 @@ pnpm format
 ### 重試機制
 
 `src/utils/retry.ts` 提供兩套機制，用途不同：
+
 - **`httpClient`**（axios-retry）— HTTP 請求用，指數退避（1s/2s/4s），自動重試網路錯誤及 429
 - **`withRetry`** — 非 HTTP 用途（如 Claude API 呼叫），固定間隔，預設 2 次重試
 

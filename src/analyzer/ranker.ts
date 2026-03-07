@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel, GenerateContentResult } from '@google/generative-ai';
 import { NewsItem, NewsCategory, Sentiment } from '../types';
 import { config } from '../config';
 import { logger } from '../utils/logger';
-import { withRetry, delay } from '../utils/retry';
+import { withRetry, delay, NonRetryableError } from '../utils/retry';
 import { buildRankingPrompt } from './prompts/ranking';
 import { classifyByKeywords } from './prompts/classification';
 
@@ -78,6 +78,28 @@ function validateRankingItem(raw: RawRankingItem): RankingResult {
   return { importanceScore, category, relatedTickers, sentiment };
 }
 
+// ─── Gemini 安全回應提取 ──────────────────────────────────────────────────────
+
+function safeGetText(result: GenerateContentResult): string {
+  const candidate = result.response.candidates?.[0];
+
+  if (!candidate) {
+    const blockReason = result.response.promptFeedback?.blockReason;
+    throw new NonRetryableError(
+      `Gemini 安全篩選器阻擋請求（blockReason: ${blockReason ?? '未知'}）`
+    );
+  }
+
+  const finishReason = candidate.finishReason as string | undefined;
+  if (finishReason === 'SAFETY' || finishReason === 'RECITATION') {
+    throw new NonRetryableError(
+      `Gemini 拒絕生成內容（finishReason: ${finishReason}）`
+    );
+  }
+
+  return result.response.text();
+}
+
 // ─── AI 回應解析 ──────────────────────────────────────────────────────────────
 
 /**
@@ -118,7 +140,7 @@ async function processBatch(
     const rawItems = await withRetry(
       async () => {
         const result = await model.generateContent(prompt);
-        const text = result.response.text();
+        const text = safeGetText(result);
 
         if (!text) {
           throw new Error('AI 回應中沒有文字內容');
