@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>加密貨幣日報 {{reportDate}}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+
+  <!-- 外層容器 -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f5f5;margin:0;padding:0;">
+    <tr>
+      <td align="center" style="padding:24px 16px;">
+
+        <!-- 主體容器（最大 600px） -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+          <!-- ═══════════════════════════════════════
+               HEADER：加密貨幣日報
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="background-color:#1a1a2e;padding:36px 32px 28px 32px;text-align:center;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td align="center">
+                    <p style="margin:0 0 8px 0;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#7f8fa6;font-weight:600;">DAILY CRYPTO INTELLIGENCE</p>
+                    <h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;line-height:1.2;letter-spacing:-0.5px;">
+                      加密貨幣日報
+                    </h1>
+                    <p style="margin:10px 0 0 0;font-size:18px;font-weight:400;color:#a8d8ea;letter-spacing:1px;">{{reportDate}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
+               時間範圍說明
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="background-color:#16213e;padding:10px 32px;text-align:center;">
+              <p style="margin:0;font-size:11px;color:#7f8fa6;letter-spacing:0.5px;">
+                資料收集時間：{{timeWindowFrom}} ～ {{timeWindowTo}}（台北時間 UTC+8）
+              </p>
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
+               今日市場總覽（Executive Summary）
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="padding:28px 32px 20px 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="background-color:#eaf4fb;border-left:4px solid #3498db;border-radius:0 6px 6px 0;padding:20px 24px;">
+                    <p style="margin:0 0 10px 0;font-size:13px;font-weight:700;color:#2980b9;text-transform:uppercase;letter-spacing:1.5px;">今日市場總覽</p>
+                    <p style="margin:0;font-size:15px;line-height:1.8;color:#2c3e50;">{{executiveSummary}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
+               今日頭條（Top Stories，最多 5 則）
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="padding:8px 32px 20px 32px;">
+
+              <!-- 區塊標題 -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding-bottom:16px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="background-color:#e74c3c;width:4px;border-radius:2px;">&nbsp;</td>
+                        <td style="padding-left:12px;">
+                          <h2 style="margin:0;font-size:18px;font-weight:700;color:#1a1a2e;letter-spacing:-0.3px;">今日頭條</h2>
+                        </td>
+                      </tr>
+                    </table>
+                    <hr style="margin:12px 0 0 0;border:none;border-top:1px solid #ecf0f1;" />
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 頭條列表 -->
+              {{#each topStories}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;border:1px solid #ecf0f1;border-radius:8px;overflow:hidden;">
+                <tr>
+                  <!-- 左側重要度色條 -->
+                  <td width="4" style="
+                    {{#if (gte importanceScore 9)}}background-color:#e74c3c;{{/if}}
+                    {{#if (and (gte importanceScore 7) (lte importanceScore 8))}}background-color:#e67e22;{{/if}}
+                    {{#if (and (gte importanceScore 5) (lte importanceScore 6))}}background-color:#3498db;{{/if}}
+                    {{#if (lt importanceScore 5)}}background-color:#95a5a6;{{/if}}
+                    width:4px;min-width:4px;
+                  ">&nbsp;</td>
+                  <td style="padding:16px 18px;">
+
+                    <!-- Badge 列：重要度 + 分類 + 情緒 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;">
+                      <tr>
+                        <!-- 重要度 Badge -->
+                        <td style="padding-right:6px;">
+                          <span style="
+                            display:inline-block;
+                            padding:2px 8px;
+                            border-radius:12px;
+                            font-size:11px;
+                            font-weight:700;
+                            letter-spacing:0.5px;
+                            {{#if (gte importanceScore 9)}}background-color:#fdecea;color:#e74c3c;{{/if}}
+                            {{#if (and (gte importanceScore 7) (lte importanceScore 8))}}background-color:#fef5e7;color:#e67e22;{{/if}}
+                            {{#if (and (gte importanceScore 5) (lte importanceScore 6))}}background-color:#eaf4fb;color:#3498db;{{/if}}
+                            {{#if (lt importanceScore 5)}}background-color:#f2f3f4;color:#95a5a6;{{/if}}
+                          ">&#9733; {{importanceScore}}/10</span>
+                        </td>
+                        <!-- 分類 Badge -->
+                        <td style="padding-right:6px;">
+                          <span style="display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;background-color:#eaf0fb;color:#2c3e7a;">
+                            {{#if (eq category 'market')}}市場行情{{/if}}
+                            {{#if (eq category 'regulation')}}監管政策{{/if}}
+                            {{#if (eq category 'technology')}}技術發展{{/if}}
+                            {{#if (eq category 'defi')}}DeFi{{/if}}
+                            {{#if (eq category 'nft')}}NFT{{/if}}
+                            {{#if (eq category 'security')}}安全事件{{/if}}
+                            {{#if (eq category 'macro')}}總體經濟{{/if}}
+                            {{#if (eq category 'exchange')}}交易所動態{{/if}}
+                            {{#if (eq category 'other')}}其他{{/if}}
+                          </span>
+                        </td>
+                        <!-- 情緒 Badge -->
+                        <td>
+                          <span style="
+                            display:inline-block;
+                            padding:2px 8px;
+                            border-radius:12px;
+                            font-size:11px;
+                            font-weight:600;
+                            {{#if (eq sentiment 'positive')}}background-color:#eafaf1;color:#27ae60;{{/if}}
+                            {{#if (eq sentiment 'negative')}}background-color:#fdecea;color:#e74c3c;{{/if}}
+                            {{#if (eq sentiment 'neutral')}}background-color:#f2f3f4;color:#7f8c8d;{{/if}}
+                          ">
+                            {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                            {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                            {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 標題（可點擊連結） -->
+                    <h3 style="margin:0 0 8px 0;font-size:15px;font-weight:700;line-height:1.4;color:#1a1a2e;">
+                      <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="color:#1a1a2e;text-decoration:none;">{{title}}</a>
+                    </h3>
+
+                    <!-- AI 摘要 -->
+                    <p style="margin:0 0 12px 0;font-size:13px;line-height:1.7;color:#4a4a4a;">{{aiSummary}}</p>
+
+                    <!-- 來源與時間 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="font-size:11px;color:#95a5a6;">
+                          <span style="font-weight:600;color:#7f8c8d;">{{sourceName}}</span>
+                          <span style="margin:0 6px;color:#bdc3c7;">&#183;</span>
+                          <span>{{publishedAtFormatted}}（台北時間）</span>
+                        </td>
+                        <td align="right">
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#3498db;text-decoration:none;font-weight:600;">閱讀全文 &#8594;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              {{/each}}
+
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
+               分類新聞
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="padding:8px 32px 20px 32px;">
+
+              <!-- 區塊標題 -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding-bottom:16px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="background-color:#9b59b6;width:4px;border-radius:2px;">&nbsp;</td>
+                        <td style="padding-left:12px;">
+                          <h2 style="margin:0;font-size:18px;font-weight:700;color:#1a1a2e;letter-spacing:-0.3px;">分類新聞</h2>
+                        </td>
+                      </tr>
+                    </table>
+                    <hr style="margin:12px 0 0 0;border:none;border-top:1px solid #ecf0f1;" />
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 市場行情 -->
+              {{#if categorizedStories.market}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #3498db;">
+                    <span style="font-size:13px;font-weight:700;color:#2980b9;">&#128200; 市場行情</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.market}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#eaf4fb;color:#3498db;">市場行情</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- 監管政策 -->
+              {{#if categorizedStories.regulation}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #e67e22;">
+                    <span style="font-size:13px;font-weight:700;color:#ca6f1e;">&#9878; 監管政策</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.regulation}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#fef5e7;color:#e67e22;">監管政策</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- 技術發展 -->
+              {{#if categorizedStories.technology}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #2ecc71;">
+                    <span style="font-size:13px;font-weight:700;color:#1e8449;">&#128296; 技術發展</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.technology}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#eafaf1;color:#2ecc71;">技術發展</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- DeFi -->
+              {{#if categorizedStories.defi}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #9b59b6;">
+                    <span style="font-size:13px;font-weight:700;color:#7d3c98;">&#128279; DeFi</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.defi}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#f5eef8;color:#9b59b6;">DeFi</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- NFT -->
+              {{#if categorizedStories.nft}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #e91e8c;">
+                    <span style="font-size:13px;font-weight:700;color:#c2185b;">&#127912; NFT</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.nft}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#fce4ec;color:#e91e8c;">NFT</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- 安全事件 -->
+              {{#if categorizedStories.security}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#fff8f8;border-radius:6px 6px 0 0;border-bottom:2px solid #e74c3c;">
+                    <span style="font-size:13px;font-weight:700;color:#c0392b;">&#9888; 安全事件</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.security}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#fdecea;color:#e74c3c;">安全事件</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- 總體經濟 -->
+              {{#if categorizedStories.macro}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #607d8b;">
+                    <span style="font-size:13px;font-weight:700;color:#455a64;">&#127758; 總體經濟</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.macro}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#eceff1;color:#607d8b;">總體經濟</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- 交易所動態 -->
+              {{#if categorizedStories.exchange}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #f39c12;">
+                    <span style="font-size:13px;font-weight:700;color:#d68910;">&#128181; 交易所動態</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.exchange}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#fef9e7;color:#f39c12;">交易所動態</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+              <!-- 其他 -->
+              {{#if categorizedStories.other}}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+                <tr>
+                  <td style="padding:12px 16px;background-color:#f8f9fa;border-radius:6px 6px 0 0;border-bottom:2px solid #95a5a6;">
+                    <span style="font-size:13px;font-weight:700;color:#7f8c8d;">&#128240; 其他</span>
+                  </td>
+                </tr>
+                {{#each categorizedStories.other}}
+                <tr>
+                  <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:13px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;margin-bottom:5px;">{{title}}</a>
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;background-color:#f2f3f4;color:#95a5a6;">其他</span>
+                              </td>
+                              <td style="padding-right:8px;">
+                                <span style="font-size:10px;font-weight:600;
+                                  {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                                  {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}color:#7f8c8d;{{/if}}
+                                ">
+                                  {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+                                  {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+                                  {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+                                </span>
+                              </td>
+                              <td>
+                                <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &#183; {{publishedAtFormatted}}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+              {{/if}}
+
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
+               數據摘要
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="padding:0 32px 24px 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="background-color:#f8f9fa;border-radius:8px;padding:16px 20px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td align="center" style="padding:0 12px;border-right:1px solid #dee2e6;">
+                          <p style="margin:0 0 4px 0;font-size:22px;font-weight:700;color:#1a1a2e;">{{totalCollected}}</p>
+                          <p style="margin:0;font-size:11px;color:#95a5a6;letter-spacing:0.5px;">本日收集</p>
+                        </td>
+                        <td align="center" style="padding:0 12px;border-right:1px solid #dee2e6;">
+                          <p style="margin:0 0 4px 0;font-size:22px;font-weight:700;color:#1a1a2e;">{{afterDedup}}</p>
+                          <p style="margin:0;font-size:11px;color:#95a5a6;letter-spacing:0.5px;">去重後</p>
+                        </td>
+                        <td align="center" style="padding:0 12px;">
+                          <p style="margin:0 0 4px 0;font-size:22px;font-weight:700;color:#1a1a2e;">{{sourcesCount}}</p>
+                          <p style="margin:0;font-size:11px;color:#95a5a6;letter-spacing:0.5px;">使用來源</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
+               Footer 免責聲明
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="background-color:#1a1a2e;padding:24px 32px;text-align:center;border-radius:0 0 8px 8px;">
+              <p style="margin:0 0 8px 0;font-size:12px;color:#7f8fa6;line-height:1.6;">
+                本報告由 AI 自動生成，僅供參考，不構成投資建議。
+              </p>
+              <p style="margin:0 0 8px 0;font-size:11px;color:#4a5568;line-height:1.5;">
+                加密貨幣投資具有高度風險，請自行評估並謹慎決策。
+              </p>
+              <p style="margin:0;font-size:10px;color:#3d4b5c;">
+                &copy; {{reportDate}} Crypto Daily News &nbsp;|&nbsp; Powered by AI
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /主體容器 -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- /外層容器 -->
+
+</body>
+</html>
