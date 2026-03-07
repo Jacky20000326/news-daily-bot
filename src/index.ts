@@ -62,8 +62,8 @@ export async function runDailyPipeline(): Promise<DailyReport> {
   const analyzedItems = await analyze(dedupResult.items);
   logger.info("AI 分析完成", { analyzedCount: analyzedItems.length });
 
-  // ── 步驟 6：建立 topStories（重要度前 5） ──
-  const topStories = analyzedItems.slice(0, 5);
+  // ── 步驟 6：建立 topStories（重要度前 15，與 AI 摘要數量一致） ──
+  const topStories = analyzedItems.slice(0, 15);
 
   // ── 步驟 7：依 category 分組（所有 9 個分類都必須有 key，空分類為空陣列） ──
   const categorizedStories = ALL_CATEGORIES.reduce<

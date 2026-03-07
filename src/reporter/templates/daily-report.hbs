@@ -47,10 +47,109 @@
           </tr>
 
           <!-- ═══════════════════════════════════════
+               優先閱讀清單（全部新聞依重要度排序）
+          ═══════════════════════════════════════ -->
+          <tr>
+            <td style="padding:24px 32px 16px 32px;">
+
+              <!-- 區塊標題 -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding-bottom:14px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="background-color:#f39c12;width:4px;border-radius:2px;">&nbsp;</td>
+                        <td style="padding-left:12px;">
+                          <h2 style="margin:0;font-size:17px;font-weight:700;color:#1a1a2e;letter-spacing:-0.3px;">優先閱讀清單</h2>
+                        </td>
+                        <td style="padding-left:10px;">
+                          <span style="font-size:11px;color:#95a5a6;">依重要度排序，點擊標題查看 AI 分析重點</span>
+                        </td>
+                      </tr>
+                    </table>
+                    <hr style="margin:10px 0 0 0;border:none;border-top:1px solid #ecf0f1;" />
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 優先清單表格 -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">
+                {{#each allStoriesByImportance}}
+                <tr style="border-bottom:1px solid #f5f5f5;">
+                  <!-- 重要度色條 -->
+                  <td width="4" style="
+                    {{#if (gte importanceScore 9)}}background-color:#e74c3c;{{/if}}
+                    {{#if (and (gte importanceScore 7) (lte importanceScore 8))}}background-color:#e67e22;{{/if}}
+                    {{#if (and (gte importanceScore 5) (lte importanceScore 6))}}background-color:#3498db;{{/if}}
+                    {{#if (lt importanceScore 5)}}background-color:#bdc3c7;{{/if}}
+                    width:4px;min-width:4px;padding:0;
+                  ">&nbsp;</td>
+                  <!-- 重要度分數 -->
+                  <td width="36" style="padding:9px 6px;text-align:center;white-space:nowrap;">
+                    <span style="
+                      display:inline-block;
+                      font-size:12px;
+                      font-weight:700;
+                      {{#if (gte importanceScore 9)}}color:#e74c3c;{{/if}}
+                      {{#if (and (gte importanceScore 7) (lte importanceScore 8))}}color:#e67e22;{{/if}}
+                      {{#if (and (gte importanceScore 5) (lte importanceScore 6))}}color:#3498db;{{/if}}
+                      {{#if (lt importanceScore 5)}}color:#bdc3c7;{{/if}}
+                    ">&#9733;{{importanceScore}}</span>
+                  </td>
+                  <!-- 分類 -->
+                  <td width="58" style="padding:9px 4px;white-space:nowrap;">
+                    <span style="font-size:10px;padding:2px 5px;border-radius:6px;font-weight:600;
+                      {{#if (eq category 'market')}}background-color:#eaf4fb;color:#2980b9;{{/if}}
+                      {{#if (eq category 'regulation')}}background-color:#fef5e7;color:#d35400;{{/if}}
+                      {{#if (eq category 'technology')}}background-color:#eafaf1;color:#1e8449;{{/if}}
+                      {{#if (eq category 'defi')}}background-color:#f5eef8;color:#7d3c98;{{/if}}
+                      {{#if (eq category 'nft')}}background-color:#fce4ec;color:#c2185b;{{/if}}
+                      {{#if (eq category 'security')}}background-color:#fdecea;color:#c0392b;{{/if}}
+                      {{#if (eq category 'macro')}}background-color:#eceff1;color:#455a64;{{/if}}
+                      {{#if (eq category 'exchange')}}background-color:#fef9e7;color:#d68910;{{/if}}
+                      {{#if (eq category 'other')}}background-color:#f2f3f4;color:#7f8c8d;{{/if}}
+                    ">
+                      {{#if (eq category 'market')}}市場{{/if}}
+                      {{#if (eq category 'regulation')}}監管{{/if}}
+                      {{#if (eq category 'technology')}}技術{{/if}}
+                      {{#if (eq category 'defi')}}DeFi{{/if}}
+                      {{#if (eq category 'nft')}}NFT{{/if}}
+                      {{#if (eq category 'security')}}安全{{/if}}
+                      {{#if (eq category 'macro')}}總經{{/if}}
+                      {{#if (eq category 'exchange')}}交易所{{/if}}
+                      {{#if (eq category 'other')}}其他{{/if}}
+                    </span>
+                  </td>
+                  <!-- 情緒 -->
+                  <td width="32" style="padding:9px 4px;white-space:nowrap;text-align:center;">
+                    <span style="font-size:11px;font-weight:700;
+                      {{#if (eq sentiment 'positive')}}color:#27ae60;{{/if}}
+                      {{#if (eq sentiment 'negative')}}color:#e74c3c;{{/if}}
+                      {{#if (eq sentiment 'neutral')}}color:#95a5a6;{{/if}}
+                    ">
+                      {{#if (eq sentiment 'positive')}}&#8679;{{/if}}
+                      {{#if (eq sentiment 'negative')}}&#8681;{{/if}}
+                      {{#if (eq sentiment 'neutral')}}&#8644;{{/if}}
+                    </span>
+                  </td>
+                  <!-- 標題 + 來源 -->
+                  <td style="padding:9px 8px 9px 4px;">
+                    <a href="{{detailLink}}" target="_blank" rel="noopener noreferrer"
+                       style="font-size:12px;font-weight:600;color:#1a1a2e;text-decoration:none;line-height:1.4;display:block;">{{title}}</a>
+                    <span style="font-size:10px;color:#bdc3c7;">{{sourceName}} &middot; {{publishedAtFormatted}}</span>
+                  </td>
+                </tr>
+                {{/each}}
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- ═══════════════════════════════════════
                今日市場總覽（Executive Summary）
           ═══════════════════════════════════════ -->
           <tr>
-            <td style="padding:28px 32px 20px 32px;">
+            <td style="padding:16px 32px 20px 32px;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                   <td style="background-color:#eaf4fb;border-left:4px solid #3498db;border-radius:0 6px 6px 0;padding:20px 24px;">
@@ -63,7 +162,7 @@
           </tr>
 
           <!-- ═══════════════════════════════════════
-               今日頭條（Top Stories，最多 5 則）
+               重點分析（AI 分析詳情，含錨點 id）
           ═══════════════════════════════════════ -->
           <tr>
             <td style="padding:8px 32px 20px 32px;">
@@ -76,7 +175,7 @@
                       <tr>
                         <td style="background-color:#e74c3c;width:4px;border-radius:2px;">&nbsp;</td>
                         <td style="padding-left:12px;">
-                          <h2 style="margin:0;font-size:18px;font-weight:700;color:#1a1a2e;letter-spacing:-0.3px;">今日頭條</h2>
+                          <h2 style="margin:0;font-size:18px;font-weight:700;color:#1a1a2e;letter-spacing:-0.3px;">重點分析</h2>
                         </td>
                       </tr>
                     </table>
@@ -85,9 +184,11 @@
                 </tr>
               </table>
 
-              <!-- 頭條列表 -->
+              <!-- 重點分析列表（各項含錨點 id） -->
               {{#each topStories}}
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;border:1px solid #ecf0f1;border-radius:8px;overflow:hidden;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                     id="story-{{id}}"
+                     style="margin-bottom:16px;border:1px solid #ecf0f1;border-radius:8px;overflow:hidden;">
                 <tr>
                   <!-- 左側重要度色條 -->
                   <td width="4" style="
@@ -152,14 +253,23 @@
                     </table>
 
                     <!-- 標題（可點擊連結） -->
-                    <h3 style="margin:0 0 8px 0;font-size:15px;font-weight:700;line-height:1.4;color:#1a1a2e;">
-                      <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="color:#1a1a2e;text-decoration:none;">{{title}}</a>
+                    <h3 style="margin:0 0 10px 0;font-size:15px;font-weight:700;line-height:1.4;color:#1a1a2e;">
+                      {{title}}
                     </h3>
 
-                    <!-- AI 摘要 -->
-                    <p style="margin:0 0 12px 0;font-size:13px;line-height:1.7;color:#4a4a4a;">{{aiSummary}}</p>
+                    <!-- AI 分析重點（繁體中文） -->
+                    {{#if aiSummary}}
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:12px;">
+                      <tr>
+                        <td style="background-color:#f8f9fa;border-left:3px solid #e74c3c;border-radius:0 4px 4px 0;padding:10px 14px;">
+                          <p style="margin:0 0 4px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1px;text-transform:uppercase;">AI 分析重點</p>
+                          <p style="margin:0;font-size:13px;line-height:1.75;color:#2c3e50;">{{aiSummary}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                    {{/if}}
 
-                    <!-- 來源與時間 -->
+                    <!-- 來源、時間與原文連結 -->
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                       <tr>
                         <td style="font-size:11px;color:#95a5a6;">
@@ -168,7 +278,8 @@
                           <span>{{publishedAtFormatted}}（台北時間）</span>
                         </td>
                         <td align="right">
-                          <a href="{{url}}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:#3498db;text-decoration:none;font-weight:600;">閱讀全文 &#8594;</a>
+                          <a href="{{url}}" target="_blank" rel="noopener noreferrer"
+                             style="font-size:11px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &#8594;</a>
                         </td>
                       </tr>
                     </table>

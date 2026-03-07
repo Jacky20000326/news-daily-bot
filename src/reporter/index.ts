@@ -10,6 +10,11 @@ interface FormattedNewsItem extends AnalyzedNewsItem {
   publishedAtFormatted: string;
 }
 
+// ─── 型別：用於優先閱讀清單，含錨點連結 ─────────────────────────────────────
+interface OverviewNewsItem extends FormattedNewsItem {
+  detailLink: string; // 有 aiSummary 時為 '#story-{id}'，否則為原始 URL
+}
+
 // ─── Handlebars Helper 註冊 ────────────────────────────────────────────────
 
 /**
@@ -100,10 +105,8 @@ function formatDateTaipei(date: Date): string {
 export function generateReport(report: DailyReport): string {
   const template = getCompiledTemplate();
 
-  // 準備 topStories：加入格式化時間
-  const topStories: FormattedNewsItem[] = report.topStories
-    .slice(0, 5)
-    .map(formatItem);
+  // 準備 topStories（重點分析區塊）：加入格式化時間
+  const topStories: FormattedNewsItem[] = report.topStories.map(formatItem);
 
   // 準備 categorizedStories：只保留非空分類，並為每項加入格式化時間
   const allCategories = Object.keys(CATEGORY_LABELS) as NewsCategory[];
@@ -116,6 +119,18 @@ export function generateReport(report: DailyReport): string {
     }
   }
 
+  // 準備優先閱讀清單：所有新聞依重要度排序，含錨點連結
+  const topStoryIds = new Set(report.topStories.map((s) => s.id));
+  const allStoriesByImportance: OverviewNewsItem[] = (
+    Object.values(report.categorizedStories) as AnalyzedNewsItem[][]
+  )
+    .flat()
+    .sort((a, b) => b.importanceScore - a.importanceScore)
+    .map((item) => ({
+      ...formatItem(item),
+      detailLink: topStoryIds.has(item.id) ? `#story-${item.id}` : item.url,
+    }));
+
   // 組裝傳入模板的資料物件
   const templateData = {
     reportDate: report.reportDate,
@@ -127,6 +142,7 @@ export function generateReport(report: DailyReport): string {
     sourcesCount: report.sources.length,
     topStories,
     categorizedStories,
+    allStoriesByImportance,
   };
 
   const html = template(templateData);

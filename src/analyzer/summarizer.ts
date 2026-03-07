@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NewsItem, AnalyzedNewsItem } from '../types';
 import { config } from '../config';
 import { logger } from '../utils/logger';
@@ -41,8 +41,15 @@ async function promisePool<T>(
 
 // ─── AI 客戶端工廠 ────────────────────────────────────────────────────────────
 
-function createClient(): Anthropic {
-  return new Anthropic({ apiKey: config.ai.apiKey });
+function createModel() {
+  const genAI = new GoogleGenerativeAI(config.ai.apiKey);
+  return genAI.getGenerativeModel({
+    model: config.ai.model,
+    generationConfig: {
+      temperature: config.ai.temperature,
+      maxOutputTokens: 512,
+    },
+  });
 }
 
 // ─── 單則新聞摘要 ─────────────────────────────────────────────────────────────
@@ -52,26 +59,16 @@ function createClient(): Anthropic {
  * 失敗時回傳空字串
  */
 export async function summarizeItem(item: NewsItem): Promise<string> {
-  const client = createClient();
+  const model = createModel();
 
   try {
     const summary = await withRetry(
       async () => {
         const prompt = buildSummaryPrompt(item);
 
-        const response = await client.messages.create({
-          model: config.ai.model,
-          max_tokens: 512,
-          temperature: config.ai.temperature,
-          messages: [{ role: 'user', content: prompt }],
-        });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text().trim();
 
-        const textBlock = response.content.find((block) => block.type === 'text');
-        if (!textBlock || textBlock.type !== 'text') {
-          throw new Error('AI 回應中沒有文字內容');
-        }
-
-        const text = textBlock.text.trim();
         if (!text) {
           throw new Error('AI 回傳空白摘要');
         }
@@ -126,26 +123,23 @@ export async function summarizeItems(items: NewsItem[]): Promise<string[]> {
  * 失敗時回傳空字串
  */
 export async function generateExecutiveSummary(topItems: AnalyzedNewsItem[]): Promise<string> {
-  const client = createClient();
+  const genAI = new GoogleGenerativeAI(config.ai.apiKey);
+  const model = genAI.getGenerativeModel({
+    model: config.ai.model,
+    generationConfig: {
+      temperature: config.ai.temperature,
+      maxOutputTokens: 1024,
+    },
+  });
 
   try {
     const executiveSummary = await withRetry(
       async () => {
         const prompt = buildExecutiveSummaryPrompt(topItems);
 
-        const response = await client.messages.create({
-          model: config.ai.model,
-          max_tokens: 1024,
-          temperature: config.ai.temperature,
-          messages: [{ role: 'user', content: prompt }],
-        });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text().trim();
 
-        const textBlock = response.content.find((block) => block.type === 'text');
-        if (!textBlock || textBlock.type !== 'text') {
-          throw new Error('AI 回應中沒有文字內容');
-        }
-
-        const text = textBlock.text.trim();
         if (!text) {
           throw new Error('AI 回傳空白總覽');
         }

@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const REQUIRED_VARS = [
-  'ANTHROPIC_API_KEY',
+  'GEMINI_API_KEY',
   'NEWSAPI_KEY',
   'SENDER_EMAIL',
   'EMAIL_RECIPIENTS',
@@ -24,8 +24,8 @@ for (const key of REQUIRED_VARS) {
 
 export const config = {
   ai: {
-    apiKey: process.env.ANTHROPIC_API_KEY!,
-    model: process.env.AI_MODEL ?? 'claude-sonnet-4-6',
+    apiKey: process.env.GEMINI_API_KEY!,
+    model: process.env.AI_MODEL ?? 'gemini-1.5-flash',
     maxTokens: 4096,
     temperature: 0.3,
   },

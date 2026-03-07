@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { NewsItem, NewsCategory, Sentiment } from '../types';
 import { config } from '../config';
 import { logger } from '../utils/logger';
@@ -106,7 +106,7 @@ function parseRankingResponse(responseText: string): RawRankingItem[] {
  * 處理單一批次的新聞評分，失敗時使用關鍵字備援
  */
 async function processBatch(
-  client: Anthropic,
+  model: GenerativeModel,
   batch: NewsItem[],
   batchIndex: number
 ): Promise<Map<string, RankingResult>> {
@@ -117,20 +117,14 @@ async function processBatch(
 
     const rawItems = await withRetry(
       async () => {
-        const response = await client.messages.create({
-          model: config.ai.model,
-          max_tokens: config.ai.maxTokens,
-          temperature: config.ai.temperature,
-          messages: [{ role: 'user', content: prompt }],
-        });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
 
-        // 取得文字內容
-        const textBlock = response.content.find((block) => block.type === 'text');
-        if (!textBlock || textBlock.type !== 'text') {
+        if (!text) {
           throw new Error('AI 回應中沒有文字內容');
         }
 
-        return parseRankingResponse(textBlock.text);
+        return parseRankingResponse(text);
       },
       {
         retries: RETRY_COUNT,
@@ -194,7 +188,14 @@ async function processBatch(
 export async function rankAndClassify(
   items: NewsItem[]
 ): Promise<Map<string, RankingResult>> {
-  const client = new Anthropic({ apiKey: config.ai.apiKey });
+  const genAI = new GoogleGenerativeAI(config.ai.apiKey);
+  const model = genAI.getGenerativeModel({
+    model: config.ai.model,
+    generationConfig: {
+      temperature: config.ai.temperature,
+      maxOutputTokens: config.ai.maxTokens,
+    },
+  });
   const allResults = new Map<string, RankingResult>();
 
   logger.info('開始批次新聞評分', { total: items.length, batchSize: BATCH_SIZE });
@@ -209,7 +210,7 @@ export async function rankAndClassify(
       batchEnd: batchStart + batch.length,
     });
 
-    const batchResults = await processBatch(client, batch, batchIndex);
+    const batchResults = await processBatch(model, batch, batchIndex);
 
     for (const [id, result] of batchResults) {
       allResults.set(id, result);
