@@ -9,9 +9,10 @@ if (process.env.NODE_ENV !== 'production') {
 const REQUIRED_VARS = [
   'ANTHROPIC_API_KEY',
   'NEWSAPI_KEY',
-  'SENDGRID_API_KEY',
   'SENDER_EMAIL',
   'EMAIL_RECIPIENTS',
+  'SMTP_USER',
+  'SMTP_PASS',
 ] as const;
 
 // 啟動時驗證必要環境變數
@@ -38,7 +39,6 @@ export const config = {
   },
 
   email: {
-    sendgridApiKey: process.env.SENDGRID_API_KEY!,
     senderEmail: process.env.SENDER_EMAIL!,
     recipients: process.env.EMAIL_RECIPIENTS!.split(',').map((e) => e.trim()),
     alertEmail: process.env.ALERT_EMAIL ?? '',
