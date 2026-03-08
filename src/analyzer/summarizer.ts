@@ -93,7 +93,7 @@ function safeGetText(result: GenerateContentResult): string {
  * 失敗時回傳空字串
  */
 export async function summarizeItem(item: NewsItem): Promise<string> {
-  const model = createModel(512);
+  const model = createModel(800);
 
   try {
     const summary = await withRetry(

@@ -26,7 +26,7 @@ interface RawRankingItem {
 
 // ─── 常數 ─────────────────────────────────────────────────────────────────────
 
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 10;
 const BATCH_INTERVAL_MS = 1000;
 const RETRY_COUNT = 2;
 const RETRY_DELAY_MS = 2000;

@@ -201,6 +201,36 @@
       color: #c8c8c8;
     }
 
+    /* ── Deep Analysis Block ── */
+    .deep-analysis {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+      border: 1px solid #30363d;
+      border-left: 4px solid #f39c12;
+      border-radius: 0 12px 12px 0;
+      padding: 28px 32px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+    .deep-analysis .deep-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #f39c12;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #21262d;
+    }
+    .deep-analysis .deep-content {
+      font-size: 15px;
+      line-height: 2;
+      color: #c9d1d9;
+      white-space: pre-line;
+    }
+    .deep-analysis .deep-content strong {
+      color: #f0c674;
+    }
+
     .story-meta {
       display: flex;
       justify-content: space-between;
@@ -279,11 +309,11 @@
           <div class="stat-label">收集新聞</div>
         </div>
         <div class="stat">
-          <div class="stat-num">{{afterDedup}}</div>
-          <div class="stat-label">去重後</div>
+          <div class="stat-num">{{selectedCount}}</div>
+          <div class="stat-label">精選報導</div>
         </div>
         <div class="stat">
-          <div class="stat-num">{{topStoriesCount}}</div>
+          <div class="stat-num">{{deepCount}}</div>
           <div class="stat-label">深度分析</div>
         </div>
       </div>
@@ -302,10 +332,10 @@
     <div class="section-title">
       <div class="bar"></div>
       <h2>重點新聞深度分析</h2>
-      <span class="count">Top {{topStoriesCount}}</span>
+      <span class="count">Top {{deepCount}}</span>
     </div>
 
-    {{#each topStories}}
+    {{#each deepStories}}
     <article class="story-card" id="story-{{id}}">
       <div class="story-header">
         <div class="story-rank {{#if (gte importanceScore 9)}}rank-high{{/if}}{{#if (and (gte importanceScore 7) (lte importanceScore 8))}}rank-mid{{/if}}{{#if (lt importanceScore 7)}}rank-low{{/if}}">{{index_1 @index}}</div>
@@ -342,12 +372,71 @@
       </div>
       {{/if}}
 
+      {{#if deepAnalysis}}
+      <div class="deep-analysis">
+        <div class="deep-tag">AI 深度分析報告（基於原文）</div>
+        <div class="deep-content">{{{deepAnalysis}}}</div>
+      </div>
+      {{/if}}
+
       <div class="story-meta">
         <span class="source"><strong>{{sourceName}}</strong> &middot; {{publishedAtFormatted}}（台北時間）</span>
         <a href="{{url}}" target="_blank" rel="noopener noreferrer">閱讀原文 &rarr;</a>
       </div>
     </article>
     {{/each}}
+
+    {{#if briefStories.length}}
+    <!-- ═══ Brief Stories ═══ -->
+    <div class="section-title">
+      <div class="bar" style="background: #3498db;"></div>
+      <h2>其他重要新聞</h2>
+    </div>
+
+    {{#each briefStories}}
+    <article class="story-card" id="story-{{id}}">
+      <div class="story-header">
+        <div class="story-rank rank-low">{{index_1 @index}}</div>
+        <h3 class="story-title">{{title}}</h3>
+      </div>
+
+      <div class="story-badges">
+        <span class="badge badge-score">&#9733; 重要度 {{importanceScore}}/10</span>
+        <span class="badge badge-category">
+          {{#if (eq category 'market')}}市場行情{{/if}}
+          {{#if (eq category 'regulation')}}監管政策{{/if}}
+          {{#if (eq category 'technology')}}技術發展{{/if}}
+          {{#if (eq category 'defi')}}DeFi{{/if}}
+          {{#if (eq category 'nft')}}NFT{{/if}}
+          {{#if (eq category 'security')}}安全事件{{/if}}
+          {{#if (eq category 'macro')}}總體經濟{{/if}}
+          {{#if (eq category 'exchange')}}交易所動態{{/if}}
+          {{#if (eq category 'other')}}其他{{/if}}
+        </span>
+        <span class="badge {{#if (eq sentiment 'positive')}}badge-positive{{/if}}{{#if (eq sentiment 'negative')}}badge-negative{{/if}}{{#if (eq sentiment 'neutral')}}badge-neutral{{/if}}">
+          {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+          {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+          {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+        </span>
+        {{#each relatedTickers}}
+        <span class="badge badge-ticker">{{this}}</span>
+        {{/each}}
+      </div>
+
+      {{#if aiSummary}}
+      <div class="ai-analysis">
+        <div class="ai-tag">AI 摘要</div>
+        <p>{{aiSummary}}</p>
+      </div>
+      {{/if}}
+
+      <div class="story-meta">
+        <span class="source"><strong>{{sourceName}}</strong> &middot; {{publishedAtFormatted}}（台北時間）</span>
+        <a href="{{url}}" target="_blank" rel="noopener noreferrer">閱讀原文 &rarr;</a>
+      </div>
+    </article>
+    {{/each}}
+    {{/if}}
 
   </div>
 

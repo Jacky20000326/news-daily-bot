@@ -2,11 +2,15 @@ import { NewsItem, AnalyzedNewsItem } from '../types';
 import { logger } from '../utils/logger';
 import { rankAndClassify } from './ranker';
 import { summarizeItems, generateExecutiveSummary as generateExecSummary } from './summarizer';
+import { deepAnalyzeItems } from './deep-analyzer';
 
 // ─── 常數 ─────────────────────────────────────────────────────────────────────
 
-/** 生成 AI 摘要的前 N 名新聞（依重要度排序） */
-const TOP_ITEMS_FOR_SUMMARY = 6;
+/** 保留的精選新聞數量 */
+const TOP_ITEMS_TO_KEEP = 10;
+
+/** 進行深度分析的前 N 名新聞 */
+const TOP_ITEMS_FOR_DEEP = 6;
 
 // ─── 主要分析函式 ─────────────────────────────────────────────────────────────
 
@@ -45,24 +49,26 @@ export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
   // 依 importanceScore 降序排序（相同分數保持原始順序）
   rankedItems.sort((a, b) => b.ranking.importanceScore - a.ranking.importanceScore);
 
-  const topRankedItems = rankedItems.slice(0, TOP_ITEMS_FOR_SUMMARY);
+  // ── 步驟 2.5：截斷至前 TOP_ITEMS_TO_KEEP 名（丟棄其餘低分新聞）──
+  const keptItems = rankedItems.slice(0, TOP_ITEMS_TO_KEEP);
 
-  logger.info('開始生成前幾名新聞摘要', {
-    topCount: topRankedItems.length,
-    topScores: topRankedItems.map((r) => r.ranking.importanceScore),
+  logger.info('開始生成精選新聞摘要', {
+    kept: keptItems.length,
+    discarded: rankedItems.length - keptItems.length,
+    topScores: keptItems.map((r) => r.ranking.importanceScore),
   });
 
-  const summaries = await summarizeItems(topRankedItems.map((r) => r.item));
+  const summaries = await summarizeItems(keptItems.map((r) => r.item));
 
   // ── 步驟 3：合併結果 ──
   // 建立 id -> aiSummary 的對照表
   const summaryMap = new Map<string, string>();
-  for (let i = 0; i < topRankedItems.length; i++) {
-    summaryMap.set(topRankedItems[i].item.id, summaries[i] ?? '');
+  for (let i = 0; i < keptItems.length; i++) {
+    summaryMap.set(keptItems[i].item.id, summaries[i] ?? '');
   }
 
-  // 組合最終的 AnalyzedNewsItem 陣列（維持依評分降序排列）
-  const analyzedItems: AnalyzedNewsItem[] = rankedItems.map(({ item, ranking }) => ({
+  // 組合最終的 AnalyzedNewsItem 陣列（僅保留精選的 TOP_ITEMS_TO_KEEP 筆）
+  const analyzedItems: AnalyzedNewsItem[] = keptItems.map(({ item, ranking }) => ({
     ...item,
     importanceScore: ranking.importanceScore,
     category: ranking.category,
@@ -71,9 +77,26 @@ export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
     aiSummary: summaryMap.get(item.id) ?? '',
   }));
 
+  // ── 步驟 4：對前 6 筆重點新聞進行深度分析（抓取原文 + AI 分析）──
+  const topItemsForDeep = analyzedItems.slice(0, TOP_ITEMS_FOR_DEEP);
+  logger.info('開始重點新聞深度分析（抓取原文）', {
+    count: topItemsForDeep.length,
+  });
+
+  const deepAnalysisMap = await deepAnalyzeItems(topItemsForDeep);
+
+  // 將深度分析結果寫入對應項目
+  for (const item of analyzedItems) {
+    const deep = deepAnalysisMap.get(item.id);
+    if (deep) {
+      item.deepAnalysis = deep;
+    }
+  }
+
   logger.info('新聞 AI 分析完成', {
     total: analyzedItems.length,
     withSummary: analyzedItems.filter((i) => i.aiSummary.length > 0).length,
+    withDeepAnalysis: analyzedItems.filter((i) => i.deepAnalysis && i.deepAnalysis.length > 0).length,
     topScore: analyzedItems[0]?.importanceScore ?? 0,
   });
 

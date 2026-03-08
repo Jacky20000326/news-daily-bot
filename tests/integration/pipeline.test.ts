@@ -154,15 +154,14 @@ describe('runDailyPipeline() 整合測試', () => {
     expect(report).toHaveProperty('totalCollected');
     expect(report).toHaveProperty('afterDedup');
     expect(report).toHaveProperty('topStories');
-    expect(report).toHaveProperty('categorizedStories');
     expect(report).toHaveProperty('executiveSummary');
     expect(report).toHaveProperty('sources');
   });
 
-  it('report.topStories.length <= 6', async () => {
+  it('report.topStories.length <= 10', async () => {
     const report = await runDailyPipeline();
 
-    expect(report.topStories.length).toBeLessThanOrEqual(6);
+    expect(report.topStories.length).toBeLessThanOrEqual(10);
   });
 
   it('report.afterDedup <= report.totalCollected', async () => {
@@ -192,23 +191,16 @@ describe('runDailyPipeline() 整合測試', () => {
     expect(report.totalCollected).toBe(3);
   });
 
-  it('report.categorizedStories 包含所有 9 個分類的 key', async () => {
+  it('report.topStories 中每筆都有合法 category', async () => {
     const report = await runDailyPipeline();
 
-    const expectedCategories = [
-      'market',
-      'regulation',
-      'technology',
-      'defi',
-      'nft',
-      'security',
-      'macro',
-      'exchange',
-      'other',
+    const validCategories = [
+      'market', 'regulation', 'technology', 'defi', 'nft',
+      'security', 'macro', 'exchange', 'other',
     ];
 
-    for (const cat of expectedCategories) {
-      expect(report.categorizedStories).toHaveProperty(cat);
+    for (const story of report.topStories) {
+      expect(validCategories).toContain(story.category);
     }
   });
 

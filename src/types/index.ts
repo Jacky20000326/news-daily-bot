@@ -58,6 +58,7 @@ export interface AnalyzedNewsItem extends NewsItem {
   aiSummary: string;             // AI 生成的繁體中文摘要（100-150 字）
   relatedTickers: string[];      // e.g., ["BTC", "ETH"]
   sentiment: Sentiment;
+  deepAnalysis?: string;         // AI 深度分析報告（400-600 字，基於原文抓取）
 }
 
 // ─── 每日報告 ─────────────────────────────────────────────────────────
@@ -68,8 +69,7 @@ export interface DailyReport {
   timeWindowTo: Date;
   totalCollected: number;        // 收集總數
   afterDedup: number;            // 去重後數量
-  topStories: AnalyzedNewsItem[];     // 重要度前 15
-  categorizedStories: Record<NewsCategory, AnalyzedNewsItem[]>;
+  topStories: AnalyzedNewsItem[];     // 精選 10 則（依重要度排序）
   executiveSummary: string;      // AI 整體摘要（300 字內）
   sources: string[];             // 使用的來源清單
   mdReportUrl?: string;          // GitHub Gist 線上 MD 報告連結（選填）

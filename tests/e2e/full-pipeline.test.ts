@@ -229,7 +229,6 @@ describe('E2E：完整 pipeline 端到端測試', () => {
     expect(report).toHaveProperty('totalCollected');
     expect(report).toHaveProperty('afterDedup');
     expect(report).toHaveProperty('topStories');
-    expect(report).toHaveProperty('categorizedStories');
     expect(report).toHaveProperty('executiveSummary');
     expect(report).toHaveProperty('sources');
 
@@ -241,14 +240,13 @@ describe('E2E：完整 pipeline 端到端測試', () => {
     expect(typeof report.totalCollected).toBe('number');
     expect(typeof report.afterDedup).toBe('number');
     expect(Array.isArray(report.topStories)).toBe(true);
-    expect(typeof report.categorizedStories).toBe('object');
     expect(typeof report.executiveSummary).toBe('string');
     expect(Array.isArray(report.sources)).toBe(true);
   });
 
-  // ── 測試 3：topStories 數量不超過 6 ──
-  it('topStories 數量應不超過 6', () => {
-    expect(report.topStories.length).toBeLessThanOrEqual(6);
+  // ── 測試 3：topStories 數量不超過 10 ──
+  it('topStories 數量應不超過 10', () => {
+    expect(report.topStories.length).toBeLessThanOrEqual(10);
   });
 
   // ── 測試 4：每筆 topStory 有 importanceScore（1-10） ──
@@ -274,11 +272,10 @@ describe('E2E：完整 pipeline 端到端測試', () => {
     }
   });
 
-  // ── 測試 7：categorizedStories 包含所有 9 個分類 key ──
-  it('categorizedStories 應包含所有 9 個分類 key', () => {
-    for (const category of VALID_CATEGORIES) {
-      expect(report.categorizedStories).toHaveProperty(category);
-      expect(Array.isArray(report.categorizedStories[category])).toBe(true);
+  // ── 測試 7：每筆 topStory 的 category 為合法分類 ──
+  it('每筆 topStory 的 category 應為合法分類', () => {
+    for (const story of report.topStories) {
+      expect(VALID_CATEGORIES).toContain(story.category);
     }
   });
 

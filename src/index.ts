@@ -1,4 +1,4 @@
-import type { DailyReport, NewsCategory, AnalyzedNewsItem } from "./types";
+import type { DailyReport } from "./types";
 import { config } from "./config";
 import { logger } from "./utils/logger";
 import { getReportTimeWindow, getReportDateString } from "./utils/time";
@@ -9,19 +9,6 @@ import { analyze, generateExecutiveSummary } from "./analyzer";
 import { generateFullReport } from "./reporter";
 import { sendReport, sendAlertEmail } from "./mailer";
 import { getReportPageUrl, publishToGitHubPages } from "./publisher";
-
-// ─── 所有 NewsCategory 值（確保 categorizedStories 含全部 9 個 key） ────────
-const ALL_CATEGORIES: NewsCategory[] = [
-  "market",
-  "regulation",
-  "technology",
-  "defi",
-  "nft",
-  "security",
-  "macro",
-  "exchange",
-  "other",
-];
 
 // ─── 主要流程 ──────────────────────────────────────────────────────────────────
 
@@ -59,26 +46,15 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     removedByTitle: dedupResult.removedByTitle,
   });
 
-  // ── 步驟 5：AI 分析 ──
+  // ── 步驟 5：AI 分析（回傳精選 10 筆） ──
   const analyzedItems = await analyze(dedupResult.items);
   logger.info("AI 分析完成", { analyzedCount: analyzedItems.length });
 
-  // ── 步驟 6：建立 topStories（重要度前 6，與 AI 摘要數量一致） ──
-  const topStories = analyzedItems.slice(0, 6);
+  // ── 步驟 6：topStories 即為全部精選新聞（已在 analyzer 中截斷至 10 筆） ──
+  const topStories = analyzedItems;
 
-  // ── 步驟 7：依 category 分組（所有 9 個分類都必須有 key，空分類為空陣列） ──
-  const categorizedStories = ALL_CATEGORIES.reduce<
-    Record<NewsCategory, AnalyzedNewsItem[]>
-  >(
-    (acc, cat) => {
-      acc[cat] = analyzedItems.filter((item) => item.category === cat);
-      return acc;
-    },
-    {} as Record<NewsCategory, AnalyzedNewsItem[]>,
-  );
-
-  // ── 步驟 8：生成執行摘要 ──
-  const executiveSummary = await generateExecutiveSummary(topStories);
+  // ── 步驟 7：生成執行摘要 ──
+  const executiveSummary = await generateExecutiveSummary(topStories.slice(0, 6));
 
   // ── 步驟 9：取不重複的來源名稱清單 ──
   const sources = [...new Set(analyzedItems.map((item) => item.sourceName))];
@@ -96,7 +72,6 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     totalCollected: rawItems.length,
     afterDedup: dedupResult.items.length,
     topStories,
-    categorizedStories,
     executiveSummary,
     sources,
     mdReportUrl,

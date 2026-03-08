@@ -45,6 +45,15 @@ Handlebars.registerHelper('and', (a: boolean, b: boolean): boolean => a && b);
 // ─── Handlebars Helper：1-based index ────────────────────────────────────
 Handlebars.registerHelper('index_1', (index: number): number => index + 1);
 
+// ─── 工具函式：將深度分析中的 Markdown 粗體轉為 HTML ────────────────────
+function formatDeepAnalysis(text: string): string {
+  // 轉換 **text** 為 <strong>text</strong>
+  let html = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // 將換行轉為 <br>
+  html = html.replace(/\n/g, '<br>');
+  return html;
+}
+
 // ─── 模板快取 ─────────────────────────────────────────────────────────────
 let compiledTemplate: HandlebarsTemplateDelegate | null = null;
 let compiledFullTemplate: HandlebarsTemplateDelegate | null = null;
@@ -128,27 +137,12 @@ export function generateReport(report: DailyReport): string {
   // 準備 topStories（重點分析區塊）：加入格式化時間
   const topStories: FormattedNewsItem[] = report.topStories.map(formatItem);
 
-  // 準備 categorizedStories：只保留非空分類，並為每項加入格式化時間
-  const allCategories = Object.keys(CATEGORY_LABELS) as NewsCategory[];
-  const categorizedStories: Partial<Record<NewsCategory, FormattedNewsItem[]>> = {};
-
-  for (const cat of allCategories) {
-    const items = report.categorizedStories[cat];
-    if (items && items.length > 0) {
-      categorizedStories[cat] = items.map(formatItem);
-    }
-  }
-
-  // 準備優先閱讀清單：所有新聞依重要度排序，含錨點連結
-  const topStoryIds = new Set(report.topStories.map((s) => s.id));
-  const allStoriesByImportance: OverviewNewsItem[] = (
-    Object.values(report.categorizedStories) as AnalyzedNewsItem[][]
-  )
-    .flat()
-    .sort((a, b) => b.importanceScore - a.importanceScore)
+  // 準備優先閱讀清單：直接使用 topStories（已只有精選 10 筆），含錨點連結
+  const deepStoryIds = new Set(report.topStories.slice(0, 6).map((s) => s.id));
+  const allStoriesByImportance: OverviewNewsItem[] = report.topStories
     .map((item) => ({
       ...formatItem(item),
-      detailLink: topStoryIds.has(item.id) ? `#story-${item.id}` : item.url,
+      detailLink: deepStoryIds.has(item.id) ? `#story-${item.id}` : item.url,
     }));
 
   // 組裝傳入模板的資料物件
@@ -161,7 +155,6 @@ export function generateReport(report: DailyReport): string {
     afterDedup: report.afterDedup,
     sourcesCount: report.sources.length,
     topStories,
-    categorizedStories,
     allStoriesByImportance,
     mdReportUrl: report.mdReportUrl ?? '',
   };
@@ -171,7 +164,6 @@ export function generateReport(report: DailyReport): string {
   logger.info('HTML 報告生成完成', {
     reportDate: report.reportDate,
     topStoriesCount: topStories.length,
-    categoriesWithContent: Object.keys(categorizedStories).length,
   });
 
   return html;
@@ -203,13 +195,12 @@ export function buildPlainText(report: DailyReport): string {
   lines.push(report.executiveSummary);
   lines.push('');
 
-  // 今日頭條
-  const topStories = report.topStories.slice(0, 5);
-  if (topStories.length > 0) {
-    lines.push('【今日頭條】');
+  // 精選新聞
+  if (report.topStories.length > 0) {
+    lines.push('【精選新聞】');
     lines.push('-'.repeat(40));
 
-    topStories.forEach((item, index) => {
+    report.topStories.forEach((item, index) => {
       const categoryLabel = CATEGORY_LABELS[item.category] ?? item.category;
       const sentimentLabel =
         item.sentiment === 'positive' ? '正向' :
@@ -217,37 +208,12 @@ export function buildPlainText(report: DailyReport): string {
 
       lines.push(`${index + 1}. [重要度 ${item.importanceScore}/10] [${categoryLabel}] [${sentimentLabel}]`);
       lines.push(`   ${item.title}`);
-      lines.push(`   ${item.aiSummary}`);
+      if (item.aiSummary) {
+        lines.push(`   ${item.aiSummary}`);
+      }
       lines.push(`   來源：${item.sourceName}  時間：${formatTaipeiTime(item.publishedAt)}（台北）`);
       lines.push(`   連結：${item.url}`);
       lines.push('');
-    });
-  }
-
-  // 分類新聞
-  const allCategories = Object.keys(CATEGORY_LABELS) as NewsCategory[];
-  let hasCategorized = false;
-
-  for (const cat of allCategories) {
-    const items = report.categorizedStories[cat];
-    if (!items || items.length === 0) continue;
-
-    if (!hasCategorized) {
-      lines.push('【分類新聞】');
-      lines.push('-'.repeat(40));
-      hasCategorized = true;
-    }
-
-    lines.push(`\n# ${CATEGORY_LABELS[cat]}`);
-
-    items.forEach((item) => {
-      const sentimentLabel =
-        item.sentiment === 'positive' ? '正向' :
-        item.sentiment === 'negative' ? '負向' : '中性';
-
-      lines.push(`  - ${item.title}`);
-      lines.push(`    [${sentimentLabel}] ${item.sourceName} ${formatTaipeiTime(item.publishedAt)}`);
-      lines.push(`    ${item.url}`);
     });
   }
 
@@ -279,10 +245,13 @@ export function buildPlainText(report: DailyReport): string {
 export function generateFullReport(report: DailyReport): string {
   const template = getCompiledFullTemplate();
 
-  const topStories = report.topStories.map((item) => ({
+  // 前 6 筆為深度分析，第 7-10 筆為簡要摘要
+  const deepStories = report.topStories.slice(0, 6).map((item) => ({
     ...formatItem(item),
-    '@index_1': 0, // placeholder, handled by helper
+    deepAnalysis: item.deepAnalysis ? formatDeepAnalysis(item.deepAnalysis) : '',
   }));
+
+  const briefStories = report.topStories.slice(6).map((item) => formatItem(item));
 
   const templateData = {
     reportDate: report.reportDate,
@@ -291,8 +260,10 @@ export function generateFullReport(report: DailyReport): string {
     executiveSummary: report.executiveSummary,
     totalCollected: report.totalCollected,
     afterDedup: report.afterDedup,
-    topStoriesCount: topStories.length,
-    topStories,
+    selectedCount: report.topStories.length,
+    deepCount: deepStories.length,
+    deepStories,
+    briefStories,
     sourcesText: report.sources.join('、'),
   };
 
@@ -300,7 +271,8 @@ export function generateFullReport(report: DailyReport): string {
 
   logger.info('完整報告頁面生成完成', {
     reportDate: report.reportDate,
-    topStoriesCount: topStories.length,
+    deepStoriesCount: deepStories.length,
+    briefStoriesCount: briefStories.length,
   });
 
   return html;

@@ -9,24 +9,7 @@ process.env.SMTP_PASS = 'test-pass';
 import { describe, it, expect } from 'vitest';
 import { generateReport, buildPlainText } from '../../src/reporter/index';
 import { mockAnalyzedItem } from '../helpers/mocks';
-import type { DailyReport, AnalyzedNewsItem, NewsCategory } from '../../src/types';
-
-// ─── 輔助函式：建立所有分類皆有 key 的空分類記錄 ──────────────────────────
-const ALL_CATEGORIES: NewsCategory[] = [
-  'market', 'regulation', 'technology', 'defi', 'nft',
-  'security', 'macro', 'exchange', 'other',
-];
-
-/**
- * 建立完整的 categorizedStories 物件，確保所有 9 個分類都有 key
- */
-function buildEmptyCategorizedStories(): Record<NewsCategory, AnalyzedNewsItem[]> {
-  const result = {} as Record<NewsCategory, AnalyzedNewsItem[]>;
-  for (const cat of ALL_CATEGORIES) {
-    result[cat] = [];
-  }
-  return result;
-}
+import type { DailyReport } from '../../src/types';
 
 /**
  * 建立測試用的 DailyReport，可透過 overrides 覆寫任何欄位
@@ -54,11 +37,6 @@ function buildMockReport(overrides?: Partial<DailyReport>): DailyReport {
     sentiment: 'neutral',
   });
 
-  // 預設 categorizedStories 含 market 和 regulation 分類資料
-  const categorizedStories = buildEmptyCategorizedStories();
-  categorizedStories.market = [topStory1];
-  categorizedStories.regulation = [topStory2];
-
   return {
     reportDate: '2026-03-07',
     generatedAt: now,
@@ -67,7 +45,6 @@ function buildMockReport(overrides?: Partial<DailyReport>): DailyReport {
     totalCollected: 120,
     afterDedup: 85,
     topStories: [topStory1, topStory2],
-    categorizedStories,
     executiveSummary: '今日加密貨幣市場表現強勁，比特幣突破歷史新高，監管政策逐步明朗化。',
     sources: ['newsapi', 'cryptopanic', 'rss'],
     ...overrides,
@@ -105,13 +82,6 @@ describe('generateReport()', () => {
     expect(html).toContain('SEC 通過新加密貨幣監管框架');
   });
 
-  it('HTML 包含分類新聞區塊（market 分類有內容時出現「市場行情」）', () => {
-    const report = buildMockReport();
-    const html = generateReport(report);
-    // 模板中 market 分類的標題文字為「市場行情」
-    expect(html).toContain('市場行情');
-  });
-
   it('HTML 包含 story-{id} 錨點（供優先清單連結跳轉）', () => {
     const report = buildMockReport();
     const html = generateReport(report);
@@ -144,10 +114,8 @@ describe('generateReport()', () => {
   });
 
   it('topStories 為空時仍能正確生成 HTML（不拋出錯誤）', () => {
-    const categorizedStories = buildEmptyCategorizedStories();
     const report = buildMockReport({
       topStories: [],
-      categorizedStories,
     });
     // 不拋出錯誤
     expect(() => generateReport(report)).not.toThrow();
@@ -197,10 +165,8 @@ describe('buildPlainText()', () => {
   });
 
   it('topStories 為空時不拋出錯誤', () => {
-    const categorizedStories = buildEmptyCategorizedStories();
     const report = buildMockReport({
       topStories: [],
-      categorizedStories,
     });
     expect(() => buildPlainText(report)).not.toThrow();
     const text = buildPlainText(report);

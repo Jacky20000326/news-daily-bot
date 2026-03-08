@@ -25,8 +25,8 @@ for (const key of REQUIRED_VARS) {
 export const config = {
   ai: {
     apiKey: process.env.GEMINI_API_KEY!,
-    model: process.env.AI_MODEL ?? "gemini-1.5-flash",
-    maxTokens: 4096,
+    model: process.env.AI_MODEL ?? "gemini-2.5-flash-lite",
+    maxTokens: 8192,
     temperature: 0.3,
   },
 

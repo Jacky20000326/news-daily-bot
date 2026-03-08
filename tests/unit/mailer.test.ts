@@ -22,7 +22,7 @@ vi.mock('nodemailer', () => ({
 import { sendReport, sendAlertEmail } from '../../src/mailer/index';
 import { config } from '../../src/config';
 import { mockAnalyzedItem } from '../helpers/mocks';
-import type { DailyReport, NewsCategory } from '../../src/types';
+import type { DailyReport } from '../../src/types';
 
 // ─── 建構測試用 DailyReport ──────────────────────────────────────────────
 
@@ -36,18 +36,6 @@ function buildMockReport(overrides?: Partial<DailyReport>): DailyReport {
     mockAnalyzedItem({ title: 'SEC 批准新一批加密貨幣 ETF', sourceName: 'Bloomberg' }),
   ];
 
-  const emptyCategorized: Record<NewsCategory, never[]> = {
-    market: [],
-    regulation: [],
-    technology: [],
-    defi: [],
-    nft: [],
-    security: [],
-    macro: [],
-    exchange: [],
-    other: [],
-  };
-
   return {
     reportDate: '2026-03-07',
     generatedAt: now,
@@ -56,7 +44,6 @@ function buildMockReport(overrides?: Partial<DailyReport>): DailyReport {
     totalCollected: 120,
     afterDedup: 80,
     topStories: defaultTopStories,
-    categorizedStories: emptyCategorized,
     executiveSummary: '今日市場整體偏多，比特幣突破歷史新高。',
     sources: ['NewsAPI', 'CryptoPanic', 'RSS'],
     ...overrides,
