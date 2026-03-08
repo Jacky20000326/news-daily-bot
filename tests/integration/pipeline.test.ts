@@ -7,48 +7,40 @@ vi.mock('../../src/config/index', () => ({
   config: {
     ai: {
       apiKey: 'test-key',
-      model: 'claude-sonnet-4-6',
+      model: 'gemini-1.5-flash',
       maxTokens: 4096,
       temperature: 0.3,
     },
     sources: {
       newsApiKey: 'test-key',
       cryptoPanicToken: '',
-      coinGeckoApiKey: '',
       enableRss: false,
       enableCoinGecko: false,
     },
     email: {
-      sendgridApiKey: 'test-key',
       senderEmail: 'test@example.com',
       recipients: ['test@example.com'],
       alertEmail: '',
       smtp: {
         host: 'smtp.gmail.com',
         port: 587,
-        user: '',
-        pass: '',
+        user: 'test@example.com',
+        pass: 'test-pass',
       },
     },
-    scheduler: {
-      timezone: 'Asia/Taipei',
-      reportHour: 9,
-    },
-    app: {
-      dryRun: true,
-      logLevel: 'info',
-      nodeEnv: 'test',
-    },
+    scheduler: { timezone: 'Asia/Taipei', reportHour: 9 },
+    app: { dryRun: true, logLevel: 'info', nodeEnv: 'test' },
+    publisher: { githubToken: '', githubOwner: '', githubRepo: '' },
   },
 }));
 
-// ── Mock Anthropic SDK（避免實際呼叫 AI API）──
-vi.mock('@anthropic-ai/sdk', () => {
-  const mockCreate = vi.fn().mockResolvedValue({
-    content: [
-      {
-        type: 'text',
-        text: JSON.stringify([
+// ── Mock Google Generative AI SDK（避免實際呼叫 AI API）──
+vi.mock('@google/generative-ai', () => {
+  const mockGenerateContent = vi.fn().mockResolvedValue({
+    response: {
+      candidates: [{ finishReason: 'STOP' }],
+      text: () =>
+        JSON.stringify([
           {
             id: 'testid0000000001',
             importanceScore: 8,
@@ -71,19 +63,17 @@ vi.mock('@anthropic-ai/sdk', () => {
             sentiment: 'negative',
           },
         ]),
-      },
-    ],
+      promptFeedback: null,
+    },
   });
 
-  const MockAnthropic = vi.fn().mockImplementation(() => ({
-    messages: {
-      create: mockCreate,
-    },
+  const MockGoogleGenerativeAI = vi.fn().mockImplementation(() => ({
+    getGenerativeModel: vi.fn().mockReturnValue({
+      generateContent: mockGenerateContent,
+    }),
   }));
 
-  return {
-    default: MockAnthropic,
-  };
+  return { GoogleGenerativeAI: MockGoogleGenerativeAI };
 });
 
 // ── Mock collector（避免實際發出 API 請求）──
@@ -100,7 +90,14 @@ vi.mock('../../src/mailer/index', () => ({
 // ── Mock reporter（避免讀取 Handlebars 模板檔案）──
 vi.mock('../../src/reporter/index', () => ({
   generateReport: vi.fn().mockReturnValue('<html>Mock Report</html>'),
+  generateFullReport: vi.fn().mockReturnValue('<html>Mock Full Report</html>'),
   buildPlainText: vi.fn().mockReturnValue('Mock Plain Text'),
+}));
+
+// ── Mock publisher（避免實際呼叫 GitHub API）──
+vi.mock('../../src/publisher/index', () => ({
+  getReportPageUrl: vi.fn().mockReturnValue(null),
+  publishToGitHubPages: vi.fn().mockResolvedValue(null),
 }));
 
 // 在 mock 設定後才 import 相關模組
@@ -162,10 +159,10 @@ describe('runDailyPipeline() 整合測試', () => {
     expect(report).toHaveProperty('sources');
   });
 
-  it('report.topStories.length <= 5', async () => {
+  it('report.topStories.length <= 6', async () => {
     const report = await runDailyPipeline();
 
-    expect(report.topStories.length).toBeLessThanOrEqual(5);
+    expect(report.topStories.length).toBeLessThanOrEqual(6);
   });
 
   it('report.afterDedup <= report.totalCollected', async () => {
@@ -241,5 +238,27 @@ describe('runDailyPipeline() 整合測試', () => {
     for (const source of report.sources) {
       expect(typeof source).toBe('string');
     }
+  });
+
+  it('sendReport 被呼叫時只傳入 report（不傳 html）', async () => {
+    // 將 dryRun 暫時設為 false 以觸發 sendReport
+    const { config: mockConfig } = await import('../../src/config/index');
+    const originalDryRun = mockConfig.app.dryRun;
+    // @ts-expect-error -- 測試用途，強制覆寫 readonly 屬性
+    mockConfig.app.dryRun = false;
+
+    const { sendReport } = await import('../../src/mailer/index');
+    const mockSendReport = sendReport as ReturnType<typeof vi.fn>;
+
+    await runDailyPipeline();
+
+    if (mockSendReport.mock.calls.length > 0) {
+      // 驗證 sendReport 只接收一個參數（report 物件）
+      expect(mockSendReport.mock.calls[0]).toHaveLength(1);
+    }
+
+    // 還原 dryRun 設定
+    // @ts-expect-error -- 測試用途，強制覆寫 readonly 屬性
+    mockConfig.app.dryRun = originalDryRun;
   });
 });

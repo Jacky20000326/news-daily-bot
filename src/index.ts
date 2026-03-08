@@ -6,7 +6,7 @@ import { collect } from "./collector";
 import { normalize } from "./normalizer";
 import { deduplicate } from "./deduplicator";
 import { analyze, generateExecutiveSummary } from "./analyzer";
-import { generateReport } from "./reporter";
+import { generateFullReport } from "./reporter";
 import { sendReport, sendAlertEmail } from "./mailer";
 import { getReportPageUrl, publishToGitHubPages } from "./publisher";
 
@@ -63,8 +63,8 @@ export async function runDailyPipeline(): Promise<DailyReport> {
   const analyzedItems = await analyze(dedupResult.items);
   logger.info("AI 分析完成", { analyzedCount: analyzedItems.length });
 
-  // ── 步驟 6：建立 topStories（重要度前 15，與 AI 摘要數量一致） ──
-  const topStories = analyzedItems.slice(0, 15);
+  // ── 步驟 6：建立 topStories（重要度前 6，與 AI 摘要數量一致） ──
+  const topStories = analyzedItems.slice(0, 6);
 
   // ── 步驟 7：依 category 分組（所有 9 個分類都必須有 key，空分類為空陣列） ──
   const categorizedStories = ALL_CATEGORIES.reduce<
@@ -102,11 +102,11 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     mdReportUrl,
   };
 
-  // ── 步驟 12：產生 HTML 報告 ──
-  const html = generateReport(report);
+  // ── 步驟 12：產生完整報告 HTML（GitHub Pages 用，含 AI 深度分析內容） ──
+  const fullHtml = generateFullReport(report);
 
-  // ── 步驟 13：發布 HTML 至 GitHub Pages ──
-  await publishToGitHubPages(html, dateStr);
+  // ── 步驟 13：發布完整報告至 GitHub Pages ──
+  await publishToGitHubPages(fullHtml, dateStr);
 
   // ── 步驟 14：發送（或 dryRun 跳過） ──
   if (config.app.dryRun) {
@@ -114,7 +114,7 @@ export async function runDailyPipeline(): Promise<DailyReport> {
       reportDate: report.reportDate,
     });
   } else {
-    await sendReport(report, html);
+    await sendReport(report);
   }
 
   // ── 步驟 15：記錄整體耗時 ──

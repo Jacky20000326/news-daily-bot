@@ -42,8 +42,12 @@ Handlebars.registerHelper('lt', (a: number, b: number): boolean => a < b);
  */
 Handlebars.registerHelper('and', (a: boolean, b: boolean): boolean => a && b);
 
+// ─── Handlebars Helper：1-based index ────────────────────────────────────
+Handlebars.registerHelper('index_1', (index: number): number => index + 1);
+
 // ─── 模板快取 ─────────────────────────────────────────────────────────────
 let compiledTemplate: HandlebarsTemplateDelegate | null = null;
+let compiledFullTemplate: HandlebarsTemplateDelegate | null = null;
 
 /**
  * 載入並編譯 Handlebars 模板（首次呼叫後快取）
@@ -59,6 +63,22 @@ function getCompiledTemplate(): HandlebarsTemplateDelegate {
 
   logger.debug('Handlebars 模板已編譯', { templatePath });
   return compiledTemplate;
+}
+
+/**
+ * 載入並編譯完整報告模板（GitHub Pages 用）
+ */
+function getCompiledFullTemplate(): HandlebarsTemplateDelegate {
+  if (compiledFullTemplate !== null) {
+    return compiledFullTemplate;
+  }
+
+  const templatePath = path.join(__dirname, 'templates', 'full-report.hbs');
+  const templateSource = fs.readFileSync(templatePath, 'utf-8');
+  compiledFullTemplate = Handlebars.compile(templateSource);
+
+  logger.debug('完整報告模板已編譯', { templatePath });
+  return compiledFullTemplate;
 }
 
 // ─── 分類中文對照表 ───────────────────────────────────────────────────────
@@ -244,4 +264,44 @@ export function buildPlainText(report: DailyReport): string {
   lines.push('加密貨幣投資具有高度風險，請自行評估並謹慎決策。');
 
   return lines.join('\n');
+}
+
+// ─── 主要函式：生成完整報告 HTML（GitHub Pages 用）──────────────────────
+
+/**
+ * 生成完整報告頁面，用於 GitHub Pages 線上閱讀。
+ * 與 Email 版不同，此版本聚焦於 AI 深度分析內容，
+ * 每則新聞附有完整 AI 摘要，而非單純的連結清單。
+ *
+ * @param report - 每日報告資料
+ * @returns 完整 HTML 字串
+ */
+export function generateFullReport(report: DailyReport): string {
+  const template = getCompiledFullTemplate();
+
+  const topStories = report.topStories.map((item) => ({
+    ...formatItem(item),
+    '@index_1': 0, // placeholder, handled by helper
+  }));
+
+  const templateData = {
+    reportDate: report.reportDate,
+    timeWindowFrom: formatDateTaipei(report.timeWindowFrom),
+    timeWindowTo: formatDateTaipei(report.timeWindowTo),
+    executiveSummary: report.executiveSummary,
+    totalCollected: report.totalCollected,
+    afterDedup: report.afterDedup,
+    topStoriesCount: topStories.length,
+    topStories,
+    sourcesText: report.sources.join('、'),
+  };
+
+  const html = template(templateData);
+
+  logger.info('完整報告頁面生成完成', {
+    reportDate: report.reportDate,
+    topStoriesCount: topStories.length,
+  });
+
+  return html;
 }

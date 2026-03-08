@@ -1,9 +1,15 @@
-import { GoogleGenerativeAI, GenerateContentResult } from '@google/generative-ai';
-import { NewsItem, AnalyzedNewsItem } from '../types';
-import { config } from '../config';
-import { logger } from '../utils/logger';
-import { withRetry, NonRetryableError } from '../utils/retry';
-import { buildSummaryPrompt, buildExecutiveSummaryPrompt } from './prompts/summary';
+import {
+  GoogleGenerativeAI,
+  GenerateContentResult,
+} from "@google/generative-ai";
+import { NewsItem, AnalyzedNewsItem } from "../types";
+import { config } from "../config";
+import { logger } from "../utils/logger";
+import { withRetry, NonRetryableError } from "../utils/retry";
+import {
+  buildSummaryPrompt,
+  buildExecutiveSummaryPrompt,
+} from "./prompts/summary";
 
 // ─── 常數 ─────────────────────────────────────────────────────────────────────
 
@@ -20,7 +26,7 @@ const RETRY_DELAY_MS = 3000;
  */
 async function promisePool<T>(
   tasks: Array<() => Promise<T>>,
-  limit: number
+  limit: number,
 ): Promise<T[]> {
   const results: T[] = new Array(tasks.length);
   let currentIndex = 0;
@@ -34,7 +40,9 @@ async function promisePool<T>(
   }
 
   // 啟動最多 limit 個 worker
-  const workers = Array.from({ length: Math.min(limit, tasks.length) }, () => runNext());
+  const workers = Array.from({ length: Math.min(limit, tasks.length) }, () =>
+    runNext(),
+  );
   await Promise.all(workers);
 
   return results;
@@ -64,14 +72,14 @@ function safeGetText(result: GenerateContentResult): string {
   if (!candidate) {
     const blockReason = result.response.promptFeedback?.blockReason;
     throw new NonRetryableError(
-      `Gemini 安全篩選器阻擋請求（blockReason: ${blockReason ?? '未知'}）`
+      `Gemini 安全篩選器阻擋請求（blockReason: ${blockReason ?? "未知"}）`,
     );
   }
 
   const finishReason = candidate.finishReason as string | undefined;
-  if (finishReason === 'SAFETY' || finishReason === 'RECITATION') {
+  if (finishReason === "SAFETY" || finishReason === "RECITATION") {
     throw new NonRetryableError(
-      `Gemini 拒絕生成內容（finishReason: ${finishReason}）`
+      `Gemini 拒絕生成內容（finishReason: ${finishReason}）`,
     );
   }
 
@@ -96,7 +104,7 @@ export async function summarizeItem(item: NewsItem): Promise<string> {
         const text = safeGetText(result);
 
         if (!text) {
-          throw new Error('AI 回傳空白摘要');
+          throw new Error("AI 回傳空白摘要");
         }
 
         return text;
@@ -105,16 +113,16 @@ export async function summarizeItem(item: NewsItem): Promise<string> {
         retries: RETRY_COUNT,
         delayMs: RETRY_DELAY_MS,
         label: `新聞摘要生成（${item.id}）`,
-      }
+      },
     );
 
     return summary;
   } catch (err) {
-    logger.warn('新聞摘要生成失敗，回傳空字串', {
+    logger.warn("新聞摘要生成失敗，回傳空字串", {
       itemId: item.id,
       error: err instanceof Error ? err.message : String(err),
     });
-    return '';
+    return "";
   }
 }
 
@@ -124,7 +132,7 @@ export async function summarizeItem(item: NewsItem): Promise<string> {
  * 對多則新聞並行生成摘要（最多 5 個同時進行）
  */
 export async function summarizeItems(items: NewsItem[]): Promise<string[]> {
-  logger.info('開始並行生成新聞摘要', {
+  logger.info("開始並行生成新聞摘要", {
     count: items.length,
     concurrency: CONCURRENCY_LIMIT,
   });
@@ -133,7 +141,7 @@ export async function summarizeItems(items: NewsItem[]): Promise<string[]> {
   const summaries = await promisePool(tasks, CONCURRENCY_LIMIT);
 
   const successCount = summaries.filter((s) => s.length > 0).length;
-  logger.info('並行摘要生成完成', {
+  logger.info("並行摘要生成完成", {
     total: items.length,
     success: successCount,
     failed: items.length - successCount,
@@ -148,7 +156,9 @@ export async function summarizeItems(items: NewsItem[]): Promise<string[]> {
  * 依據前幾名重要新聞生成整體「今日市場總覽」（250-300 字）
  * 失敗時回傳空字串
  */
-export async function generateExecutiveSummary(topItems: AnalyzedNewsItem[]): Promise<string> {
+export async function generateExecutiveSummary(
+  topItems: AnalyzedNewsItem[],
+): Promise<string> {
   const model = createModel(1024);
 
   try {
@@ -160,7 +170,7 @@ export async function generateExecutiveSummary(topItems: AnalyzedNewsItem[]): Pr
         const text = safeGetText(result);
 
         if (!text) {
-          throw new Error('AI 回傳空白總覽');
+          throw new Error("AI 回傳空白總覽");
         }
 
         return text;
@@ -168,16 +178,16 @@ export async function generateExecutiveSummary(topItems: AnalyzedNewsItem[]): Pr
       {
         retries: RETRY_COUNT,
         delayMs: RETRY_DELAY_MS,
-        label: '今日市場總覽生成',
-      }
+        label: "今日市場總覽生成",
+      },
     );
 
     return executiveSummary;
   } catch (err) {
-    logger.warn('今日市場總覽生成失敗，回傳空字串', {
+    logger.warn("今日市場總覽生成失敗，回傳空字串", {
       topItemCount: topItems.length,
       error: err instanceof Error ? err.message : String(err),
     });
-    return '';
+    return "";
   }
 }

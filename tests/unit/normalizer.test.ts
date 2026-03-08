@@ -1,9 +1,10 @@
 // 設定測試所需環境變數（必須在任何 src 模組 import 前設定）
-process.env.ANTHROPIC_API_KEY = 'test-key';
+process.env.GEMINI_API_KEY = 'test-key';
 process.env.NEWSAPI_KEY = 'test-key';
-process.env.SENDGRID_API_KEY = 'test-key';
 process.env.SENDER_EMAIL = 'test@example.com';
 process.env.EMAIL_RECIPIENTS = 'test@example.com';
+process.env.SMTP_USER = 'test@example.com';
+process.env.SMTP_PASS = 'test-pass';
 
 import { describe, it, expect } from 'vitest';
 import { normalize } from '../../src/normalizer/index';

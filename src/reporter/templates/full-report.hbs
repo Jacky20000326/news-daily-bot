@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>加密貨幣日報 {{reportDate}} — AI 深度分析</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 48px 0 40px;
+      text-align: center;
+      border-bottom: 3px solid #f39c12;
+    }
+    header .label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #7f8fa6;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    header .date {
+      font-size: 18px;
+      color: #a8d8ea;
+      margin-top: 8px;
+    }
+    header .time-range {
+      font-size: 12px;
+      color: #7f8fa6;
+      margin-top: 12px;
+    }
+    header .stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 20px;
+    }
+    header .stat {
+      text-align: center;
+    }
+    header .stat-num {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f39c12;
+    }
+    header .stat-label {
+      font-size: 11px;
+      color: #7f8fa6;
+    }
+
+    /* ── Executive Summary ── */
+    .executive-summary {
+      background: linear-gradient(135deg, #1c2541 0%, #1a1a2e 100%);
+      border-left: 4px solid #3498db;
+      border-radius: 0 12px 12px 0;
+      padding: 32px 36px;
+      margin: 40px 0;
+    }
+    .executive-summary .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #3498db;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .executive-summary p {
+      font-size: 16px;
+      line-height: 2;
+      color: #d0d0d0;
+    }
+
+    /* ── Section Title ── */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0 24px;
+    }
+    .section-title .bar {
+      width: 4px;
+      height: 28px;
+      border-radius: 2px;
+      background: #e74c3c;
+    }
+    .section-title h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-title .count {
+      font-size: 13px;
+      color: #7f8fa6;
+      margin-left: 4px;
+    }
+
+    /* ── Story Card ── */
+    .story-card {
+      background: #1c1c2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      transition: border-color 0.2s;
+    }
+    .story-card:hover {
+      border-color: #3a3a5e;
+    }
+
+    .story-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .story-rank {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .rank-high { background: #e74c3c; }
+    .rank-mid { background: #e67e22; }
+    .rank-low { background: #3498db; }
+
+    .story-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+    }
+
+    .story-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-score { background: rgba(243,156,18,0.15); color: #f39c12; }
+    .badge-category { background: rgba(52,152,219,0.15); color: #5dade2; }
+    .badge-positive { background: rgba(39,174,96,0.15); color: #2ecc71; }
+    .badge-negative { background: rgba(231,76,60,0.15); color: #e74c3c; }
+    .badge-neutral { background: rgba(149,165,166,0.15); color: #95a5a6; }
+    .badge-ticker { background: rgba(155,89,182,0.15); color: #bb8fce; }
+
+    /* ── AI Analysis Block ── */
+    .ai-analysis {
+      background: #12121e;
+      border-left: 3px solid #e74c3c;
+      border-radius: 0 8px 8px 0;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    .ai-analysis .ai-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: #e74c3c;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .ai-analysis p {
+      font-size: 15px;
+      line-height: 2;
+      color: #c8c8c8;
+    }
+
+    .story-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #2a2a3e;
+    }
+    .story-meta .source {
+      font-size: 12px;
+      color: #7f8fa6;
+    }
+    .story-meta .source strong {
+      color: #95a5a6;
+    }
+    .story-meta a {
+      font-size: 12px;
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .story-meta a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: #1a1a2e;
+      padding: 32px 0;
+      text-align: center;
+      margin-top: 48px;
+      border-top: 1px solid #2a2a3e;
+    }
+    footer .sources {
+      font-size: 12px;
+      color: #7f8fa6;
+      margin-bottom: 16px;
+    }
+    footer .sources strong {
+      color: #95a5a6;
+    }
+    footer .disclaimer {
+      font-size: 11px;
+      color: #4a5568;
+      line-height: 1.8;
+    }
+    footer .copyright {
+      font-size: 10px;
+      color: #3d4b5c;
+      margin-top: 12px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header h1 { font-size: 24px; }
+      header .stats { gap: 16px; }
+      .story-card { padding: 20px; }
+      .story-title { font-size: 17px; }
+      .story-header { flex-direction: column; gap: 8px; }
+      .story-meta { flex-direction: column; gap: 8px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header>
+    <div class="container">
+      <div class="label">Daily Crypto Intelligence</div>
+      <h1>加密貨幣日報</h1>
+      <div class="date">{{reportDate}}</div>
+      <div class="time-range">資料時間：{{timeWindowFrom}} ～ {{timeWindowTo}}（台北時間 UTC+8）</div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num">{{totalCollected}}</div>
+          <div class="stat-label">收集新聞</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">{{afterDedup}}</div>
+          <div class="stat-label">去重後</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">{{topStoriesCount}}</div>
+          <div class="stat-label">深度分析</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- ═══ Executive Summary ═══ -->
+    <div class="executive-summary">
+      <div class="section-tag">今日市場總覽</div>
+      <p>{{executiveSummary}}</p>
+    </div>
+
+    <!-- ═══ Top Stories ═══ -->
+    <div class="section-title">
+      <div class="bar"></div>
+      <h2>重點新聞深度分析</h2>
+      <span class="count">Top {{topStoriesCount}}</span>
+    </div>
+
+    {{#each topStories}}
+    <article class="story-card" id="story-{{id}}">
+      <div class="story-header">
+        <div class="story-rank {{#if (gte importanceScore 9)}}rank-high{{/if}}{{#if (and (gte importanceScore 7) (lte importanceScore 8))}}rank-mid{{/if}}{{#if (lt importanceScore 7)}}rank-low{{/if}}">{{index_1 @index}}</div>
+        <h3 class="story-title">{{title}}</h3>
+      </div>
+
+      <div class="story-badges">
+        <span class="badge badge-score">&#9733; 重要度 {{importanceScore}}/10</span>
+        <span class="badge badge-category">
+          {{#if (eq category 'market')}}市場行情{{/if}}
+          {{#if (eq category 'regulation')}}監管政策{{/if}}
+          {{#if (eq category 'technology')}}技術發展{{/if}}
+          {{#if (eq category 'defi')}}DeFi{{/if}}
+          {{#if (eq category 'nft')}}NFT{{/if}}
+          {{#if (eq category 'security')}}安全事件{{/if}}
+          {{#if (eq category 'macro')}}總體經濟{{/if}}
+          {{#if (eq category 'exchange')}}交易所動態{{/if}}
+          {{#if (eq category 'other')}}其他{{/if}}
+        </span>
+        <span class="badge {{#if (eq sentiment 'positive')}}badge-positive{{/if}}{{#if (eq sentiment 'negative')}}badge-negative{{/if}}{{#if (eq sentiment 'neutral')}}badge-neutral{{/if}}">
+          {{#if (eq sentiment 'positive')}}&#8679; 正向{{/if}}
+          {{#if (eq sentiment 'negative')}}&#8681; 負向{{/if}}
+          {{#if (eq sentiment 'neutral')}}&#8644; 中性{{/if}}
+        </span>
+        {{#each relatedTickers}}
+        <span class="badge badge-ticker">{{this}}</span>
+        {{/each}}
+      </div>
+
+      {{#if aiSummary}}
+      <div class="ai-analysis">
+        <div class="ai-tag">AI 分析重點</div>
+        <p>{{aiSummary}}</p>
+      </div>
+      {{/if}}
+
+      <div class="story-meta">
+        <span class="source"><strong>{{sourceName}}</strong> &middot; {{publishedAtFormatted}}（台北時間）</span>
+        <a href="{{url}}" target="_blank" rel="noopener noreferrer">閱讀原文 &rarr;</a>
+      </div>
+    </article>
+    {{/each}}
+
+  </div>
+
+  <!-- ═══ Footer ═══ -->
+  <footer>
+    <div class="container">
+      <div class="sources"><strong>資料來源：</strong>{{sourcesText}}</div>
+      <div class="disclaimer">
+        本報告由 AI 自動生成，僅供參考，不構成投資建議。<br />
+        加密貨幣投資具有高度風險，請自行評估並謹慎決策。
+      </div>
+      <div class="copyright">&copy; {{reportDate}} Crypto Daily News &nbsp;|&nbsp; Powered by AI</div>
+    </div>
+  </footer>
+
+</body>
+</html>

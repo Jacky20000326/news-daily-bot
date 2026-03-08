@@ -6,7 +6,7 @@ import { summarizeItems, generateExecutiveSummary as generateExecSummary } from 
 // ─── 常數 ─────────────────────────────────────────────────────────────────────
 
 /** 生成 AI 摘要的前 N 名新聞（依重要度排序） */
-const TOP_ITEMS_FOR_SUMMARY = 15;
+const TOP_ITEMS_FOR_SUMMARY = 6;
 
 // ─── 主要分析函式 ─────────────────────────────────────────────────────────────
 
