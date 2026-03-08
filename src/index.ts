@@ -89,7 +89,7 @@ export async function runDailyPipeline(): Promise<DailyReport> {
       reportDate: report.reportDate,
     });
   } else {
-    await sendReport(report);
+    await sendReport(report, fullHtml);
   }
 
   // ── 步驟 15：記錄整體耗時 ──

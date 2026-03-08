@@ -245,8 +245,8 @@ describe('runDailyPipeline() 整合測試', () => {
     await runDailyPipeline();
 
     if (mockSendReport.mock.calls.length > 0) {
-      // 驗證 sendReport 只接收一個參數（report 物件）
-      expect(mockSendReport.mock.calls[0]).toHaveLength(1);
+      // 驗證 sendReport 接收兩個參數（report 物件 + fullReportHtml）
+      expect(mockSendReport.mock.calls[0]).toHaveLength(2);
     }
 
     // 還原 dryRun 設定

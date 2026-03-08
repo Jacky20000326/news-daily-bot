@@ -177,24 +177,66 @@ function buildNotificationText(report: DailyReport): string {
 
 /**
  * 發送每日通知 Email：包含頭條新聞列表 + 完整報告連結。
+ * 白名單 Gmail 使用者會額外收到完整報告內容，方便在 Gmail 內搜尋全文。
+ *
+ * @param report - 每日報告物件
+ * @param fullReportHtml - 完整報告 HTML（GitHub Pages 同版），供白名單使用者使用
  */
-export async function sendReport(report: DailyReport): Promise<void> {
-  const { senderEmail, recipients } = config.email;
+export async function sendReport(report: DailyReport, fullReportHtml?: string): Promise<void> {
+  const { senderEmail, recipients, gmailWhitelist } = config.email;
 
   const transporter = createTransporter();
+  const subject = buildSubject(report);
 
-  await transporter.sendMail({
-    from: `"加密日報" <${senderEmail}>`,
-    to: recipients.join(', '),
-    subject: buildSubject(report),
-    html: buildNotificationHtml(report),
-    text: buildNotificationText(report),
-  });
+  // 區分白名單與一般收件者
+  const whitelistSet = new Set(gmailWhitelist.map((e) => e.toLowerCase()));
+  const normalRecipients = recipients.filter((r) => !whitelistSet.has(r.toLowerCase()));
+  const whitelistRecipients = recipients.filter((r) => whitelistSet.has(r.toLowerCase()));
 
-  logger.info('SMTP 發送成功', {
-    recipients,
-    reportDate: report.reportDate,
-  });
+  // 發送一般通知信給非白名單收件者
+  if (normalRecipients.length > 0) {
+    await transporter.sendMail({
+      from: `"加密日報" <${senderEmail}>`,
+      to: normalRecipients.join(', '),
+      subject,
+      html: buildNotificationHtml(report),
+      text: buildNotificationText(report),
+    });
+
+    logger.info('SMTP 通知信發送成功', {
+      recipients: normalRecipients,
+      reportDate: report.reportDate,
+    });
+  }
+
+  // 發送完整報告給白名單收件者
+  if (whitelistRecipients.length > 0 && fullReportHtml) {
+    await transporter.sendMail({
+      from: `"加密日報" <${senderEmail}>`,
+      to: whitelistRecipients.join(', '),
+      subject,
+      html: fullReportHtml,
+      text: buildNotificationText(report),
+    });
+
+    logger.info('SMTP 完整報告發送成功（白名單）', {
+      recipients: whitelistRecipients,
+      reportDate: report.reportDate,
+    });
+  } else if (whitelistRecipients.length > 0 && !fullReportHtml) {
+    // 無完整報告 HTML 時，退回發送通知信
+    await transporter.sendMail({
+      from: `"加密日報" <${senderEmail}>`,
+      to: whitelistRecipients.join(', '),
+      subject,
+      html: buildNotificationHtml(report),
+      text: buildNotificationText(report),
+    });
+
+    logger.warn('白名單收件者未收到完整報告（fullReportHtml 未提供），已退回發送通知信', {
+      recipients: whitelistRecipients,
+    });
+  }
 }
 
 // ─── 公開 API：發送警報 Email ─────────────────────────────────────────────
