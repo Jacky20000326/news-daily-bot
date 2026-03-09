@@ -3,6 +3,7 @@ import { AnalyzedNewsItem } from '../types';
 import { config } from '../config';
 import { logger } from '../utils/logger';
 import { withRetry, NonRetryableError } from '../utils/retry';
+import { tokenTracker } from '../utils/token-tracker';
 import { fetchArticleContent } from './article-fetcher';
 import { buildDeepAnalysisPrompt } from './prompts/deep-analysis';
 
@@ -102,6 +103,7 @@ async function deepAnalyzeItem(item: AnalyzedNewsItem): Promise<string> {
       async () => {
         const prompt = buildDeepAnalysisPrompt(item, articleContent);
         const result = await model.generateContent(prompt);
+        tokenTracker.record(`深度分析-${item.id}`, result.response.usageMetadata);
         const text = safeGetText(result);
 
         if (!text) {

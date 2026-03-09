@@ -9,6 +9,7 @@ import { analyze, generateExecutiveSummary } from "./analyzer";
 import { generateFullReport } from "./reporter";
 import { sendReport, sendAlertEmail } from "./mailer";
 import { getReportPageUrl, publishToGitHubPages } from "./publisher";
+import { tokenTracker } from "./utils/token-tracker";
 
 // ─── 主要流程 ──────────────────────────────────────────────────────────────────
 
@@ -92,7 +93,10 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     await sendReport(report, fullHtml);
   }
 
-  // ── 步驟 15：記錄整體耗時 ──
+  // ── 步驟 15：輸出 Gemini API Token 用量總結 ──
+  tokenTracker.logSummary();
+
+  // ── 步驟 16：記錄整體耗時 ──
   const durationMs = Date.now() - pipelineStart;
   logger.info("每日報告流程完成", {
     reportDate: report.reportDate,

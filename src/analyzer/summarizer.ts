@@ -6,6 +6,7 @@ import { NewsItem, AnalyzedNewsItem } from "../types";
 import { config } from "../config";
 import { logger } from "../utils/logger";
 import { withRetry, NonRetryableError } from "../utils/retry";
+import { tokenTracker } from "../utils/token-tracker";
 import {
   buildSummaryPrompt,
   buildExecutiveSummaryPrompt,
@@ -101,6 +102,7 @@ export async function summarizeItem(item: NewsItem): Promise<string> {
         const prompt = buildSummaryPrompt(item);
 
         const result = await model.generateContent(prompt);
+        tokenTracker.record(`新聞摘要-${item.id}`, result.response.usageMetadata);
         const text = safeGetText(result);
 
         if (!text) {
@@ -167,6 +169,7 @@ export async function generateExecutiveSummary(
         const prompt = buildExecutiveSummaryPrompt(topItems);
 
         const result = await model.generateContent(prompt);
+        tokenTracker.record('市場總覽', result.response.usageMetadata);
         const text = safeGetText(result);
 
         if (!text) {

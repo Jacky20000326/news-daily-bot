@@ -10,7 +10,8 @@
       "Bash(DRY_RUN=true LOG_LEVEL=debug timeout 180 npx ts-node:*)",
       "Bash(DRY_RUN=true LOG_LEVEL=debug npx ts-node:*)",
       "Bash(source:*)",
-      "Bash(pnpm test:*)"
+      "Bash(pnpm test:*)",
+      "Bash(DRY_RUN=true pnpm send:*)"
     ]
   }
 }

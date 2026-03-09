@@ -3,6 +3,7 @@ import { NewsItem, NewsCategory, Sentiment } from '../types';
 import { config } from '../config';
 import { logger } from '../utils/logger';
 import { withRetry, delay, NonRetryableError } from '../utils/retry';
+import { tokenTracker } from '../utils/token-tracker';
 import { buildRankingPrompt } from './prompts/ranking';
 import { classifyByKeywords } from './prompts/classification';
 
@@ -140,6 +141,7 @@ async function processBatch(
     const rawItems = await withRetry(
       async () => {
         const result = await model.generateContent(prompt);
+        tokenTracker.record(`排名評分-批次${batchIndex + 1}`, result.response.usageMetadata);
         const text = safeGetText(result);
 
         if (!text) {
