@@ -46,7 +46,7 @@ function buildMockReport(overrides?: Partial<DailyReport>): DailyReport {
     afterDedup: 85,
     topStories: [topStory1, topStory2],
     executiveSummary: '今日加密貨幣市場表現強勁，比特幣突破歷史新高，監管政策逐步明朗化。',
-    sources: ['newsapi', 'cryptopanic', 'rss'],
+    sources: ['newsapi', 'rss'],
     ...overrides,
   };
 }
@@ -150,10 +150,10 @@ describe('buildPlainText()', () => {
   });
 
   it('包含來源資訊', () => {
-    const report = buildMockReport({ sources: ['newsapi', 'cryptopanic', 'rss'] });
+    const report = buildMockReport({ sources: ['newsapi', 'rss'] });
     const text = buildPlainText(report);
-    // buildPlainText 輸出「使用來源 3 個」
-    expect(text).toContain('使用來源 3 個');
+    // buildPlainText 輸出「使用來源 2 個」
+    expect(text).toContain('使用來源 2 個');
   });
 
   it('包含免責聲明', () => {

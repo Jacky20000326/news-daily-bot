@@ -215,12 +215,12 @@ describe('normalize()', () => {
   });
 
   it('sourceType 對應來源的 source 欄位', () => {
-    const item = mockRawItem({ source: 'cryptopanic' });
+    const item = mockRawItem({ source: 'rss' });
     const window = buildWindow();
 
     const results = normalize([item], window);
 
     expect(results).toHaveLength(1);
-    expect(results[0].sourceType).toBe('cryptopanic');
+    expect(results[0].sourceType).toBe('rss');
   });
 });

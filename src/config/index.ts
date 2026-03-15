@@ -32,9 +32,9 @@ export const config = {
 
   sources: {
     newsApiKey: process.env.NEWSAPI_KEY!,
-    cryptoPanicToken: process.env.CRYPTOPANIC_TOKEN ?? "",
     enableRss: process.env.ENABLE_RSS !== "false",
     enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
+    enableCoinDesk: process.env.ENABLE_COINDESK !== "false",
   },
 
   email: {

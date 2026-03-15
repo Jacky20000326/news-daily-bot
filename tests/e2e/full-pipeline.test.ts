@@ -59,7 +59,7 @@ vi.mock('@google/generative-ai', () => {
   };
 });
 
-// ─── Mock：HTTP Client（NewsAPI、CryptoPanic 資料來源） ──────────────────────────
+// ─── Mock：HTTP Client（NewsAPI 資料來源） ──────────────────────────
 vi.mock('../../src/utils/retry', async (importOriginal) => {
   const original = await importOriginal<typeof import('../../src/utils/retry')>();
   return {

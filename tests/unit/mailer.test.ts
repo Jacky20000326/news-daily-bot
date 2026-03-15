@@ -45,7 +45,7 @@ function buildMockReport(overrides?: Partial<DailyReport>): DailyReport {
     afterDedup: 80,
     topStories: defaultTopStories,
     executiveSummary: '今日市場整體偏多，比特幣突破歷史新高。',
-    sources: ['NewsAPI', 'CryptoPanic', 'RSS'],
+    sources: ['NewsAPI', 'RSS'],
     ...overrides,
   };
 }

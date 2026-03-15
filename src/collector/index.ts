@@ -3,8 +3,8 @@ import { AllSourcesFailedError } from "../types";
 import { logger } from "../utils/logger";
 import { config } from "../config";
 import { fetchNewsAPI } from "./newsapi";
-import { fetchCryptoPanic } from "./cryptopanic";
 import { fetchRSSFeeds } from "./rss";
+import { fetchCoinDesk } from "./coindesk";
 
 // ─── 來源定義型別 ─────────────────────────────────────────────────────────────
 
@@ -30,15 +30,15 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
       enabled: true,
       fetch: fetchNewsAPI,
     },
-    {
-      name: "cryptopanic",
-      enabled: true,
-      fetch: fetchCryptoPanic,
-    },
-    {
+{
       name: "rss",
       enabled: config.sources.enableRss,
       fetch: fetchRSSFeeds,
+    },
+    {
+      name: "coindesk",
+      enabled: config.sources.enableCoinDesk,
+      fetch: fetchCoinDesk,
     },
   ];
 

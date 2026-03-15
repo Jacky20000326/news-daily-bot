@@ -1,5 +1,5 @@
 // ─── 來源類型 ─────────────────────────────────────────────────────────
-export type SourceType = 'newsapi' | 'cryptopanic' | 'rss' | 'coingecko';
+export type SourceType = 'newsapi' | 'rss' | 'coingecko' | 'coindesk';
 
 // ─── 新聞分類 ─────────────────────────────────────────────────────────
 export type NewsCategory =

@@ -28,7 +28,6 @@ jobs:
           # ─── 選填 Secrets ───
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
-          CRYPTOPANIC_TOKEN: ${{ secrets.CRYPTOPANIC_TOKEN }}
           GMAIL_WHITELIST: ${{ secrets.GMAIL_WHITELIST }}
           ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
           GITHUB_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
