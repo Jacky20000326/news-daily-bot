@@ -14,7 +14,7 @@ jobs:
           node-version: '20'
       - run: npm install -g pnpm && pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: ls -R dist/reporter/templates/
+      - run: ls -la dist/ && ls -R dist/reporter/templates/
       - run: node dist/index.js
         env:
           NODE_ENV: production
