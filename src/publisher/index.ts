@@ -78,7 +78,7 @@ async function ensureGitHubPagesEnabled(): Promise<void> {
     try {
       await httpClient.post(
         pagesUrl,
-        { source: { branch: 'main', path: '/' } },
+        { source: { branch: 'master', path: '/' } },
         { headers: buildHeaders() }
       );
       logger.info('GitHub Pages 已自動啟用（首次）。Pages 建置通常需要 1-3 分鐘，之後連結即可正常瀏覽。');
