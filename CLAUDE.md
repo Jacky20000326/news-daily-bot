@@ -136,3 +136,13 @@ tests/
 ```
 
 測試框架：Vitest。外部 API 一律 mock。config 模組需 mock 以避免 `ConfigValidationError`。
+
+## 長對話自動保存
+
+當你注意到系統開始壓縮先前的對話訊息（context 接近上限），**必須主動執行以下動作**：
+
+1. 立即通知使用者：「對話已接近 context 上限，正在自動保存進度。」
+2. 執行 `/continue` 將當前任務進度、決策脈絡與待辦事項寫入接續文件
+3. 建議使用者開啟新 session 並讀取 `.claude/continue/SESSION.md` 接續工作
+
+此行為無需使用者要求，偵測到壓縮即自動觸發。
