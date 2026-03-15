@@ -117,9 +117,3 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
   return allItems;
 }
 
-console.log(
-  await collect({
-    from: new Date("2026-03-15T00:00:00Z"),
-    to: new Date("2026-03-15T23:59:59Z"),
-  }),
-);
