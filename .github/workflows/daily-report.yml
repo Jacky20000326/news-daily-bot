@@ -29,6 +29,6 @@ jobs:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
-          GITHUB_OWNER: ${{ secrets.GITHUB_OWNER }}
-          GITHUB_REPO: ${{ secrets.GITHUB_REPO }}
+          GH_PAGES_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          GH_PAGES_OWNER: ${{ secrets.GH_PAGES_OWNER }}
+          GH_PAGES_REPO: ${{ secrets.GH_PAGES_REPO }}

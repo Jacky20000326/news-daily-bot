@@ -62,8 +62,8 @@ enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
   },
 
   publisher: {
-    githubToken: process.env.GITHUB_TOKEN ?? "",
-    githubOwner: process.env.GITHUB_OWNER ?? "",
-    githubRepo: process.env.GITHUB_REPO ?? "",
+    githubToken: process.env.GITHUB_TOKEN ?? process.env.GH_PAGES_TOKEN ?? "",
+    githubOwner: process.env.GITHUB_OWNER ?? process.env.GH_PAGES_OWNER ?? "",
+    githubRepo: process.env.GITHUB_REPO ?? process.env.GH_PAGES_REPO ?? "",
   },
 } as const;
