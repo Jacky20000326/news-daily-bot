@@ -1,6 +1,6 @@
-import { config } from '../config';
-import { logger } from '../utils/logger';
-import { httpClient } from '../utils/retry';
+import { config } from "../config";
+import { logger } from "../utils/logger";
+import { httpClient } from "../utils/retry";
 
 // ─── 型別 ─────────────────────────────────────────────────────────────────────
 
@@ -23,8 +23,8 @@ function repoApiBase(): string {
 function buildHeaders() {
   return {
     Authorization: `Bearer ${config.publisher.githubToken}`,
-    Accept: 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28',
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
   };
 }
 
@@ -35,7 +35,7 @@ async function getFileSha(path: string): Promise<string | undefined> {
   try {
     const res = await httpClient.get<GitHubFileResponse>(
       `${repoApiBase()}/contents/${path}`,
-      { headers: buildHeaders() }
+      { headers: buildHeaders() },
     );
     return res.data.sha;
   } catch {
@@ -46,16 +46,20 @@ async function getFileSha(path: string): Promise<string | undefined> {
 /**
  * 推送單一檔案至 repo
  */
-async function pushFile(path: string, content: string, message: string): Promise<void> {
+async function pushFile(
+  path: string,
+  content: string,
+  message: string,
+): Promise<void> {
   const sha = await getFileSha(path);
   await httpClient.put(
     `${repoApiBase()}/contents/${path}`,
     {
       message,
-      content: Buffer.from(content).toString('base64'),
+      content: Buffer.from(content).toString("base64"),
       ...(sha ? { sha } : {}),
     },
-    { headers: buildHeaders() }
+    { headers: buildHeaders() },
   );
 }
 
@@ -72,21 +76,26 @@ async function ensureGitHubPagesEnabled(): Promise<void> {
     const res = await httpClient.get<GitHubPagesResponse>(pagesUrl, {
       headers: buildHeaders(),
     });
-    logger.debug('GitHub Pages 已啟用', { status: res.data.status, url: res.data.html_url });
+    logger.debug("GitHub Pages 已啟用", {
+      status: res.data.status,
+      url: res.data.html_url,
+    });
   } catch {
     // Pages 未啟用，嘗試自動啟用
     try {
       await httpClient.post(
         pagesUrl,
-        { source: { branch: 'master', path: '/' } },
-        { headers: buildHeaders() }
+        { source: { branch: "master", path: "/" } },
+        { headers: buildHeaders() },
       );
-      logger.info('GitHub Pages 已自動啟用（首次）。Pages 建置通常需要 1-3 分鐘，之後連結即可正常瀏覽。');
+      logger.info(
+        "GitHub Pages 已自動啟用（首次）。Pages 建置通常需要 1-3 分鐘，之後連結即可正常瀏覽。",
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       logger.warn(
-        'GitHub Pages 自動啟用失敗，請手動至 repo → Settings → Pages → Source 選擇 main branch。',
-        { error: msg }
+        "GitHub Pages 自動啟用失敗，請手動至 repo → Settings → Pages → Source 選擇 main branch。",
+        { error: msg },
       );
     }
   }
@@ -114,16 +123,16 @@ export function getReportPageUrl(dateStr: string): string | null {
  * - 自動啟用 GitHub Pages（若尚未啟用）
  * - 更新 index.html 自動轉址至最新報告
  *
- * 若三個環境變數（GITHUB_TOKEN / GITHUB_OWNER / GITHUB_REPO）任一未設定，跳過並回傳 null。
+ * 若三個環境變數（GH_PAGES_TOKEN / GH_PAGES_OWNER / GH_PAGES_REPO）任一未設定，跳過並回傳 null。
  */
 export async function publishToGitHubPages(
   html: string,
-  dateStr: string
+  dateStr: string,
 ): Promise<string | null> {
   const { githubToken, githubOwner, githubRepo } = config.publisher;
 
   if (!githubToken || !githubOwner || !githubRepo) {
-    logger.warn('GitHub Pages 設定不完整，跳過 HTML 報告發布', {
+    logger.warn("GitHub Pages 設定不完整，跳過 HTML 報告發布", {
       hasToken: !!githubToken,
       hasOwner: !!githubOwner,
       hasRepo: !!githubRepo,
@@ -139,22 +148,20 @@ export async function publishToGitHubPages(
     await ensureGitHubPagesEnabled();
 
     // 2. 推送 HTML 報告主檔案
-    await pushFile(
-      reportFilename,
-      html,
-      `report: 加密貨幣每日報告 ${dateStr}`
-    );
-    logger.info('HTML 報告推送成功', { file: reportFilename });
+    await pushFile(reportFilename, html, `report: 加密貨幣每日報告 ${dateStr}`);
+    logger.info("HTML 報告推送成功", { file: reportFilename });
 
     // 3. 更新 index.html，自動轉址至最新報告
     const indexHtml = buildIndexHtml(dateStr, pageUrl);
-    await pushFile('index.html', indexHtml, `chore: 更新首頁轉址至 ${dateStr}`);
-    logger.info('index.html 已更新');
+    await pushFile("index.html", indexHtml, `chore: 更新首頁轉址至 ${dateStr}`);
+    logger.info("index.html 已更新");
 
-    logger.info('GitHub Pages 報告連結（建置完成後即可瀏覽）', { url: pageUrl });
+    logger.info("GitHub Pages 報告連結（建置完成後即可瀏覽）", {
+      url: pageUrl,
+    });
     return pageUrl;
   } catch (err) {
-    logger.warn('HTML 報告發布至 GitHub Pages 失敗', {
+    logger.warn("HTML 報告發布至 GitHub Pages 失敗", {
       error: err instanceof Error ? err.message : String(err),
     });
     return null;

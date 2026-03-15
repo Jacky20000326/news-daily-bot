@@ -28,21 +28,21 @@ async function run() {
 
   // ── 1. 環境變數 ──
   console.log("[1] 環境變數檢查");
-  if (githubToken) ok(`GITHUB_TOKEN 已設定（長度 ${githubToken.length}）`);
+  if (githubToken) ok(`GH_PAGES_TOKEN 已設定（長度 ${githubToken.length}）`);
   else {
-    fail("GITHUB_TOKEN 未設定");
+    fail("GH_PAGES_TOKEN 未設定");
     process.exit(1);
   }
 
-  if (githubOwner) ok(`GITHUB_OWNER = ${githubOwner}`);
+  if (githubOwner) ok(`GH_PAGES_OWNER = ${githubOwner}`);
   else {
-    fail("GITHUB_OWNER 未設定");
+    fail("GH_PAGES_OWNER 未設定");
     process.exit(1);
   }
 
-  if (githubRepo) ok(`GITHUB_REPO = ${githubRepo}`);
+  if (githubRepo) ok(`GH_PAGES_REPO = ${githubRepo}`);
   else {
-    fail("GITHUB_REPO 未設定");
+    fail("GH_PAGES_REPO 未設定");
     process.exit(1);
   }
 
@@ -56,7 +56,7 @@ async function run() {
     ok(`Token 有效，帳號：${res.data.login}`);
     if (res.data.login.toLowerCase() !== githubOwner.toLowerCase()) {
       fail(
-        `帳號不符：Token 屬於 "${res.data.login}"，但 GITHUB_OWNER 設定為 "${githubOwner}"`,
+        `帳號不符：Token 屬於 "${res.data.login}"，但 GH_PAGES_OWNER 設定為 "${githubOwner}"`,
       );
     }
   } catch (err: any) {

@@ -32,7 +32,7 @@ export const config = {
 
   sources: {
     newsApiKey: process.env.NEWSAPI_KEY!,
-enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
+    enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
     enableCoinDesk: process.env.ENABLE_COINDESK !== "false",
     enableMessari: process.env.ENABLE_MESSARI !== "false",
     messariApiKey: process.env.MESSARI_API_KEY ?? "",
@@ -62,8 +62,8 @@ enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
   },
 
   publisher: {
-    githubToken: process.env.GITHUB_TOKEN ?? process.env.GH_PAGES_TOKEN ?? "",
-    githubOwner: process.env.GITHUB_OWNER ?? process.env.GH_PAGES_OWNER ?? "",
-    githubRepo: process.env.GITHUB_REPO ?? process.env.GH_PAGES_REPO ?? "",
+    githubToken: process.env.GH_PAGES_TOKEN ?? "",
+    githubOwner: process.env.GH_PAGES_OWNER ?? "",
+    githubRepo: process.env.GH_PAGES_REPO ?? "",
   },
 } as const;

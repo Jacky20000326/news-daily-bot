@@ -32,6 +32,7 @@
 **技術棧**：TypeScript + Node.js、Google Gemini AI、Handlebars 模板、nodemailer SMTP、GitHub Pages
 
 **進入點**：
+
 - `src/index.ts` — 單次執行 `runDailyPipeline()`
 - `src/scheduler/index.ts` — 長駐排程（node-cron，預設每天 09:00 Asia/Taipei）
 
@@ -51,12 +52,12 @@ cp .env.example .env
 
 編輯 `.env`，填入以下**必要**變數（缺一則拋 `ConfigValidationError`）：
 
-| 變數 | 說明 |
-|------|------|
-| `GEMINI_API_KEY` | [Google AI Studio](https://aistudio.google.com/) 取得 |
-| `NEWSAPI_KEY` | [NewsAPI](https://newsapi.org/) 取得 |
-| `SENDER_EMAIL` | 寄件者 Email |
-| `EMAIL_RECIPIENTS` | 收件者（逗號分隔） |
+| 變數                      | 說明                                                                    |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `GEMINI_API_KEY`          | [Google AI Studio](https://aistudio.google.com/) 取得                   |
+| `NEWSAPI_KEY`             | [NewsAPI](https://newsapi.org/) 取得                                    |
+| `SENDER_EMAIL`            | 寄件者 Email                                                            |
+| `EMAIL_RECIPIENTS`        | 收件者（逗號分隔）                                                      |
 | `SMTP_USER` / `SMTP_PASS` | Gmail 建議使用[應用程式密碼](https://myaccount.google.com/apppasswords) |
 
 ### 2.2 執行
@@ -120,10 +121,10 @@ pnpm format             # Prettier 格式化
 
 **關鍵數字**：
 
-| 階段 | 處理量 |
-|------|--------|
-| 評分批次 | 每批 20 筆，間隔 1 秒 |
-| AI 摘要 | 前 15 筆取摘要，截斷至前 10 筆精選 |
+| 階段     | 處理量                                   |
+| -------- | ---------------------------------------- |
+| 評分批次 | 每批 20 筆，間隔 1 秒                    |
+| AI 摘要  | 前 15 筆取摘要，截斷至前 10 筆精選       |
 | 深度分析 | 前 6 筆（抓取原文 + AI 分析 400-600 字） |
 | 摘要並行 | 限制 2 並行（配合 Gemini 免費層 15 RPM） |
 
@@ -133,11 +134,11 @@ pnpm format             # Prettier 格式化
 
 ### 4.1 Collector (`src/collector/`)
 
-| 檔案 | 來源 | 特點 |
-|------|------|------|
-| `newsapi.ts` | NewsAPI | 分頁 100 筆/頁，依 `publishedAt` 排序 |
-| `cryptopanic.ts` | CryptoPanic | 需 `CRYPTOPANIC_TOKEN`，未設定回傳空陣列 |
-| `rss.ts` | 5 個 RSS Feed | CoinDesk / CoinTelegraph / The Block / Decrypt / Bitcoin Magazine |
+| 檔案             | 來源          | 特點                                                              |
+| ---------------- | ------------- | ----------------------------------------------------------------- |
+| `newsapi.ts`     | NewsAPI       | 分頁 100 筆/頁，依 `publishedAt` 排序                             |
+| `cryptopanic.ts` | CryptoPanic   | 需 `CRYPTOPANIC_TOKEN`，未設定回傳空陣列                          |
+| `rss.ts`         | 5 個 RSS Feed | CoinDesk / CoinTelegraph / The Block / Decrypt / Bitcoin Magazine |
 
 **容錯設計**：`index.ts` 使用 `Promise.allSettled`，任一來源失敗不影響其他，**全部失敗**才拋 `AllSourcesFailedError`。
 
@@ -169,22 +170,22 @@ deepAnalyzeItems()    → 前 6 筆原文抓取 + 深度分析
 
 **提示詞目錄** (`src/analyzer/prompts/`)：
 
-| 檔案 | 用途 |
-|------|------|
-| `ranking.ts` | 評分 1-10、分類（9 類）、情緒、相關幣種 |
-| `summary.ts` | 單則摘要 100-150 字 + 市場總覽 250-300 字 |
-| `deep-analysis.ts` | 深度分析 400-600 字（Markdown 格式） |
-| `classification.ts` | AI 失敗時的**關鍵字備援分類** |
+| 檔案                | 用途                                      |
+| ------------------- | ----------------------------------------- |
+| `ranking.ts`        | 評分 1-10、分類（9 類）、情緒、相關幣種   |
+| `summary.ts`        | 單則摘要 100-150 字 + 市場總覽 250-300 字 |
+| `deep-analysis.ts`  | 深度分析 400-600 字（Markdown 格式）      |
+| `classification.ts` | AI 失敗時的**關鍵字備援分類**             |
 
 **9 個分類**：`market` / `regulation` / `technology` / `defi` / `nft` / `security` / `macro` / `exchange` / `other`
 
 ### 4.5 Reporter (`src/reporter/`)
 
-| 函式 | 輸出 | 用途 |
-|------|------|------|
-| `generateReport()` | Email HTML | 通知信（頭條清單 + 重點分析） |
-| `generateFullReport()` | 完整 HTML | GitHub Pages（含深度分析） |
-| `buildPlainText()` | 純文字 | Email text/plain 備援 |
+| 函式                   | 輸出       | 用途                          |
+| ---------------------- | ---------- | ----------------------------- |
+| `generateReport()`     | Email HTML | 通知信（頭條清單 + 重點分析） |
+| `generateFullReport()` | 完整 HTML  | GitHub Pages（含深度分析）    |
+| `buildPlainText()`     | 純文字     | Email text/plain 備援         |
 
 模板位於 `src/reporter/templates/`，使用 Handlebars。自訂 helper：`eq`、`gte`、`lte`、`lt`、`and`、`index_1`。
 
@@ -193,24 +194,24 @@ deepAnalyzeItems()    → 前 6 筆原文抓取 + 深度分析
 - 透過 GitHub Contents API 推送 HTML 至 repo
 - 檔名格式：`crypto-daily-{YYYY-MM-DD}.html`
 - 自動更新 `index.html`（3 秒轉址至最新報告）
-- 需設定 `GITHUB_TOKEN` + `GITHUB_OWNER` + `GITHUB_REPO`，任一缺少則跳過
+- 需設定 `GH_PAGES_TOKEN` + `GH_PAGES_OWNER` + `GH_PAGES_REPO`，任一缺少則跳過
 
 ### 4.7 Mailer (`src/mailer/index.ts`)
 
-| 收件對象 | 內容 |
-|----------|------|
-| 一般收件者 | 通知信：頭條清單 + 完整報告連結按鈕 |
-| Gmail 白名單 (`GMAIL_WHITELIST`) | 完整報告 HTML（便於 Gmail 搜尋） |
-| `ALERT_EMAIL` | Pipeline 失敗時的警報信（含 Stack Trace） |
+| 收件對象                         | 內容                                      |
+| -------------------------------- | ----------------------------------------- |
+| 一般收件者                       | 通知信：頭條清單 + 完整報告連結按鈕       |
+| Gmail 白名單 (`GMAIL_WHITELIST`) | 完整報告 HTML（便於 Gmail 搜尋）          |
+| `ALERT_EMAIL`                    | Pipeline 失敗時的警報信（含 Stack Trace） |
 
 ### 4.8 Utils (`src/utils/`)
 
-| 檔案 | 功能 |
-|------|------|
-| `logger.ts` | JSON 格式日誌，`LOG_LEVEL` 控制層級 |
-| `retry.ts` | `httpClient`（axios-retry 指數退避）+ `withRetry`（通用重試） |
-| `time.ts` | 台北時區工具：時間窗、日期字串、格式化 |
-| `token-tracker.ts` | Gemini API Token 用量追蹤（單例） |
+| 檔案               | 功能                                                          |
+| ------------------ | ------------------------------------------------------------- |
+| `logger.ts`        | JSON 格式日誌，`LOG_LEVEL` 控制層級                           |
+| `retry.ts`         | `httpClient`（axios-retry 指數退避）+ `withRetry`（通用重試） |
+| `time.ts`          | 台北時區工具：時間窗、日期字串、格式化                        |
+| `token-tracker.ts` | Gemini API Token 用量追蹤（單例）                             |
 
 ---
 
@@ -232,41 +233,42 @@ DailyReport          → 最終報告（topStories[10]、executiveSummary、mdRe
 
 ```typescript
 interface RawNewsItem {
-  source: SourceType;          // 'newsapi' | 'cryptopanic' | 'rss' | 'coingecko'
+  source: SourceType; // 'newsapi' | 'cryptopanic' | 'rss' | 'coingecko'
   rawId: string;
   url: string;
   title: string;
   content?: string;
   summary?: string;
-  publishedAt: string;         // ISO 字串
+  publishedAt: string; // ISO 字串
   tags?: string[];
 }
 
 interface NewsItem extends RawNewsItem {
-  id: string;                  // SHA-256(url) 前 16 hex
-  publishedAt: Date;           // 已解析為 Date 物件
-  tags: string[];              // 已正規化
+  id: string; // SHA-256(url) 前 16 hex
+  publishedAt: Date; // 已解析為 Date 物件
+  tags: string[]; // 已正規化
 }
 
 interface AnalyzedNewsItem extends NewsItem {
-  importanceScore: number;     // 1-10
+  importanceScore: number; // 1-10
   category: NewsCategory;
-  aiSummary?: string;          // 繁體中文 100-150 字
-  sentiment: Sentiment;        // 'positive' | 'negative' | 'neutral'
-  relatedTickers?: string[];   // ['BTC', 'ETH', ...]
-  deepAnalysis?: string;       // Markdown 400-600 字
+  aiSummary?: string; // 繁體中文 100-150 字
+  sentiment: Sentiment; // 'positive' | 'negative' | 'neutral'
+  relatedTickers?: string[]; // ['BTC', 'ETH', ...]
+  deepAnalysis?: string; // Markdown 400-600 字
 }
 
 interface DailyReport {
-  reportDate: string;          // YYYY-MM-DD
-  topStories: AnalyzedNewsItem[];  // 前 10 筆
-  executiveSummary: string;    // 市場總覽 250-300 字
-  mdReportUrl?: string;        // GitHub Pages 連結
+  reportDate: string; // YYYY-MM-DD
+  topStories: AnalyzedNewsItem[]; // 前 10 筆
+  executiveSummary: string; // 市場總覽 250-300 字
+  mdReportUrl?: string; // GitHub Pages 連結
   // ... 其他統計欄位
 }
 ```
 
 **自訂錯誤**：
+
 - `AllSourcesFailedError` — 所有新聞來源均失敗
 - `ConfigValidationError` — 環境變數缺少必要項
 
@@ -286,15 +288,16 @@ src/analyzer/ranker.ts
 
 ### 速率控制
 
-| 限制 | 對策 |
-|------|------|
-| Gemini 免費層 15 RPM | 摘要並行度限制 2 |
-| 批次評分 | 每批 20 筆 → 單次 API 呼叫，批次間隔 1 秒 |
-| Token 上限 | `token-tracker.ts` 追蹤用量，logSummary() 輸出統計 |
+| 限制                 | 對策                                               |
+| -------------------- | -------------------------------------------------- |
+| Gemini 免費層 15 RPM | 摘要並行度限制 2                                   |
+| 批次評分             | 每批 20 筆 → 單次 API 呼叫，批次間隔 1 秒          |
+| Token 上限           | `token-tracker.ts` 追蹤用量，logSummary() 輸出統計 |
 
 ### 備援機制
 
 當 Gemini API 呼叫失敗時：
+
 1. `withRetry` 重試 2 次（固定延遲）
 2. 安全篩選器攔截 → `NonRetryableError`，直接放棄
 3. 所有重試失敗 → 退回 `classifyByKeywords()` 關鍵字分類（`src/analyzer/prompts/classification.ts`）
@@ -311,35 +314,35 @@ src/analyzer/ranker.ts
 // axios + axios-retry
 // 指數退避：1s → 2s → 4s
 // 自動重試：網路錯誤、HTTP 429（速率限制）
-import { httpClient } from './utils/retry';
-const res = await httpClient.get('https://...');
+import { httpClient } from "./utils/retry";
+const res = await httpClient.get("https://...");
 ```
 
 ### withRetry（通用非 HTTP）
 
 ```typescript
 // 用於 Gemini API 呼叫等場景
-import { withRetry, NonRetryableError } from './utils/retry';
+import { withRetry, NonRetryableError } from "./utils/retry";
 
-const result = await withRetry(
-  () => geminiModel.generateContent(prompt),
-  { retries: 2, delay: 2000 }
-);
+const result = await withRetry(() => geminiModel.generateContent(prompt), {
+  retries: 2,
+  delay: 2000,
+});
 
 // 不可重試的錯誤（如安全篩選器）
-throw new NonRetryableError('Safety filter blocked');
+throw new NonRetryableError("Safety filter blocked");
 ```
 
 ### 容錯設計總覽
 
-| 場景 | 處理方式 |
-|------|----------|
-| 單一新聞來源失敗 | `Promise.allSettled` 忽略，繼續 |
-| 全部來源失敗 | 拋 `AllSourcesFailedError` |
-| AI 評分失敗 | 關鍵字備援分類 |
-| AI 安全篩選器 | `NonRetryableError`，跳過該筆 |
-| GitHub Pages 未設定 | 跳過發布，記錄警告 |
-| Pipeline 失敗 | `sendAlertEmail()` 警報 |
+| 場景                | 處理方式                        |
+| ------------------- | ------------------------------- |
+| 單一新聞來源失敗    | `Promise.allSettled` 忽略，繼續 |
+| 全部來源失敗        | 拋 `AllSourcesFailedError`      |
+| AI 評分失敗         | 關鍵字備援分類                  |
+| AI 安全篩選器       | `NonRetryableError`，跳過該筆   |
+| GitHub Pages 未設定 | 跳過發布，記錄警告              |
+| Pipeline 失敗       | `sendAlertEmail()` 警報         |
 
 ---
 
@@ -347,10 +350,10 @@ throw new NonRetryableError('Safety filter blocked');
 
 ### Handlebars 模板
 
-| 模板 | 路徑 | 用途 |
-|------|------|------|
-| Email 通知版 | `src/reporter/templates/daily-report.hbs` | 頭條清單 + 重點分析 |
-| GitHub Pages 版 | `src/reporter/templates/full-report.hbs` | 完整報告含深度分析 |
+| 模板            | 路徑                                      | 用途                |
+| --------------- | ----------------------------------------- | ------------------- |
+| Email 通知版    | `src/reporter/templates/daily-report.hbs` | 頭條清單 + 重點分析 |
+| GitHub Pages 版 | `src/reporter/templates/full-report.hbs`  | 完整報告含深度分析  |
 
 ### 自訂 Helper
 
@@ -365,12 +368,12 @@ throw new NonRetryableError('Safety filter blocked');
 
 ### 重要度色條
 
-| 分數 | 顏色 |
-|------|------|
+| 分數 | 顏色             |
+| ---- | ---------------- |
 | 9-10 | 紅色（重大事件） |
-| 7-8 | 橘色（顯著影響） |
-| 5-6 | 藍色（一般新聞） |
-| <5 | 灰色（低影響） |
+| 7-8  | 橘色（顯著影響） |
+| 5-6  | 藍色（一般新聞） |
+| <5   | 灰色（低影響）   |
 
 ---
 
@@ -431,10 +434,12 @@ mockAnalyzedItem()        // 測試用 AnalyzedNewsItem
 ### GitHub Actions (`.github/workflows/daily-report.yml`)
 
 **觸發**：
+
 - 每天 01:00 UTC（= 09:00 Asia/Taipei）
 - 手動觸發（workflow_dispatch）
 
 **流程**：
+
 ```
 Checkout → Node 20 + pnpm → pnpm build → 驗證模板 → node dist/index.js
 ```
@@ -445,7 +450,7 @@ Checkout → Node 20 + pnpm → pnpm build → 驗證模板 → node dist/index.
 
 必要：`GEMINI_API_KEY`、`NEWSAPI_KEY`、`SENDER_EMAIL`、`EMAIL_RECIPIENTS`、`SMTP_USER`、`SMTP_PASS`
 
-選填：`GH_PAGES_TOKEN`（映射為 `GITHUB_TOKEN`）、`GITHUB_OWNER`、`GITHUB_REPO`、`CRYPTOPANIC_TOKEN`、`GMAIL_WHITELIST`、`ALERT_EMAIL`
+選填：`GH_PAGES_TOKEN`（映射為 `GH_PAGES_TOKEN`）、`GH_PAGES_OWNER`、`GH_PAGES_REPO`、`CRYPTOPANIC_TOKEN`、`GMAIL_WHITELIST`、`ALERT_EMAIL`
 
 ---
 
@@ -461,14 +466,14 @@ Checkout → Node 20 + pnpm → pnpm build → 驗證模板 → node dist/index.
 
 需同步修改 **5 處**：
 
-| 位置 | 修改項 |
-|------|--------|
-| `src/types/index.ts` | `NewsCategory` 型別 |
-| `src/index.ts` | `ALL_CATEGORIES` 陣列 |
-| `src/analyzer/prompts/ranking.ts` | AI 提示詞 |
-| `src/analyzer/ranker.ts` | `VALID_CATEGORIES` 驗證集合 |
-| `src/analyzer/prompts/classification.ts` | 關鍵字備援 |
-| `src/reporter/index.ts` | `CATEGORY_LABELS` 中文標籤 |
+| 位置                                     | 修改項                      |
+| ---------------------------------------- | --------------------------- |
+| `src/types/index.ts`                     | `NewsCategory` 型別         |
+| `src/index.ts`                           | `ALL_CATEGORIES` 陣列       |
+| `src/analyzer/prompts/ranking.ts`        | AI 提示詞                   |
+| `src/analyzer/ranker.ts`                 | `VALID_CATEGORIES` 驗證集合 |
+| `src/analyzer/prompts/classification.ts` | 關鍵字備援                  |
+| `src/reporter/index.ts`                  | `CATEGORY_LABELS` 中文標籤  |
 
 ### 調整 AI 行為
 
@@ -487,14 +492,14 @@ Checkout → Node 20 + pnpm → pnpm build → 驗證模板 → node dist/index.
 
 ## 12. 已知限制
 
-| 限制 | 說明 |
-|------|------|
-| Gemini 免費層 | 15 RPM，透過並行度限制與批次間隔控制 |
-| HTML Email | 不支援 CSS 媒體查詢，使用 table 佈局 |
-| 文章抓取 | 截斷至 8000 字；內容不足 100 字跳過深度分析 |
-| 時區 | 預設 Asia/Taipei（UTC+8），可透過 `TIMEZONE` 調整 |
-| GitHub Pages | 需啟用 Pages 且 token 具備 `contents:write` 權限 |
-| dotenv | 僅在 `NODE_ENV !== 'production'` 載入 |
+| 限制          | 說明                                              |
+| ------------- | ------------------------------------------------- |
+| Gemini 免費層 | 15 RPM，透過並行度限制與批次間隔控制              |
+| HTML Email    | 不支援 CSS 媒體查詢，使用 table 佈局              |
+| 文章抓取      | 截斷至 8000 字；內容不足 100 字跳過深度分析       |
+| 時區          | 預設 Asia/Taipei（UTC+8），可透過 `TIMEZONE` 調整 |
+| GitHub Pages  | 需啟用 Pages 且 token 具備 `contents:write` 權限  |
+| dotenv        | 僅在 `NODE_ENV !== 'production'` 載入             |
 
 ---
 

@@ -43,7 +43,7 @@ pnpm format
 複製 `.env.example` 為 `.env`。必要環境變數（缺少任一項啟動即拋出 `ConfigValidationError`）：
 
 | 變數               | 說明                                  |
-|--------------------|---------------------------------------|
+| ------------------ | ------------------------------------- |
 | `GEMINI_API_KEY`   | Google Gemini API 金鑰                |
 | `NEWSAPI_KEY`      | NewsAPI 金鑰                          |
 | `SENDER_EMAIL`     | 寄件者 Email                          |
@@ -53,20 +53,20 @@ pnpm format
 
 選填環境變數：
 
-| 變數                | 預設值            | 說明                                   |
-|---------------------|-------------------|----------------------------------------|
-| `AI_MODEL`          | `gemini-1.5-flash`| 指定 Gemini 模型                       |
-| `SMTP_HOST`         | `smtp.gmail.com`  | SMTP 伺服器主機                        |
-| `SMTP_PORT`         | `587`             | SMTP 埠號                              |
-| `CRYPTOPANIC_TOKEN` | 空                | CryptoPanic API Token                  |
-| `ENABLE_RSS`        | `true`            | 設 `false` 停用 RSS 來源               |
-| `GITHUB_TOKEN`      | 空                | GitHub Personal Access Token（Pages 發布用） |
-| `GITHUB_OWNER`      | 空                | GitHub 使用者/組織名稱                 |
-| `GITHUB_REPO`       | 空                | GitHub 報告 repo 名稱                  |
-| `ALERT_EMAIL`       | 空                | 流程失敗時的警示收件者                 |
-| `REPORT_HOUR`       | `9`               | 排程觸發小時（24h，台北時間）          |
-| `DRY_RUN`           | `false`           | 設 `true` 跳過 Email 寄送（本地測試用）|
-| `LOG_LEVEL`         | `info`            | 日誌層級                               |
+| 變數                | 預設值             | 說明                                         |
+| ------------------- | ------------------ | -------------------------------------------- |
+| `AI_MODEL`          | `gemini-1.5-flash` | 指定 Gemini 模型                             |
+| `SMTP_HOST`         | `smtp.gmail.com`   | SMTP 伺服器主機                              |
+| `SMTP_PORT`         | `587`              | SMTP 埠號                                    |
+| `CRYPTOPANIC_TOKEN` | 空                 | CryptoPanic API Token                        |
+| `ENABLE_RSS`        | `true`             | 設 `false` 停用 RSS 來源                     |
+| `GH_PAGES_TOKEN`    | 空                 | GitHub Personal Access Token（Pages 發布用） |
+| `GH_PAGES_OWNER`    | 空                 | GitHub 使用者/組織名稱                       |
+| `GH_PAGES_REPO`     | 空                 | GitHub 報告 repo 名稱                        |
+| `ALERT_EMAIL`       | 空                 | 流程失敗時的警示收件者                       |
+| `REPORT_HOUR`       | `9`                | 排程觸發小時（24h，台北時間）                |
+| `DRY_RUN`           | `false`            | 設 `true` 跳過 Email 寄送（本地測試用）      |
+| `LOG_LEVEL`         | `info`             | 日誌層級                                     |
 
 `dotenv` 僅在非 production 環境載入（`NODE_ENV !== 'production'`）。
 
@@ -93,7 +93,7 @@ pnpm format
   - `allStoriesByImportance`：全部新聞依重要度排序，有 AI 摘要的條目 `detailLink` 指向信件內錨點，其餘直連原始 URL
   - `categorizedStories`：依分類分組的所有新聞
   - Handlebars 自訂 helper：`eq`、`gte`、`lte`、`lt`、`and`，新增 helper 需在 `src/reporter/index.ts` 中註冊
-- **`src/publisher/`** — 透過 GitHub Contents API 將 HTML 報告推送至 repo，由 GitHub Pages 提供線上瀏覽；同時更新 `index.html` 自動轉址至最新報告。三個 config（`GITHUB_TOKEN`/`GITHUB_OWNER`/`GITHUB_REPO`）任一未設定則跳過
+- **`src/publisher/`** — 透過 GitHub Contents API 將 HTML 報告推送至 repo，由 GitHub Pages 提供線上瀏覽；同時更新 `index.html` 自動轉址至最新報告。三個 config（`GH_PAGES_TOKEN`/`GH_PAGES_OWNER`/`GH_PAGES_REPO`）任一未設定則跳過
 - **`src/mailer/`** — 透過 nodemailer SMTP 寄送**通知型 Email**（頭條列表 + 完整報告連結按鈕），非完整報告內容。另有 `sendAlertEmail` 於 pipeline 失敗時寄送警報
 - **`src/scheduler/`** — node-cron 排程，預設每天 `REPORT_HOUR`（09:00）Asia/Taipei 觸發
 
