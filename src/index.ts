@@ -40,7 +40,7 @@ export async function runDailyPipeline(): Promise<DailyReport> {
   logger.info("標準化完成", { normalizedCount: normalizedItems.length });
 
   // ── 步驟 4：去重 ──
-  const dedupResult = deduplicate(normalizedItems);
+  const dedupResult = await deduplicate(normalizedItems);
   logger.info("去重完成", {
     dedupedCount: dedupResult.items.length,
     removedByUrl: dedupResult.removedByUrl,

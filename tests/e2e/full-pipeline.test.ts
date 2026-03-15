@@ -72,14 +72,6 @@ vi.mock('../../src/utils/retry', async (importOriginal) => {
   };
 });
 
-// ─── Mock：RSS Parser ───────────────────────────────────────────────────────────
-vi.mock('rss-parser', () => {
-  return {
-    default: vi.fn().mockImplementation(() => ({
-      parseURL: vi.fn().mockResolvedValue({ items: [] }),
-    })),
-  };
-});
 
 // ─── Mock：Publisher（GitHub Pages） ─────────────────────────────────────────────
 vi.mock('../../src/publisher/index', () => ({

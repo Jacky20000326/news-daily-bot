@@ -21,7 +21,23 @@
       "WebFetch(domain:www.conventionalcommits.org)",
       "Bash(git reset:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(bun:*)",
+      "Bash(curl:*)",
+      "Bash(~/.bun/bin/bun run:*)",
+      "Bash(export:*)",
+      "Bash(pnpm remove:*)",
+      "WebFetch(domain:docs.messari.io)",
+      "WebFetch(domain:data.messari.io)",
+      "WebFetch(domain:publicapi.dev)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm view:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(npx pnpm:*)",
+      "Bash(echo:*)",
+      "Bash(node:*)",
+      "Bash(git stash:*)"
     ]
   }
 }

@@ -32,9 +32,10 @@ export const config = {
 
   sources: {
     newsApiKey: process.env.NEWSAPI_KEY!,
-    enableRss: process.env.ENABLE_RSS !== "false",
-    enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
+enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
     enableCoinDesk: process.env.ENABLE_COINDESK !== "false",
+    enableMessari: process.env.ENABLE_MESSARI !== "false",
+    messariApiKey: process.env.MESSARI_API_KEY ?? "",
   },
 
   email: {

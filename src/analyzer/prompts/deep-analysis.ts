@@ -1,4 +1,4 @@
-import { AnalyzedNewsItem } from '../../types';
+import { AnalyzedNewsItem } from "../../types";
 
 /**
  * 建立深度分析 Prompt — 基於實際文章全文生成繁體中文深度報告
@@ -15,6 +15,7 @@ export function buildDeepAnalysisPrompt(
 - 字數：400 至 600 字（繁體中文字數）
 - 語言：繁體中文，語氣客觀專業
 - 請依以下結構撰寫，每段以對應標題開頭：
+- 當遇到專有名詞時由於不是所有人都了解所以必續在文章下方新增註釋來介紹專有名詞
 
 **【事件概述】**
 用 2-3 句話精確描述事件核心，包含關鍵主體、行為與背景。
@@ -27,7 +28,7 @@ export function buildDeepAnalysisPrompt(
 
 **【市場影響】**
 評估對加密貨幣市場的短期與中長期影響：
-- 對相關幣種（${item.relatedTickers.length > 0 ? item.relatedTickers.join('、') : '主流幣種'}）的價格影響
+- 對相關幣種（${item.relatedTickers.length > 0 ? item.relatedTickers.join("、") : "主流幣種"}）的價格影響
 - 對產業生態或投資人信心的影響
 - 可能引發的連鎖效應
 
@@ -44,10 +45,10 @@ export function buildDeepAnalysisPrompt(
 
 **標題：** ${item.title}
 **來源：** ${item.sourceName}
-**AI 初步摘要：** ${item.aiSummary || '無'}
+**AI 初步摘要：** ${item.aiSummary || "無"}
 **分類：** ${item.category}
 **情緒傾向：** ${item.sentiment}
-**相關幣種：** ${item.relatedTickers.join(', ') || '無'}
+**相關幣種：** ${item.relatedTickers.join(", ") || "無"}
 
 ## 原始文章全文
 

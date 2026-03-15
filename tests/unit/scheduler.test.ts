@@ -39,7 +39,6 @@ vi.mock('../../src/config/index', () => ({
     sources: {
       newsApiKey: 'test',
       cryptoPanicToken: '',
-      enableRss: false,
       enableCoinGecko: false,
     },
     email: {

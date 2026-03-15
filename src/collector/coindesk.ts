@@ -1,6 +1,6 @@
-import type { RawNewsItem, TimeWindow } from '../types';
-import { httpClient } from '../utils/retry';
-import { logger } from '../utils/logger';
+import type { RawNewsItem, TimeWindow } from "../types";
+import { httpClient } from "../utils/retry";
+import { logger } from "../utils/logger";
 
 // ─── CoinDesk API 回應型別 ──────────────────────────────────────────────────────
 
@@ -16,13 +16,13 @@ interface CoinDeskSourceData {
 interface CoinDeskArticle {
   ID: number;
   GUID: string;
-  PUBLISHED_ON: number;          // Unix timestamp（秒）
+  PUBLISHED_ON: number; // Unix timestamp（秒）
   IMAGE_URL: string | null;
   TITLE: string;
   AUTHORS: string;
   URL: string;
   BODY: string;
-  KEYWORDS: string | null;       // pipe-separated（e.g., "BTC|ETH"）
+  KEYWORDS: string | null; // pipe-separated（e.g., "BTC|ETH"）
   LANG: string;
   SOURCE_DATA: CoinDeskSourceData;
   CATEGORY_DATA: CoinDeskCategory[];
@@ -35,7 +35,8 @@ interface CoinDeskResponse {
 
 // ─── 常數設定 ─────────────────────────────────────────────────────────────────
 
-const COINDESK_ENDPOINT = 'https://data-api.coindesk.com/news/v1/article/list';
+const COINDESK_ENDPOINT =
+  "https://data-api.coindesk.com/news/v1/article/list?categories=ADA,BTC,ETH";
 const PAGE_SIZE = 50;
 const TIMEOUT_MS = 30_000;
 
@@ -46,14 +47,16 @@ const TIMEOUT_MS = 30_000;
  * @param timeWindow 目標時間窗（UTC）
  * @returns 標準化前的原始新聞項目陣列
  */
-export async function fetchCoinDesk(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
+export async function fetchCoinDesk(
+  timeWindow: TimeWindow,
+): Promise<RawNewsItem[]> {
   const results: RawNewsItem[] = [];
 
   // 將時間窗轉為 Unix timestamp（秒）
   const fromTs = Math.floor(timeWindow.from.getTime() / 1000);
   const toTs = Math.floor(timeWindow.to.getTime() / 1000);
 
-  logger.info('開始從 CoinDesk API 收集新聞', {
+  logger.info("開始從 CoinDesk API 收集新聞", {
     from: timeWindow.from.toISOString(),
     to: timeWindow.to.toISOString(),
   });
@@ -65,7 +68,7 @@ export async function fetchCoinDesk(timeWindow: TimeWindow): Promise<RawNewsItem
     const response = await httpClient.get<CoinDeskResponse>(COINDESK_ENDPOINT, {
       timeout: TIMEOUT_MS,
       params: {
-        lang: 'EN',
+        lang: "EN",
         limit: PAGE_SIZE,
         to_ts: currentToTs,
       },
@@ -74,7 +77,7 @@ export async function fetchCoinDesk(timeWindow: TimeWindow): Promise<RawNewsItem
     const articles = response.data?.Data;
 
     if (!articles || articles.length === 0) {
-      logger.debug('CoinDesk 本頁無資料，停止分頁');
+      logger.debug("CoinDesk 本頁無資料，停止分頁");
       break;
     }
 
@@ -100,7 +103,11 @@ export async function fetchCoinDesk(timeWindow: TimeWindow): Promise<RawNewsItem
       // 從 KEYWORDS 和 CATEGORY_DATA 提取 tags
       const tags: string[] = [];
       if (article.KEYWORDS) {
-        tags.push(...article.KEYWORDS.split('|').map((k) => k.trim()).filter(Boolean));
+        tags.push(
+          ...article.KEYWORDS.split("|")
+            .map((k) => k.trim())
+            .filter(Boolean),
+        );
       }
       if (article.CATEGORY_DATA) {
         for (const cat of article.CATEGORY_DATA) {
@@ -111,12 +118,12 @@ export async function fetchCoinDesk(timeWindow: TimeWindow): Promise<RawNewsItem
       }
 
       const item: RawNewsItem = {
-        source: 'coindesk',
+        source: "coindesk",
         rawId: String(article.ID),
         url: article.URL,
         title: article.TITLE,
         publishedAt: new Date(publishedTs * 1000).toISOString(),
-        sourceName: article.SOURCE_DATA?.NAME || 'CoinDesk',
+        sourceName: article.SOURCE_DATA?.NAME || "CoinDesk",
         ...(article.BODY ? { content: article.BODY } : {}),
         ...(article.AUTHORS ? { author: article.AUTHORS } : {}),
         ...(article.IMAGE_URL ? { imageUrl: article.IMAGE_URL } : {}),
@@ -134,13 +141,13 @@ export async function fetchCoinDesk(timeWindow: TimeWindow): Promise<RawNewsItem
       hasMore = false;
     }
 
-    logger.debug('CoinDesk 頁面收集完成', {
+    logger.debug("CoinDesk 頁面收集完成", {
       pageCount: articles.length,
       accumulated: results.length,
     });
   }
 
-  logger.info('CoinDesk 收集完成', { totalItems: results.length });
+  logger.info("CoinDesk 收集完成", { totalItems: results.length });
 
   return results;
 }

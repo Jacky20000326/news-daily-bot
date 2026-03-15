@@ -7,11 +7,11 @@ process.env.SMTP_USER = 'test@example.com';
 process.env.SMTP_PASS = 'test-pass';
 
 import { describe, it, expect } from 'vitest';
-import { deduplicate } from '../../src/deduplicator/index';
+import { deduplicate, deduplicateByUrl, deduplicateByTitle } from '../../src/deduplicator/index';
 import type { NewsItem } from '../../src/types';
 import { mockNewsItem } from '../helpers/mocks';
 
-describe('deduplicate()', () => {
+describe('deduplicateByUrl()', () => {
   it('能移除相同 URL 的重複項目', () => {
     const item1 = mockNewsItem({
       id: 'id001',
@@ -24,110 +24,125 @@ describe('deduplicate()', () => {
       title: 'Article One Duplicate',
     });
 
-    const result = deduplicate([item1, item2]);
-
-    expect(result.items).toHaveLength(1);
-    expect(result.removedByUrl).toBe(1);
+    const result = deduplicateByUrl([item1, item2]);
+    expect(result).toHaveLength(1);
   });
 
   it('URL 正規化：移除 utm_source 參數後視為同一筆', () => {
     const item1 = mockNewsItem({
       id: 'id001',
       url: 'https://example.com/a',
-      title: 'Same Article',
     });
     const item2 = mockNewsItem({
       id: 'id002',
       url: 'https://example.com/a?utm_source=twitter',
-      title: 'Same Article from Twitter',
     });
 
-    const result = deduplicate([item1, item2]);
-
-    expect(result.items).toHaveLength(1);
-    expect(result.removedByUrl).toBe(1);
+    const result = deduplicateByUrl([item1, item2]);
+    expect(result).toHaveLength(1);
   });
 
-  it('URL 正規化：trailing slash 處理（/a/ 與 /a 視為同一筆）', () => {
+  it('URL 正規化：trailing slash 處理', () => {
     const item1 = mockNewsItem({
       id: 'id001',
       url: 'https://example.com/a',
-      title: 'Article Without Slash',
     });
     const item2 = mockNewsItem({
       id: 'id002',
       url: 'https://example.com/a/',
-      title: 'Article With Trailing Slash',
     });
 
-    const result = deduplicate([item1, item2]);
-
-    expect(result.items).toHaveLength(1);
-    expect(result.removedByUrl).toBe(1);
+    const result = deduplicateByUrl([item1, item2]);
+    expect(result).toHaveLength(1);
   });
 
-  it('URL 正規化：同時有 UTM 參數和 trailing slash 的情況', () => {
+  it('URL 正規化：同時有 UTM 參數和 trailing slash', () => {
     const item1 = mockNewsItem({
       id: 'id001',
       url: 'https://example.com/news/article',
-      title: 'Original Article',
     });
     const item2 = mockNewsItem({
       id: 'id002',
       url: 'https://example.com/news/article/?utm_medium=social&utm_campaign=test',
-      title: 'Article with UTM and slash',
     });
 
-    const result = deduplicate([item1, item2]);
-
-    expect(result.items).toHaveLength(1);
-    expect(result.removedByUrl).toBe(1);
+    const result = deduplicateByUrl([item1, item2]);
+    expect(result).toHaveLength(1);
   });
 
-  it('標題相似度 > 0.85 視為重複（跨批次，相同標題）', () => {
-    // deduplicateByTitle 的批次大小為 50
-    // 在同一批次內，由於 candidateIdx 計算使用了動態增長的 keptItems.length，
-    // 第 2 筆（i=1）的索引會超出 tfidf 範圍，導致向量為空而無法去重
-    // 因此需要讓相同標題的第 2 筆落在第 2 個批次（第 51 筆以後）才能正確比較
+  it('多個不同 URL 的項目都被保留', () => {
+    const items: NewsItem[] = [
+      mockNewsItem({ id: 'id001', url: 'https://example.com/news/one', title: 'News One' }),
+      mockNewsItem({ id: 'id002', url: 'https://example.com/news/two', title: 'News Two' }),
+      mockNewsItem({ id: 'id003', url: 'https://example.com/news/three', title: 'News Three' }),
+    ];
 
+    const result = deduplicateByUrl(items);
+    expect(result).toHaveLength(3);
+  });
+});
+
+describe('deduplicateByTitle()', () => {
+  it('完全相同的標題會被去重', async () => {
     const baseDate = new Date('2024-01-01T10:00:00Z');
     const laterDate = new Date('2024-01-01T12:00:00Z');
 
-    // 先建立 50 筆各自不同標題的項目（第 1 批次）
-    const firstBatchItems: NewsItem[] = Array.from({ length: 50 }, (_, i) =>
-      mockNewsItem({
-        id: `batch1-${String(i).padStart(3, '0')}`,
-        url: `https://example.com/news/unique-story-${i}`,
-        title: `Unique story number ${i} about cryptocurrency market`,
-      })
-    );
-
-    // 第 51 筆：帶有特定標題的項目（將進入第 2 批次）
-    const targetTitle = 'Major Bitcoin Exchange Gets Hacked for 100 Million';
-    const item51 = mockNewsItem({
-      id: 'batch2-anchor',
-      url: 'https://source-a.com/bitcoin-hack',
-      title: targetTitle,
+    const item1 = mockNewsItem({
+      id: 'id001',
+      url: 'https://source-a.com/article',
+      title: 'Bitcoin surges past $100K as institutional demand soars',
       publishedAt: baseDate,
     });
-
-    // 第 52 筆：與第 51 筆完全相同標題（在第 2 批次，此時 keptItems 非空，能正確比較）
-    const item52 = mockNewsItem({
-      id: 'batch2-duplicate',
-      url: 'https://source-b.com/bitcoin-hack',
-      title: targetTitle,
+    const item2 = mockNewsItem({
+      id: 'id002',
+      url: 'https://source-b.com/article',
+      title: 'Bitcoin surges past $100K as institutional demand soars',
       publishedAt: laterDate,
     });
 
-    const allItems = [...firstBatchItems, item51, item52];
-    const result = deduplicate(allItems);
+    const result = await deduplicateByTitle([item1, item2]);
+    expect(result).toHaveLength(1);
+    // 保留較早的
+    expect(result[0].id).toBe('id001');
+  }, 30000);
 
-    // 第 2 筆重複應被去重
-    expect(result.items.length).toBeLessThan(allItems.length);
-    expect(result.removedByTitle).toBeGreaterThanOrEqual(1);
-  });
+  it('語義相似的改寫標題會被去重（主被動語態改寫）', async () => {
+    const item1 = mockNewsItem({
+      id: 'id001',
+      url: 'https://source-a.com/eth',
+      title: 'Ethereum ETF approved by SEC',
+      publishedAt: new Date('2024-01-01T10:00:00Z'),
+    });
+    const item2 = mockNewsItem({
+      id: 'id002',
+      url: 'https://source-b.com/eth',
+      title: 'SEC approves Ethereum ETF',
+      publishedAt: new Date('2024-01-01T12:00:00Z'),
+    });
 
-  it('完全不同的標題不被去重', () => {
+    const result = await deduplicateByTitle([item1, item2]);
+    expect(result).toHaveLength(1);
+  }, 30000);
+
+  it('語義相似的改寫標題會被去重（措辭不同但同一事件）', async () => {
+    const item1 = mockNewsItem({
+      id: 'id001',
+      url: 'https://source-a.com/btc',
+      title: 'Bitcoin price hits $100K for the first time ever',
+      publishedAt: new Date('2024-01-01T10:00:00Z'),
+    });
+    const item2 = mockNewsItem({
+      id: 'id002',
+      url: 'https://source-b.com/btc',
+      title: 'Bitcoin hits $100,000 for the first time in history',
+      publishedAt: new Date('2024-01-01T12:00:00Z'),
+    });
+
+    const result = await deduplicateByTitle([item1, item2]);
+    expect(result).toHaveLength(1);
+  }, 30000);
+
+  it('完全不同主題的標題不被去重', async () => {
     const item1 = mockNewsItem({
       id: 'id001',
       url: 'https://example.com/news/article-one',
@@ -144,69 +159,66 @@ describe('deduplicate()', () => {
       title: 'SEC announces new cryptocurrency regulations',
     });
 
-    const result = deduplicate([item1, item2, item3]);
+    const result = await deduplicateByTitle([item1, item2, item3]);
+    expect(result).toHaveLength(3);
+  }, 30000);
 
-    expect(result.items).toHaveLength(3);
-    expect(result.removedByTitle).toBe(0);
-    expect(result.removedByUrl).toBe(0);
+  it('空陣列輸入時正確處理', async () => {
+    const result = await deduplicateByTitle([]);
+    expect(result).toHaveLength(0);
   });
 
-  it('回傳物件包含 removedByUrl', () => {
-    const item = mockNewsItem({ id: 'id001', url: 'https://example.com/unique' });
-    const result = deduplicate([item]);
+  it('單一項目輸入時不被去重', async () => {
+    const item = mockNewsItem({ id: 'id001', url: 'https://example.com/single' });
+    const result = await deduplicateByTitle([item]);
+    expect(result).toHaveLength(1);
+  });
 
+  it('重複時保留 publishedAt 較早的那筆', async () => {
+    const earlyDate = new Date('2024-01-01T08:00:00Z');
+    const lateDate = new Date('2024-01-01T20:00:00Z');
+
+    const item1 = mockNewsItem({
+      id: 'late-item',
+      url: 'https://source-a.com/news',
+      title: 'Major exchange hack results in $100M loss',
+      publishedAt: lateDate,
+    });
+    const item2 = mockNewsItem({
+      id: 'early-item',
+      url: 'https://source-b.com/news',
+      title: 'Major exchange hack results in $100M loss',
+      publishedAt: earlyDate,
+    });
+
+    const result = await deduplicateByTitle([item1, item2]);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('early-item');
+  }, 30000);
+});
+
+describe('deduplicate()（整合）', () => {
+  it('兩階段去重正確回傳結果結構', async () => {
+    const items: NewsItem[] = [
+      mockNewsItem({ id: 'id001', url: 'https://example.com/dup', title: 'Dup A' }),
+      mockNewsItem({ id: 'id002', url: 'https://example.com/dup', title: 'Dup B' }),
+      mockNewsItem({ id: 'id003', url: 'https://example.com/unique', title: 'Unique Article' }),
+    ];
+
+    const result = await deduplicate(items);
+
+    expect(result).toHaveProperty('items');
     expect(result).toHaveProperty('removedByUrl');
-    expect(typeof result.removedByUrl).toBe('number');
-  });
-
-  it('回傳物件包含 removedByTitle', () => {
-    const item = mockNewsItem({ id: 'id001', url: 'https://example.com/unique' });
-    const result = deduplicate([item]);
-
     expect(result).toHaveProperty('removedByTitle');
-    expect(typeof result.removedByTitle).toBe('number');
-  });
+    expect(result.removedByUrl).toBe(1);
+    expect(result.items.length).toBe(items.length - result.removedByUrl - result.removedByTitle);
+  }, 30000);
 
-  it('空陣列輸入時正確處理', () => {
-    const result = deduplicate([]);
+  it('空陣列輸入時正確處理', async () => {
+    const result = await deduplicate([]);
 
     expect(result.items).toHaveLength(0);
     expect(result.removedByUrl).toBe(0);
     expect(result.removedByTitle).toBe(0);
-  });
-
-  it('單一項目輸入時不被去重', () => {
-    const item = mockNewsItem({ id: 'id001', url: 'https://example.com/single' });
-    const result = deduplicate([item]);
-
-    expect(result.items).toHaveLength(1);
-    expect(result.removedByUrl).toBe(0);
-    expect(result.removedByTitle).toBe(0);
-  });
-
-  it('多個不同 URL 的項目都被保留', () => {
-    const items: NewsItem[] = [
-      mockNewsItem({ id: 'id001', url: 'https://example.com/news/one', title: 'News One' }),
-      mockNewsItem({ id: 'id002', url: 'https://example.com/news/two', title: 'News Two' }),
-      mockNewsItem({ id: 'id003', url: 'https://example.com/news/three', title: 'News Three' }),
-    ];
-
-    const result = deduplicate(items);
-
-    expect(result.items).toHaveLength(3);
-    expect(result.removedByUrl).toBe(0);
-  });
-
-  it('URL 去重後的數量等於原始數量減去 removedByUrl', () => {
-    const items: NewsItem[] = [
-      mockNewsItem({ id: 'id001', url: 'https://example.com/dup', title: 'Dup A' }),
-      mockNewsItem({ id: 'id002', url: 'https://example.com/dup', title: 'Dup B' }),
-      mockNewsItem({ id: 'id003', url: 'https://example.com/unique', title: 'Unique' }),
-    ];
-
-    const result = deduplicate(items);
-
-    expect(result.removedByUrl).toBe(1);
-    expect(result.items.length).toBe(items.length - result.removedByUrl - result.removedByTitle);
   });
 });

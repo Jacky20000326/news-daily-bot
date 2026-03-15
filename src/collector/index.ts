@@ -3,8 +3,8 @@ import { AllSourcesFailedError } from "../types";
 import { logger } from "../utils/logger";
 import { config } from "../config";
 import { fetchNewsAPI } from "./newsapi";
-import { fetchRSSFeeds } from "./rss";
 import { fetchCoinDesk } from "./coindesk";
+import { fetchMessari } from "./messari";
 
 // ─── 來源定義型別 ─────────────────────────────────────────────────────────────
 
@@ -30,15 +30,15 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
       enabled: true,
       fetch: fetchNewsAPI,
     },
-{
-      name: "rss",
-      enabled: config.sources.enableRss,
-      fetch: fetchRSSFeeds,
-    },
     {
       name: "coindesk",
       enabled: config.sources.enableCoinDesk,
       fetch: fetchCoinDesk,
+    },
+    {
+      name: "messari",
+      enabled: config.sources.enableMessari && !!config.sources.messariApiKey,
+      fetch: fetchMessari,
     },
   ];
 
@@ -116,3 +116,10 @@ export async function collect(timeWindow: TimeWindow): Promise<RawNewsItem[]> {
 
   return allItems;
 }
+
+console.log(
+  await collect({
+    from: new Date("2026-03-15T00:00:00Z"),
+    to: new Date("2026-03-15T23:59:59Z"),
+  }),
+);
