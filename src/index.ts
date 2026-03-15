@@ -90,7 +90,7 @@ export async function runDailyPipeline(): Promise<DailyReport> {
       reportDate: report.reportDate,
     });
   } else {
-    await sendReport(report, fullHtml);
+    await sendReport(report);
   }
 
   // ── 步驟 15：輸出 Gemini API Token 用量總結 ──

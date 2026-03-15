@@ -41,9 +41,6 @@ enableCoinGecko: process.env.ENABLE_COINGECKO !== "false",
   email: {
     senderEmail: process.env.SENDER_EMAIL!,
     recipients: process.env.EMAIL_RECIPIENTS!.split(",").map((e) => e.trim()),
-    gmailWhitelist: process.env.GMAIL_WHITELIST
-      ? process.env.GMAIL_WHITELIST.split(",").map((e) => e.trim()).filter(Boolean)
-      : [],
     alertEmail: process.env.ALERT_EMAIL ?? "",
     smtp: {
       host: process.env.SMTP_HOST ?? "smtp.gmail.com",
