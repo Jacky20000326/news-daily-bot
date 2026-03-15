@@ -11,7 +11,17 @@
       "Bash(DRY_RUN=true LOG_LEVEL=debug npx ts-node:*)",
       "Bash(source:*)",
       "Bash(pnpm test:*)",
-      "Bash(DRY_RUN=true pnpm send:*)"
+      "Bash(DRY_RUN=true pnpm send:*)",
+      "Bash(wc:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:developers.coindesk.com)",
+      "WebFetch(domain:rapidapi.com)",
+      "WebFetch(domain:publicapis.io)",
+      "WebFetch(domain:data-api.coindesk.com)",
+      "WebFetch(domain:www.conventionalcommits.org)",
+      "Bash(git reset:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
