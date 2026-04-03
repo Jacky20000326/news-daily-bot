@@ -9,7 +9,8 @@ import { appendToHistory } from "./deduplicator/history";
 import { analyze, generateExecutiveSummary } from "./analyzer";
 import { generateFullReport } from "./reporter";
 import { sendReport, sendAlertEmail } from "./mailer";
-import { getReportPageUrl, publishToGitHubPages } from "./publisher";
+import { getReportPageUrl, publishToGitHubPages, publishAudioFile } from "./publisher";
+import { generateNarration } from "./tts";
 import { tokenTracker } from "./utils/token-tracker";
 
 // ─── 主要流程 ──────────────────────────────────────────────────────────────────
@@ -80,10 +81,21 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     mdReportUrl,
   };
 
-  // ── 步驟 12：產生完整報告 HTML（GitHub Pages 用，含 AI 深度分析內容） ──
-  const fullHtml = generateFullReport(report);
+  // ── 步驟 12：語音合成（Edge TTS） ──
+  let audioUrl: string | undefined;
+  try {
+    const audioBuffer = await generateNarration(report);
+    audioUrl = await publishAudioFile(audioBuffer, dateStr) ?? undefined;
+  } catch (err) {
+    logger.warn("語音合成失敗，報告將不含語音導讀", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
 
-  // ── 步驟 13：發布完整報告至 GitHub Pages ──
+  // ── 步驟 13：產生完整報告 HTML（GitHub Pages 用，含 AI 深度分析內容） ──
+  const fullHtml = generateFullReport(report, audioUrl);
+
+  // ── 步驟 14：發布完整報告至 GitHub Pages ──
   await publishToGitHubPages(fullHtml, dateStr);
 
   // ── 步驟 13.5：將今日報導寫入去重歷史（供後續日報跨日比對）──

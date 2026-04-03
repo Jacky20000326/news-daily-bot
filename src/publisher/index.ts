@@ -44,23 +44,48 @@ async function getFileSha(path: string): Promise<string | undefined> {
 }
 
 /**
- * 推送單一檔案至 repo
+ * 推送單一檔案至 repo（支援文字或二進位 Buffer）
  */
 async function pushFile(
   path: string,
-  content: string,
+  content: string | Buffer,
   message: string,
 ): Promise<void> {
   const sha = await getFileSha(path);
+  const base64 = Buffer.isBuffer(content)
+    ? content.toString("base64")
+    : Buffer.from(content).toString("base64");
   await httpClient.put(
     `${repoApiBase()}/contents/${path}`,
     {
       message,
-      content: Buffer.from(content).toString("base64"),
+      content: base64,
       ...(sha ? { sha } : {}),
     },
     { headers: buildHeaders() },
   );
+}
+
+/**
+ * 推送音檔至 repo
+ */
+export async function publishAudioFile(
+  audioBuffer: Buffer,
+  dateStr: string,
+): Promise<string | null> {
+  const { githubToken, githubOwner, githubRepo } = config.publisher;
+  if (!githubToken || !githubOwner || !githubRepo) return null;
+
+  const audioFilename = `crypto-daily-${dateStr}.wav`;
+  try {
+    await pushFile(audioFilename, audioBuffer, `audio: 語音導讀 ${dateStr}`);
+    const audioUrl = `https://${githubOwner}.github.io/${githubRepo}/${audioFilename}`;
+    logger.info("語音檔推送成功", { file: audioFilename, sizeKB: (audioBuffer.length / 1024).toFixed(1) });
+    return audioUrl;
+  } catch (err) {
+    logger.warn("語音檔發布失敗", { error: err instanceof Error ? err.message : String(err) });
+    return null;
+  }
 }
 
 // ─── GitHub Pages 自動啟用 ────────────────────────────────────────────────────

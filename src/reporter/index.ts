@@ -242,7 +242,7 @@ export function buildPlainText(report: DailyReport): string {
  * @param report - 每日報告資料
  * @returns 完整 HTML 字串
  */
-export function generateFullReport(report: DailyReport): string {
+export function generateFullReport(report: DailyReport, audioUrl?: string): string {
   const template = getCompiledFullTemplate();
 
   // 前 6 筆為深度分析，第 7-10 筆為簡要摘要
@@ -265,6 +265,7 @@ export function generateFullReport(report: DailyReport): string {
     deepStories,
     briefStories,
     sourcesText: report.sources.join('、'),
+    audioUrl: audioUrl ?? '',
   };
 
   const html = template(templateData);
