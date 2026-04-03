@@ -84,7 +84,7 @@ pnpm format
 
 - **`src/collector/`** — 從 3 個來源並行收集（`Promise.allSettled`）：NewsAPI、CryptoPanic、RSS Feeds。單一來源失敗不中斷整體，全部失敗才拋出 `AllSourcesFailedError`
 - **`src/normalizer/`** — `RawNewsItem` → `NewsItem`：驗證 URL、解析時間、過濾時間窗外項目、以 SHA-256(url) 前 16 hex 字元生成 ID
-- **`src/deduplicator/`** — 兩階段去重：URL 精確去重 → 標題 TF-IDF Cosine Similarity 去重（閾值 0.85，批次 50 筆）
+- **`src/deduplicator/`** — 三階段去重：URL 精確去重 → 當日語義去重（Xenova/all-MiniLM-L6-v2 Embedding，結合標題+內容前 300 字，閾值 0.72）→ 跨日歷史去重（與過去 7 天已報導新聞比對，閾值 0.70，歷史記錄存於 `data/dedup-history.json`）
 - **`src/analyzer/`** — Gemini AI 分析，兩步驟：
   1. `ranker.ts`：批次 20 筆呼叫 Gemini API，對每筆新聞評分（1-10）、分類、情緒分析；AI 失敗時退回 `classifyByKeywords` 關鍵字備援
   2. `summarizer.ts`：對前 6 筆（`TOP_ITEMS_FOR_SUMMARY`，依評分排序）生成繁體中文摘要（100-150 字），並行度限制 2（`CONCURRENCY_LIMIT`，配合 Gemini 免費層 15 RPM）；另有 `generateExecutiveSummary` 生成整體市場總覽（250-300 字）

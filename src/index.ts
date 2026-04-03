@@ -5,6 +5,7 @@ import { getReportTimeWindow, getReportDateString } from "./utils/time";
 import { collect } from "./collector";
 import { normalize } from "./normalizer";
 import { deduplicate } from "./deduplicator";
+import { appendToHistory } from "./deduplicator/history";
 import { analyze, generateExecutiveSummary } from "./analyzer";
 import { generateFullReport } from "./reporter";
 import { sendReport, sendAlertEmail } from "./mailer";
@@ -45,6 +46,7 @@ export async function runDailyPipeline(): Promise<DailyReport> {
     dedupedCount: dedupResult.items.length,
     removedByUrl: dedupResult.removedByUrl,
     removedByTitle: dedupResult.removedByTitle,
+    removedByHistory: dedupResult.removedByHistory,
   });
 
   // ── 步驟 5：AI 分析（回傳精選 10 筆） ──
@@ -83,6 +85,9 @@ export async function runDailyPipeline(): Promise<DailyReport> {
 
   // ── 步驟 13：發布完整報告至 GitHub Pages ──
   await publishToGitHubPages(fullHtml, dateStr);
+
+  // ── 步驟 13.5：將今日報導寫入去重歷史（供後續日報跨日比對）──
+  appendToHistory(dedupResult.items, dateStr);
 
   // ── 步驟 14：發送（或 dryRun 跳過） ──
   if (config.app.dryRun) {

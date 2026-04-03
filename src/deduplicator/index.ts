@@ -1,6 +1,7 @@
 import { pipeline, FeatureExtractionPipeline } from '@huggingface/transformers';
 import { NewsItem } from '../types';
 import { logger } from '../utils/logger';
+import { getHistoryTexts } from './history';
 
 // ─── URL 正規化 ──────────────────────────────────────────────────────────────
 
@@ -113,18 +114,27 @@ export function deduplicateByUrl(items: NewsItem[]): NewsItem[] {
 }
 
 /**
- * 第二階段：依標題語義相似度去重
+ * 將新聞項目轉為語義比較用的文字
+ * 結合標題與內容前 300 字，提供更豐富的語義資訊
+ */
+function buildSemanticText(item: NewsItem): string {
+  const contentSnippet = item.content.slice(0, 300).trim();
+  return contentSnippet ? `${item.title} | ${contentSnippet}` : item.title;
+}
+
+/**
+ * 第二階段：依語義相似度去重
  * 使用 Transformer embedding 計算 cosine similarity
- * 相似度 > 0.80 視為重複，保留 publishedAt 最早的那筆
+ * 結合標題與內容摘要進行比較，相似度 > 0.72 視為重複，保留 publishedAt 最早的那筆
  */
 export async function deduplicateByTitle(items: NewsItem[]): Promise<NewsItem[]> {
-  const SIMILARITY_THRESHOLD = 0.80;
+  const SIMILARITY_THRESHOLD = 0.72;
 
   if (items.length <= 1) return [...items];
 
-  // 一次性計算所有標題的 embedding
-  const titles = items.map((item) => item.title);
-  const embeddings = await computeEmbeddings(titles);
+  // 一次性計算所有項目的 embedding（標題 + 內容摘要）
+  const texts = items.map((item) => buildSemanticText(item));
+  const embeddings = await computeEmbeddings(texts);
 
   // 貪心去重：依序比較每筆與已保留項目的相似度
   const keptIndices: number[] = [0];
@@ -156,36 +166,100 @@ export async function deduplicateByTitle(items: NewsItem[]): Promise<NewsItem[]>
   return result;
 }
 
+// ─── 跨日去重 ────────────────────────────────────────────────────────────────
+
+/**
+ * 第三階段：依歷史記錄去重（跨日）
+ * 將今日新聞與過去 7 天已報導的新聞比較
+ * 相似度 > HISTORY_THRESHOLD 視為重複，直接移除
+ */
+export async function deduplicateByHistory(items: NewsItem[]): Promise<NewsItem[]> {
+  const HISTORY_THRESHOLD = 0.70;
+
+  const historyTexts = getHistoryTexts();
+  if (historyTexts.length === 0 || items.length === 0) return [...items];
+
+  // 組合歷史記錄的語義文字
+  const historySemanticTexts = historyTexts.map((h) =>
+    h.contentSnippet ? `${h.title} | ${h.contentSnippet}` : h.title,
+  );
+
+  // 組合今日新聞的語義文字
+  const todaySemanticTexts = items.map((item) => buildSemanticText(item));
+
+  // 一次性計算所有 embedding
+  const allTexts = [...historySemanticTexts, ...todaySemanticTexts];
+  const allEmbeddings = await computeEmbeddings(allTexts);
+
+  const historyEmbeddings = allEmbeddings.slice(0, historySemanticTexts.length);
+  const todayEmbeddings = allEmbeddings.slice(historySemanticTexts.length);
+
+  const result: NewsItem[] = [];
+
+  for (let i = 0; i < items.length; i++) {
+    let isDuplicate = false;
+
+    for (let j = 0; j < historyEmbeddings.length; j++) {
+      const similarity = cosineSimilarity(todayEmbeddings[i], historyEmbeddings[j]);
+      if (similarity > HISTORY_THRESHOLD) {
+        logger.debug('跨日重複偵測', {
+          todayTitle: items[i].title,
+          historyTitle: historyTexts[j].title,
+          similarity: similarity.toFixed(4),
+        });
+        isDuplicate = true;
+        break;
+      }
+    }
+
+    if (!isDuplicate) {
+      result.push(items[i]);
+    }
+  }
+
+  logger.debug('跨日去重完成', { before: items.length, after: result.length });
+  return result;
+}
+
 // ─── 主要匯出函式 ─────────────────────────────────────────────────────────────
 
 export interface DeduplicateResult {
   items: NewsItem[];
   removedByUrl: number;
   removedByTitle: number;
+  removedByHistory: number;
 }
 
 /**
- * 兩階段去重：先 URL 去重，再標題語義去重
+ * 三階段去重：URL 去重 → 當日語義去重 → 跨日歷史去重
  */
 export async function deduplicate(items: NewsItem[]): Promise<DeduplicateResult> {
   logger.info('開始去重處理', { total: items.length });
 
+  // 第一階段：URL 精確去重
   const afterUrl = deduplicateByUrl(items);
   const removedByUrl = items.length - afterUrl.length;
 
+  // 第二階段：當日語義去重
   const afterTitle = await deduplicateByTitle(afterUrl);
   const removedByTitle = afterUrl.length - afterTitle.length;
+
+  // 第三階段：跨日歷史去重
+  const afterHistory = await deduplicateByHistory(afterTitle);
+  const removedByHistory = afterTitle.length - afterHistory.length;
 
   logger.info('去重處理完成', {
     originalCount: items.length,
     removedByUrl,
     removedByTitle,
-    finalCount: afterTitle.length,
+    removedByHistory,
+    finalCount: afterHistory.length,
   });
 
   return {
-    items: afterTitle,
+    items: afterHistory,
     removedByUrl,
     removedByTitle,
+    removedByHistory,
   };
 }

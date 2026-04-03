@@ -6,10 +6,11 @@ process.env.EMAIL_RECIPIENTS = 'test@example.com';
 process.env.SMTP_USER = 'test@example.com';
 process.env.SMTP_PASS = 'test-pass';
 
-import { describe, it, expect } from 'vitest';
-import { deduplicate, deduplicateByUrl, deduplicateByTitle } from '../../src/deduplicator/index';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { deduplicate, deduplicateByUrl, deduplicateByTitle, deduplicateByHistory } from '../../src/deduplicator/index';
 import type { NewsItem } from '../../src/types';
 import { mockNewsItem } from '../helpers/mocks';
+import * as historyModule from '../../src/deduplicator/history';
 
 describe('deduplicateByUrl()', () => {
   it('能移除相同 URL 的重複項目', () => {
@@ -142,6 +143,35 @@ describe('deduplicateByTitle()', () => {
     expect(result).toHaveLength(1);
   }, 30000);
 
+  it('同一事件不同角度的報導會被去重', async () => {
+    const item1 = mockNewsItem({
+      id: 'id001',
+      url: 'https://source-a.com/drift1',
+      title: 'DRIFT Hacked: 280M$ Loss and Price Collapse',
+      content: 'Drift Protocol suffered a major exploit today, with attackers draining approximately $280 million from the platform. The DRIFT token price collapsed following the breach.',
+      publishedAt: new Date('2024-01-01T10:00:00Z'),
+    });
+    const item2 = mockNewsItem({
+      id: 'id002',
+      url: 'https://source-b.com/drift2',
+      title: 'Drift Protocol Hack Drains $270M, TVL Halves Amid Security Breach',
+      content: 'Drift Protocol has been exploited for roughly $270 million, causing total value locked to drop by more than 50%. The hack is one of the largest DeFi exploits this year.',
+      publishedAt: new Date('2024-01-01T11:00:00Z'),
+    });
+    const item3 = mockNewsItem({
+      id: 'id003',
+      url: 'https://source-c.com/drift3',
+      title: 'Drift Protocol Hack: Staggering $285M in Stolen Funds Swapped for Ethereum',
+      content: 'The attacker behind the Drift Protocol exploit has swapped approximately $285 million in stolen funds for Ethereum, according to on-chain data. The breach targeted multiple liquidity pools.',
+      publishedAt: new Date('2024-01-01T12:00:00Z'),
+    });
+
+    const result = await deduplicateByTitle([item1, item2, item3]);
+    expect(result).toHaveLength(1);
+    // 保留最早的
+    expect(result[0].id).toBe('id001');
+  }, 30000);
+
   it('完全不同主題的標題不被去重', async () => {
     const item1 = mockNewsItem({
       id: 'id001',
@@ -197,8 +227,59 @@ describe('deduplicateByTitle()', () => {
   }, 30000);
 });
 
+describe('deduplicateByHistory()', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('與歷史記錄中高度相似的新聞會被移除', async () => {
+    vi.spyOn(historyModule, 'getHistoryTexts').mockReturnValue([
+      {
+        title: 'Morgan Stanley Bitcoin ETF Shatters Barriers with Historic NYSE Approval',
+        contentSnippet: 'Morgan Stanley has received approval from NYSE to launch a spot Bitcoin ETF with the ticker MSBT, set to begin trading on April 2, 2025.',
+      },
+    ]);
+
+    const items = [
+      mockNewsItem({
+        id: 'id001',
+        url: 'https://source-a.com/ms-etf',
+        title: 'Morgan Stanley Bitcoin ETF Poised for April 8 Launch, Sparking Major Institutional Shift',
+        content: 'Morgan Stanley spot Bitcoin ETF is expected to begin trading on April 8 with the ticker BITA, marking a major institutional move into crypto markets.',
+      }),
+      mockNewsItem({
+        id: 'id002',
+        url: 'https://source-b.com/drift',
+        title: 'DRIFT Hacked: 280M$ Loss and Price Collapse',
+        content: 'Drift Protocol suffered a major exploit today with attackers draining approximately $280 million.',
+      }),
+    ];
+
+    const result = await deduplicateByHistory(items);
+    // Morgan Stanley ETF 應被移除（與歷史重複），Drift hack 應保留
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('id002');
+  }, 30000);
+
+  it('歷史記錄為空時保留所有項目', async () => {
+    vi.spyOn(historyModule, 'getHistoryTexts').mockReturnValue([]);
+
+    const items = [
+      mockNewsItem({ id: 'id001', title: 'Some news' }),
+    ];
+
+    const result = await deduplicateByHistory(items);
+    expect(result).toHaveLength(1);
+  });
+});
+
 describe('deduplicate()（整合）', () => {
-  it('兩階段去重正確回傳結果結構', async () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.spyOn(historyModule, 'getHistoryTexts').mockReturnValue([]);
+  });
+
+  it('三階段去重正確回傳結果結構', async () => {
     const items: NewsItem[] = [
       mockNewsItem({ id: 'id001', url: 'https://example.com/dup', title: 'Dup A' }),
       mockNewsItem({ id: 'id002', url: 'https://example.com/dup', title: 'Dup B' }),
@@ -210,8 +291,11 @@ describe('deduplicate()（整合）', () => {
     expect(result).toHaveProperty('items');
     expect(result).toHaveProperty('removedByUrl');
     expect(result).toHaveProperty('removedByTitle');
+    expect(result).toHaveProperty('removedByHistory');
     expect(result.removedByUrl).toBe(1);
-    expect(result.items.length).toBe(items.length - result.removedByUrl - result.removedByTitle);
+    expect(result.items.length).toBe(
+      items.length - result.removedByUrl - result.removedByTitle - result.removedByHistory,
+    );
   }, 30000);
 
   it('空陣列輸入時正確處理', async () => {
@@ -220,5 +304,6 @@ describe('deduplicate()（整合）', () => {
     expect(result.items).toHaveLength(0);
     expect(result.removedByUrl).toBe(0);
     expect(result.removedByTitle).toBe(0);
+    expect(result.removedByHistory).toBe(0);
   });
 });
