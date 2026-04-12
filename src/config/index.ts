@@ -66,4 +66,9 @@ export const config = {
     githubOwner: process.env.GH_PAGES_OWNER ?? "",
     githubRepo: process.env.GH_PAGES_REPO ?? "",
   },
+
+  podcast: {
+    notebookLmEmail: process.env.NOTEBOOKLM_EMAIL ?? "",
+    notebookLmPassword: process.env.NOTEBOOKLM_PASSWORD ?? "",
+  },
 } as const;

@@ -38,7 +38,9 @@
       "Bash(echo:*)",
       "Bash(node:*)",
       "Bash(git stash:*)",
-      "Bash(DRY_RUN=true pnpm dev 2>&1)"
+      "Bash(DRY_RUN=true pnpm dev 2>&1)",
+      "Bash(pnpm ts-node:*)",
+      "Bash(pnpm tsc:*)"
     ]
   }
 }

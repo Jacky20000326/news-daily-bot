@@ -68,19 +68,21 @@ async function pushFile(
 
 /**
  * 推送音檔至 repo
+ * @param format 音檔格式：'wav'（既有 TTS）或 'mp3'（NotebookLM Podcast）
  */
 export async function publishAudioFile(
   audioBuffer: Buffer,
   dateStr: string,
+  format: "wav" | "mp3" = "wav",
 ): Promise<string | null> {
   const { githubToken, githubOwner, githubRepo } = config.publisher;
   if (!githubToken || !githubOwner || !githubRepo) return null;
 
-  const audioFilename = `crypto-daily-${dateStr}.wav`;
+  const audioFilename = `crypto-daily-${dateStr}.${format}`;
   try {
     await pushFile(audioFilename, audioBuffer, `audio: 語音導讀 ${dateStr}`);
     const audioUrl = `https://${githubOwner}.github.io/${githubRepo}/${audioFilename}`;
-    logger.info("語音檔推送成功", { file: audioFilename, sizeKB: (audioBuffer.length / 1024).toFixed(1) });
+    logger.info("語音檔推送成功", { file: audioFilename, format, sizeKB: (audioBuffer.length / 1024).toFixed(1) });
     return audioUrl;
   } catch (err) {
     logger.warn("語音檔發布失敗", { error: err instanceof Error ? err.message : String(err) });
