@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>加密貨幣日報 2026-05-06 — AI 深度分析</title>
+  <!--[if !mso]><!-->
+  <style>
+    /* Web-only enhancements — email clients will strip this block */
+    body { -webkit-font-smoothing: antialiased; }
+    .story-card:hover { border-color: #3a3a5e !important; }
+    .read-link:hover { text-decoration: underline !important; }
+    @media (max-width: 600px) {
+      .main-table { width: 100% !important; }
+      .header-title { font-size: 24px !important; }
+      .story-title-text { font-size: 17px !important; }
+      .card-inner { padding: 20px !important; }
+      .stat-cell { padding: 0 12px !important; }
+    }
+
+    /* ── 語音導讀 UI ── */
+    .tts-panel {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 20px; padding: 8px 16px;
+      background: rgba(243,156,18,.12); border: 1px solid rgba(243,156,18,.30);
+      border-radius: 28px; transition: opacity .2s;
+    }
+    .tts-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: #f39c12; color: #0f0f1a; cursor: pointer;
+      font-size: 16px; transition: background .15s;
+    }
+    .tts-btn:hover { background: #e67e22; }
+    .tts-btn:disabled { opacity: .4; cursor: default; }
+    .tts-status { font-size: 13px; color: #d0d0d0; min-width: 100px; }
+    .tts-speed { background: transparent; border: 1px solid rgba(243,156,18,.40);
+      color: #f39c12; border-radius: 14px; padding: 2px 8px; font-size: 11px; cursor: pointer; }
+    .tts-speed:hover { background: rgba(243,156,18,.15); }
+    .story-card.tts-active { border-color: #f39c12 !important; box-shadow: 0 0 16px rgba(243,156,18,.25); }
+  </style>
+  <!--<![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#0f0f1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;color:#e0e0e0;line-height:1.8;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+
+  <!-- 外層容器 -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#0f0f1a;">
+    <tr>
+      <td align="center">
+
+        <!-- ═══════════════════════════════════════
+             HEADER
+        ═══════════════════════════════════════ -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#1a1a2e;border-bottom:3px solid #f39c12;">
+          <tr>
+            <td align="center" style="padding:48px 24px 40px 24px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="820" class="main-table" style="max-width:820px;width:100%;">
+                <tr>
+                  <td align="center">
+                    <p style="margin:0 0 8px 0;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7f8fa6;font-weight:600;">DAILY CRYPTO INTELLIGENCE</p>
+                    <h1 class="header-title" style="margin:0;font-size:32px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">加密貨幣日報</h1>
+                    <p style="margin:8px 0 0 0;font-size:18px;color:#a8d8ea;">2026-05-06</p>
+                    <p style="margin:12px 0 0 0;font-size:12px;color:#7f8fa6;">資料時間：2026-05-05 00:00 ～ 2026-05-06 09:00（台北時間 UTC+8）</p>
+
+                    <!-- 統計數據 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:20px auto 0 auto;">
+                      <tr>
+                        <td class="stat-cell" align="center" style="padding:0 20px;">
+                          <p style="margin:0;font-size:24px;font-weight:700;color:#f39c12;">306</p>
+                          <p style="margin:0;font-size:11px;color:#7f8fa6;">收集新聞</p>
+                        </td>
+                        <td class="stat-cell" align="center" style="padding:0 20px;">
+                          <p style="margin:0;font-size:24px;font-weight:700;color:#f39c12;">10</p>
+                          <p style="margin:0;font-size:11px;color:#7f8fa6;">精選報導</p>
+                        </td>
+                        <td class="stat-cell" align="center" style="padding:0 20px;">
+                          <p style="margin:0;font-size:24px;font-weight:700;color:#f39c12;">6</p>
+                          <p style="margin:0;font-size:11px;color:#7f8fa6;">深度分析</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 語音導讀面板 -->
+                    <div class="tts-panel" id="ttsPanel">
+                      <button class="tts-btn" id="ttsPlayBtn" title="播放" onclick="ttsToggle()">&#9654;</button>
+                      <button class="tts-btn" id="ttsStopBtn" title="停止" onclick="ttsStop()" style="background:#e74c3c;display:none;">&#9632;</button>
+                      <span class="tts-status" id="ttsStatus">語音導讀</span>
+                      <button class="tts-speed" id="ttsSpeedBtn" onclick="ttsCycleSpeed()">1.0x</button>
+                    </div>
+
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- ═══════════════════════════════════════
+             內容區域
+        ═══════════════════════════════════════ -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="820" class="main-table" style="max-width:820px;width:100%;">
+          <tr>
+            <td style="padding:0 24px;">
+
+              <!-- ═══ 今日市場總覽 ═══ -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:40px 0;">
+                <tr>
+                  <td style="background-color:#1c2541;border-left:4px solid #3498db;border-radius:0 12px 12px 0;padding:32px 36px;">
+                    <p style="margin:0 0 12px 0;font-size:11px;font-weight:700;color:#3498db;letter-spacing:2px;text-transform:uppercase;">今日市場總覽</p>
+                    <p data-tts="summary" style="margin:0;font-size:16px;line-height:2;color:#d0d0d0;">今日市場焦點集中在比特幣價格突破八萬一千美元的關鍵里程碑，創下今年新高。此波漲勢主要受惠於四月份比特幣現貨ETF的強勁資金流入，累計達二十四億四千萬美元。同時，美國與伊朗地緣政治緊張局勢的緩和，以及市場的軋空行情，也助長了比特幣價格的上揚。
+
+然而，去中心化交易所Drift宣布的兩億九千五百萬美元駭客事件追回計畫，為市場帶來了負面消息，引發對交易所安全性的擔憂。儘管補償代幣的發行預計能緩解用戶損失，但其執行細節仍待觀察。
+
+另一方面，美國存管信託與結算公司（DTCC）將於七月展開代幣化證券的有限度交易，並預計於十月全面推出，觸及高達一百一十四兆美元的託管資產基礎。此舉顯示傳統金融與加密資產整合的趨勢日益明顯，可能對未來市場結構產生深遠影響。
+
+整體而言，市場情緒呈現多空分歧。比特幣的強勁表現與ETF資金流入為市場注入樂觀預期，但駭客事件的影響不容忽視。值得關注的趨勢是代幣化資產的發展，以及地緣政治風險對加密貨幣避險屬性的影響。</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- ═══ 區塊標題：重點新聞深度分析 ═══ -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:48px 0 24px 0;">
+                <tr>
+                  <td style="width:4px;min-width:4px;background-color:#e74c3c;border-radius:2px;">&nbsp;</td>
+                  <td style="padding-left:12px;">
+                    <h2 style="margin:0;font-size:22px;font-weight:700;color:#ffffff;display:inline;">重點新聞深度分析</h2>
+                    <span style="font-size:13px;color:#7f8fa6;margin-left:8px;">Top 6</span>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- ═══ 深度分析新聞卡片 ═══ -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-2947ebec4e7e1d57"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;
+                                background-color:#e74c3c;
+                                
+                                
+                              ">1</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Drift announces $295 million ETH hack recovery plan</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <!-- 重要度 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 9/10</span>
+                        </td>
+                        <!-- 分類 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            
+                            
+                            
+                            
+                            
+                            安全事件
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 情緒 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            
+                            background-color:#2e0e0e;color:#e74c3c;
+                            
+                          ">
+                            
+                            &#8681; 負向
+                            
+                          </span>
+                        </td>
+                        <!-- 相關代幣 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">ETH</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 分析重點 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 分析重點</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">去中心化交易所 Drift 宣布一項總計 2.95 億美元的資產追回計畫，以應對近期發生的以太坊（ETH）駭客攻擊事件。該計畫旨在追蹤並尋回被盜資產，同時將發行用戶補償代幣。此次駭客事件涉及的金額龐大，可能對市場信心造成短期影響，並引發對交易所安全措施的關注。補償代幣的推出預計將有助於緩解用戶損失，但具體執行細節與成效仍待觀察。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 深度分析報告 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                      <tr>
+                        <td style="background-color:#0d1117;border:1px solid #30363d;border-left:4px solid #f39c12;border-radius:0 12px 12px 0;padding:28px 32px;">
+                          <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;color:#f39c12;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #21262d;">AI 深度分析報告（基於原文）</p>
+                          <div data-tts="deep-analysis" style="font-size:15px;line-height:2;color:#c9d1d9;white-space:pre-line;"><strong>【事件概述】</strong><br>去中心化金融（DeFi）協議 Drift 在 4 月 1 日遭受駭客攻擊，損失近 2.95 億美元的以太坊（ETH）。為此，Drift 宣布一項總計 2.95 億美元的資產追回計畫，其中包括發行用戶補償代幣，並尋求法律途徑追回被盜資產。<br><br><strong>【深度解析】</strong><br>此次駭客攻擊事件發生於全球 DeFi 領域安全挑戰日益嚴峻的背景下。文章指出，此次攻擊的幕後黑手被認為與朝鮮有關，這也反映了國家級駭客組織對加密貨幣領域的持續滲透。攻擊者成功盜取了 130,259 枚 ETH，總計約 2.95 億美元。Drift 的追回計畫核心是發行「Recovery Tokens」，每枚代幣代表用戶損失的 1 美元，並將透過一個包含現有 380 萬美元、未來交易所收入、Tether 的 1.275 億美元績效支持以及合作夥伴的 2000 萬美元貢獻的資金池進行償付，直至達到 2.954 億美元的目標。此外，Drift 還推出了 10% 的資產追回懸賞計畫，鼓勵社群參與。此計畫的成功與否，將取決於資金池的持續增長、法律追索的進展以及社群的治理投票結果。<br><br><strong>【市場影響】</strong><br>短期內，此類大規模駭客攻擊事件無疑會對市場信心造成負面衝擊，尤其對以太坊生態系統內的協議。投資者對 DeFi 協議的安全性產生疑慮，可能導致相關代幣價格承壓。然而，Drift 積極的追回計畫，特別是 Tether 的大規模支持，以及社群治理機制的引入，展現了行業試圖重建信任的努力。中長期來看，若此類事件能促使 DeFi 協議加強安全措施，並推動更透明的治理和監管框架的建立，則有助於行業的健康發展。此次事件也可能引發其他 DeFi 協議對自身安全漏洞的審查，並加強與監管機構的合作。<br><br><strong>【後續觀察重點】</strong><br>1.  <strong>Recovery Tokens 的執行成效：</strong> 觀察 Recovery Tokens 的發放進度、資金池的實際增長速度以及最終能否全額兌付，這將是衡量 Drift 償付能力和誠信的關鍵指標。<br>2.  <strong>社群治理的實際運作：</strong> Drift 強調最終決策將透過社群治理投票，觀察此機制在實際操作中的有效性，以及是否能真正代表廣大用戶的利益。<br>3.  <strong>行業安全標準的提升：</strong> 關注 Drift 重啟後採取的安全措施（如多重簽名控制、時間鎖交易等）是否能成為行業的標竿，以及其他 DeFi 協議是否會跟進類似的安全升級。<br><br>---<br><strong>註釋：</strong><br><br>*   <strong>DeFi (Decentralized Finance)</strong>：去中心化金融，指建立在區塊鏈技術上的金融服務，不依賴傳統金融機構，如銀行或證券交易所。<br>*   <strong>ETH (Ethereum)</strong>：以太坊，一個開源的區塊鏈平台，以其智能合約功能而聞名，是許多去中心化應用程式（dApps）和 DeFi 協議的基礎。<br>*   <strong>USDC (USD Coin)</strong>：一種與美元掛鉤的穩定幣，由 Circle 和 Coinbase 共同推出，旨在提供與美元價值穩定的加密貨幣。<br>*   <strong>Recovery Tokens</strong>：Recovery Tokens，即「恢復代幣」，是 Drift 提出的用於補償用戶損失的代幣，其價值與用戶損失的美元金額掛鉤。<br>*   <strong>Tether</strong>：Tether 是市值最大的穩定幣之一，其價值理論上與美元掛鉤，常被用於加密貨幣交易和價值儲存。<br>*   <strong>Perpetual Futures Contracts</strong>：永續期貨合約，一種衍生性金融商品，允許交易者對資產的未來價格進行投機，但與傳統期貨不同的是，它沒有到期日。<br>*   <strong>Kelp DAO</strong>：Kelp DAO 是一個去中心化金融協議，專注於提供流動性質押解決方案。<br>*   <strong>Lazarus Group</strong>：一個被廣泛認為與朝鮮政府有關聯的駭客組織，以其對全球金融機構和加密貨幣平台的攻擊而聞名。<br>*   <strong>Multisignature Controls (Multisig)</strong>：多重簽名控制，一種安全措施，要求交易在被授權前需要多個私鑰簽名才能執行，增加了資產的安全性。<br>*   <strong>Time-locked Transactions</strong>：時間鎖交易，一種交易機制，其中資產在特定時間段內被鎖定，無法被轉移或使用，直到鎖定時間結束。</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">CoinTurk News</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>04:45（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://en.coin-turk.com/drift-announces-295-million-eth-hack-recovery-plan/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-3ee142ef068f7bb4"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;
+                                background-color:#e74c3c;
+                                
+                                
+                              ">2</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Bitcoin Breaks $81,000 Behind ETF Inflows, Iran De-escalation and a Short Squeeze</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <!-- 重要度 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 9/10</span>
+                        </td>
+                        <!-- 分類 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            市場行情
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 情緒 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 相關代幣 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">BTC</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 分析重點 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 分析重點</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">比特幣於2026年5月5日突破八萬一千美元關卡，創下今年一月以來新高。此波漲勢主要由四月份比特幣現貨ETF流入的二十四億四千萬美元資金推動，同時，美國與伊朗地緣政治緊張局勢緩和，以及軋空行情也助長了價格上揚，迫使放空者平倉離場。此事件顯示ETF資金流動、地緣政治風險以及市場槓桿操作對比特幣價格具有顯著影響。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 深度分析報告 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                      <tr>
+                        <td style="background-color:#0d1117;border:1px solid #30363d;border-left:4px solid #f39c12;border-radius:0 12px 12px 0;padding:28px 32px;">
+                          <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;color:#f39c12;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #21262d;">AI 深度分析報告（基於原文）</p>
+                          <div data-tts="deep-analysis" style="font-size:15px;line-height:2;color:#c9d1d9;white-space:pre-line;"><strong>【事件概述】</strong><br>比特幣於2026年5月5日價格突破81,000美元，創下今年以來新高。此波漲勢由四月份高達24.4億美元的現貨比特幣ETF資金流入、美國與伊朗地緣政治緊張局勢緩和，以及軋空行情共同推動。<br><br><strong>【深度解析】</strong><br>此次比特幣價格的顯著上漲，是多重利多因素疊加的結果。首先，<strong>現貨比特幣ETF</strong>的資金流入是關鍵推手。文章指出，四月份ETF淨流入高達24.4億美元，是自2025年10月以來最強勁的月度數據，顯示機構投資者在第一季度的價格回調期間並未離場觀望，而是積極承接。特別是5月1日，ETF市場出現了約6.3億美元的淨流入，結束了連續三天的資金流出，表明機構信心正在恢復。此外，美國的<strong>FBTC</strong>產品（Fidelity發行）也吸引了1900萬美元資金，而歐洲的<strong>比特幣交易所交易產品（ETP）</strong>，如貝萊德（Blackrock）的產品，資產管理規模已突破11億美元，持有14,200枚比特幣，顯示機構的興趣不僅限於美國市場。<br><br>其次，<strong>地緣政治風險的緩和</strong>為市場帶來了提振。美國總統川普宣布的「自由計畫」（Project Freedom），旨在護送中立商業船隻通過荷姆茲海峽，緩解了中東地區的緊張局勢。此舉帶動了風險資產的普遍上漲，比特幣作為其中之一直接受益。儘管一度出現因假消息導致的短暫回落，但隨著美國否認相關報導，市場情緒迅速恢復。<br><br>最後，<strong>軋空行情（Short Squeeze）</strong>加速了價格的上漲。文章提到，過去30天比特幣期貨的資金費率平均為-5%，這表明在第一季度的下跌中，槓桿空頭佔據主導地位。當比特幣價格突破關鍵阻力位時，這些空頭頭寸被迫平倉，反向買入，進一步推高了價格。有數據顯示，一名交易者平倉了價值194萬美元的700枚比特幣空單，一次性抹去了之前11筆連續獲利的空單收益，這類自動清算的強制平倉行為，將原本的技術性上漲演變成了自我強化的軋空行情。<br><br><strong>【市場影響】</strong><br>此事件對加密貨幣市場產生了積極的短期影響。比特幣價格的突破81,000美元，不僅創下新高，也提振了整體市場情緒。<strong>對BTC價格而言</strong>，此波上漲突破了關鍵阻力位，可能為進一步向90,000美元邁進打開空間。<strong>對產業生態而言</strong>，ETF資金的持續流入再次證明了機構對比特幣的認可，增強了市場的信心。同時，地緣政治風險的降低也減少了外部不確定性對市場的干擾。<strong>連鎖效應</strong>方面，比特幣的上漲通常會帶動其他加密貨幣（如以太坊）的價格走勢，形成普漲格局。<br><br><strong>【後續觀察重點】</strong><br>1.  <strong>ETF資金流動的持續性：</strong> 觀察未來幾週現貨比特幣ETF的淨流入數據，以判斷機構投資者的熱情是否能持續。<br>2.  <strong>地緣政治局勢的穩定性：</strong> 密切關注中東地區的局勢發展，任何新的緊張局勢都可能對市場情緒造成影響。<br>3.  <strong>期貨市場槓桿水平：</strong> 監控比特幣期貨的資金費率和未平倉合約數量，以評估軋空行情是否會重現或槓桿風險是否增加。<br><br>---<br><strong>專有名詞註釋：</strong><br><br>*   <strong>比特幣現貨ETF (Spot Bitcoin ETF)：</strong> 指的是直接持有比特幣作為標的的交易所交易基金。投資者可以透過購買ETF份額來間接投資比特幣，而無需直接持有和管理比特幣本身。<br>*   <strong>軋空行情 (Short Squeeze)：</strong> 指的是當某資產的價格快速上漲，導致先前持有該資產空頭頭寸（預期價格下跌而賣出）的交易者被迫以更高的價格回補頭寸（買入），從而進一步推高資產價格的現象。<br>*   <strong>資產管理規模 (Assets Under Management, AUM)：</strong> 指的是金融機構為客戶管理的資產總價值。<br>*   <strong>比特幣交易所交易產品 (Bitcoin Exchange-Traded Product, ETP)：</strong> 是一種在交易所交易的金融產品，其價值與比特幣的價格掛鉤。ETP涵蓋了ETF、ETN等不同形式。<br>*   <strong>資金費率 (Funding Rate)：</strong> 在期貨市場中，用於調節多頭和空頭之間支付的費用。正的資金費率意味著多頭支付給空頭，負的資金費率則相反。它反映了市場對多頭或空頭的偏好程度。<br>*   <strong>多頭 (Long Position)：</strong> 指的是預期資產價格上漲而買入的頭寸。<br>*   <strong>空頭 (Short Position)：</strong> 指的是預期資產價格下跌而賣出（借入後賣出）的頭寸。<br>*   <strong>清算 (Liquidation)：</strong> 在期貨或保證金交易中，當交易者的保證金不足以覆蓋潛在虧損時，經紀商會強制平倉該交易者的頭寸，以防止進一步虧損。</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">Bitcoin.com</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>15:15（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://news.bitcoin.com/bitcoin-breaks-81000-etf-inflows-iran-deescalation-short-squeeze-may-2026/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-b6f248479a6f7361"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;
+                                background-color:#e74c3c;
+                                
+                                
+                              ">3</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">DTCC to Start Tokenized Trading for $114T Custody Base in July</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <!-- 重要度 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 9/10</span>
+                        </td>
+                        <!-- 分類 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            
+                            監管政策
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 情緒 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 相關代幣 -->
+                      </tr>
+                    </table>
+
+                    <!-- AI 分析重點 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 分析重點</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">美國存管信託與結算公司（DTCC）將於七月展開代幣化證券的有限度交易，並預計於十月全面推出此項服務。該服務初期將涵蓋羅素1000指數成分股、追蹤主要指數的交易所交易基金（ETF）以及美國國庫券等資產。此舉預計將觸及DTCC高達114兆美元的託管資產基礎。超過五十家華爾街及加密貨幣原生公司已加入DTCC的相關工作小組，顯示業界對此代幣化服務的重視。此發展可能對傳統金融市場與加密資產的整合產生深遠影響。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 深度分析報告 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                      <tr>
+                        <td style="background-color:#0d1117;border:1px solid #30363d;border-left:4px solid #f39c12;border-radius:0 12px 12px 0;padding:28px 32px;">
+                          <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;color:#f39c12;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #21262d;">AI 深度分析報告（基於原文）</p>
+                          <div data-tts="deep-analysis" style="font-size:15px;line-height:2;color:#c9d1d9;white-space:pre-line;"><strong>【事件概述】</strong><br>美國存管信託與結算公司（DTCC）宣布將於七月展開代幣化證券的有限度交易，並預計於十月全面推廣此項服務。此舉將觸及DTCC高達114兆美元的託管資產基礎，初期將涵蓋羅素1000指數成分股、主要指數ETF及美國國庫券等資產。<br><br><strong>【深度解析】</strong><br>此事件的發生背景是傳統金融市場對區塊鏈技術潛力的認可，以及監管機構對數位資產的逐步接納。DTCC作為美國證券結算的核心機構，其推動代幣化證券交易，標誌著傳統金融基礎設施與區塊鏈技術的深度融合。透過將股票、ETF和國庫券等資產代幣化，DTCC旨在提升市場的流動性、透明度與效率。例如，文章提到超過五十家華爾街及加密貨幣原生公司（如BlackRock、Goldman Sachs、Circle、Coinbase等）的參與，顯示了業界對此技術的廣泛認可與支持。這項服務的技術邏輯在於利用分散式帳本技術（DLT）來記錄和管理證券的所有權，從而簡化結算流程，降低交易成本，並可能實現更快的交易結算週期。<br><br><strong>【市場影響】</strong><br>此舉對加密貨幣市場的影響將是深遠且多層次的。短期內，雖然直接相關的加密貨幣幣種不明確，但此舉無疑會增強市場對代幣化資產（Real-World Assets, RWA）的信心，並可能吸引更多機構資金流入該領域。中長期來看，DTCC的行動將為傳統金融資產的代幣化樹立重要里程碑，有望加速RWA市場的擴張，並可能為比特幣、以太坊等主流加密貨幣帶來更多應用場景和機構採用。這也可能引發其他國家和地區的類似嘗試，進一步推動全球金融市場的數位化轉型。此外，此舉也可能促使更多傳統金融機構與加密貨幣原生公司建立合作夥伴關係，促進生態系統的整合。<br><br><strong>【後續觀察重點】</strong><br>1.  <strong>實際交易量與資產類別擴展：</strong> 觀察七月有限度交易及十月全面推出後的實際交易量，以及DTCC是否會逐步擴展代幣化資產的類別。<br>2.  <strong>監管政策的演變：</strong> 持續關注美國證券交易委員會（SEC）等監管機構對代幣化證券的進一步監管框架和政策動態。<br>3.  <strong>機構採用與市場反應：</strong> 追蹤更多傳統金融機構和加密貨幣平台對此服務的實際採用情況，以及市場對代幣化資產的接受度和投資熱度變化。<br><br>---<br><strong>專有名詞註釋：</strong><br><br>*   <strong>美國存管信託與結算公司（DTCC）：</strong> Depository Trust & Clearing Corporation，是美國主要的證券後台結算機構，負責處理絕大多數美國股票和固定收益證券的交易結算。<br>*   <strong>代幣化證券（Tokenized Securities）：</strong> 指將傳統證券（如股票、債券）的所有權記錄在區塊鏈上，以數位代幣形式呈現的證券。<br>*   <strong>羅素1000指數（Russell 1000 Index）：</strong> 一個追蹤美國市值最大的1000家上市公司的股價指數，代表了美國股市的大部分市值。<br>*   <strong>交易所交易基金（ETF）：</strong> Exchange-Traded Fund，一種在交易所交易的基金，其交易方式類似股票，通常追蹤特定指數、商品、債券或資產組合。<br>*   <strong>美國國庫券（U.S. Treasury bills, bonds, and notes）：</strong> 美國財政部發行的債務證券，被視為最安全的投資之一。<br>*   <strong>華爾街（Wall Street）：</strong> 指美國紐約市曼哈頓下城的一條街道，也是美國金融業的代稱。<br>*   <strong>加密貨幣原生公司（Crypto-native firms）：</strong> 指專注於加密貨幣和區塊鏈技術開發、服務或交易的公司。<br>*   <strong>分散式帳本技術（DLT）：</strong> Distributed Ledger Technology，一種數據庫技術，數據被複製並分佈在多個節點上，沒有單一的中央管理者。區塊鏈是DLT的一種形式。<br>*   <strong>真實世界資產（Real-World Assets, RWA）：</strong> 指將現實世界中的資產（如房地產、債券、商品、藝術品等）代幣化後在區塊鏈上進行交易。<br>*   <strong>總鎖定價值（Total Value Locked, TVL）：</strong> 在去中心化金融（DeFi）領域，指存入DeFi協議中的總資產價值。</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">Coin Edition</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>03:19（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://coinedition.com/dtcc-to-start-tokenized-trading-for-114t-custody-base-in-july/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-42bf2065145581c6"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;
+                                
+                                background-color:#e67e22;
+                                
+                              ">4</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Ark Invest predicts crypto market will reach $28 trillion by 2030</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <!-- 重要度 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <!-- 分類 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            市場行情
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 情緒 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 相關代幣 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">BTC</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 分析重點 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 分析重點</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">Ark Invest 預測，至 2030 年加密貨幣市場規模將達到 28 兆美元。此預測發布之際，比特幣本週上漲 6.7%，但仍較歷史高點下跌 36%。此消息可能影響市場對未來加密貨幣發展的預期，並可能對比特幣及其他加密貨幣的價格走勢產生潛在影響。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 深度分析報告 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                      <tr>
+                        <td style="background-color:#0d1117;border:1px solid #30363d;border-left:4px solid #f39c12;border-radius:0 12px 12px 0;padding:28px 32px;">
+                          <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;color:#f39c12;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #21262d;">AI 深度分析報告（基於原文）</p>
+                          <div data-tts="deep-analysis" style="font-size:15px;line-height:2;color:#c9d1d9;white-space:pre-line;"><strong>【事件概述】</strong><br>Ark Invest在其最新發布的「Big Ideas 2026」報告中，預測至2030年，全球加密貨幣市場總市值將從目前的約2.7兆美元大幅增長至28兆美元。此預測由公司創辦人Cathie Wood領銜，突顯了加密貨幣市場未來十年的巨大潛力。<br><br><strong>【深度解析】</strong><br>Ark Invest的預測建立在對加密貨幣市場多個關鍵驅動因素的深入分析之上。首先，比特幣（BTC）作為首個且市值最大的加密貨幣，預計將扮演「價值儲存資產」<sup>1</sup>的角色，並吸引更多機構投資者<sup>2</sup>的青睞。報告預計比特幣在未來五年內將以約63%的年複合增長率（CAGR）<sup>3</sup>擴張。其次，鏈上金融基礎設施的成熟是另一重要推動力。報告特別指出，智能合約平台<sup>4</sup>的潛力巨大，預計到2030年其總市值將超過6兆美元，並可能由少數幾個主導區塊鏈<sup>5</sup>瓜分市場。去中心化金融（DeFi）<sup>6</sup>和鏈上應用的創新將加速整體產業的增長。此外，機構興趣的持續上升是支撐這一樂觀預測的關鍵。文章中提到，Michael Saylor的公司已持有相當於3.9%的比特幣總供應量，而公開上市公司和機構總計持有127萬枚比特幣，佔總供應量的6%以上。對於以太坊（ETH）<sup>7</sup>，文章也提及了Bitmine Immersion Technologies的龐大持有量，並強調了其在整合金融產品和滿足人工智慧對去中心化網絡需求的雙重優勢。<br><br><strong>【市場影響】</strong><br>Ark Invest的28兆美元預測，若能實現，將對加密貨幣市場產生深遠影響。短期內，此類積極預測可能提振投資者信心，尤其是在比特幣近期價格回升（本週上漲6.7%）的背景下，可能進一步推動比特幣及其他主流加密貨幣的價格上漲。中長期來看，如此規模的市場擴張將吸引更多傳統金融機構和企業進入，加速產業生態的成熟與創新，並可能催生新的應用場景和商業模式。然而，實現這一目標的關鍵在於持續的機構興趣、監管的清晰化以及DeFi協議的穩健發展。若這些條件未能滿足，預測的實現將面臨挑戰。<br><br><strong>【後續觀察重點】</strong><br>1.  <strong>機構資金流入與持倉變化：</strong> 持續關注大型機構（如ETF<sup>8</sup>）對比特幣及其他加密貨幣的資金流入情況，以及企業持倉的增減趨勢。<br>2.  <strong>監管政策發展：</strong> 密切關注全球主要經濟體在加密貨幣監管方面的動態，例如文章中提及的「CLARITY Act」，監管的清晰度將是影響長期發展的關鍵因素。<br>3.  <strong>智能合約平台生態發展：</strong> 觀察以太坊及其他領先的智能合約平台在技術創新、應用落地和市場份額上的競爭格局，特別是其能否支撐起預期的市場規模。<br><br>---<br><strong>名詞註釋：</strong><br><br>1.  <strong>價值儲存資產 (Store of Value Asset)：</strong> 指一種能夠在時間推移中保持其購買力，甚至增值的資產。黃金常被視為傳統的價值儲存資產。<br>2.  <strong>機構投資者 (Institutional Investors)：</strong> 指代表大型組織（如養老基金、保險公司、共同基金、對沖基金等）進行投資的實體。<br>3.  <strong>年複合增長率 (Compound Annual Growth Rate, CAGR)：</strong> 指在給定時間段內，一項投資的年平均增長率，假設利潤在每年年底重新投資。<br>4.  <strong>智能合約平台 (Smart Contract Platforms)：</strong> 指支持執行智能合約的區塊鏈網絡，例如以太坊。智能合約是自動執行、控制或記錄法律相關事件和行為的計算機協議。<br>5.  <strong>主導區塊鏈 (Dominant Blockchains)：</strong> 指在市場上佔據主導地位、擁有最大用戶群、市值和開發者生態系統的區塊鏈網絡。<br>6.  <strong>去中心化金融 (Decentralized Finance, DeFi)：</strong> 指建立在區塊鏈技術上、無需傳統金融中介（如銀行）即可提供金融服務的生態系統。<br>7.  <strong>以太坊 (Ethereum, ETH)：</strong> 第二大加密貨幣，也是一個開源的、全球性的區塊鏈網絡，支持智能合約的開發和運行。<br>8.  <strong>ETF (Exchange Traded Fund)：</strong> 指交易所交易基金，是一種在證券交易所交易的基金，其價格會隨市場波動。加密貨幣ETF允許投資者在傳統證券市場上間接投資加密貨幣。</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">CoinTurk News</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>07:09（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://en.coin-turk.com/ark-invest-predicts-crypto-market-will-reach-28-trillion-by-2030/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-69e1ec5e387bc52e"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;
+                                
+                                background-color:#e67e22;
+                                
+                              ">5</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">The world&#x27;s entire economy will be tokenized, says Consensys’ Joseph Lubin</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <!-- 重要度 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <!-- 分類 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            其他
+                          </span>
+                        </td>
+                        <!-- 情緒 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 相關代幣 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">ETH</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 分析重點 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 分析重點</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">Consensys執行長Joseph Lubin預測，全球經濟將走向全面代幣化，此趨勢可追溯至他共同創辦的以太坊區塊鏈。他認為，代幣化將重塑資產所有權與交易方式，預計未來所有經濟活動皆可能以代幣形式呈現。此觀點暗示著區塊鏈技術，特別是以太坊，將在未來經濟體系中扮演核心角色，可能對現有金融市場結構及加密貨幣生態系帶來深遠影響，但具體影響範圍與程度仍待觀察。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 深度分析報告 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                      <tr>
+                        <td style="background-color:#0d1117;border:1px solid #30363d;border-left:4px solid #f39c12;border-radius:0 12px 12px 0;padding:28px 32px;">
+                          <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;color:#f39c12;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #21262d;">AI 深度分析報告（基於原文）</p>
+                          <div data-tts="deep-analysis" style="font-size:15px;line-height:2;color:#c9d1d9;white-space:pre-line;"><strong>【事件概述】</strong><br>Consensys執行長Joseph Lubin在Consensus Miami 2026大會上預測，全球經濟的全面代幣化已成必然趨勢，而非僅是實驗性階段。他認為此趨勢可追溯至以太坊的早期設計，並預期未來所有經濟活動皆可能以代幣形式呈現。<br><br><strong>【深度解析】</strong><br>Lubin的預測建立在區塊鏈技術，特別是以太坊的演進與成熟度之上。其核心論點在於，以太坊最初的設計允許任何人無需創建新區塊鏈即可發行代幣，此彈性使其成為未來經濟代幣化的理想基礎設施。隨著傳統金融機構（TradFi）將穩定幣、國庫券及其他現實世界資產（RWA）逐步上鏈，以太坊的生態系統，包含Layer-2擴展方案、同步可組合性（synchronous composability）以及ETH作為「信任商品」（trust commodity）的角色，正吸引監管機構與傳統金融的目光。Lubin指出，代幣化已從穩定幣擴展至國庫券等更廣泛的資產類別，預計未來將有更多金融活動轉移至區塊鏈。儘管近期去中心化金融（DeFi）出現的動盪反映了技術仍在發展中，但Lubin認為這正是技術成熟過程的一部分，並強調生態系統透過協作持續強化。他預計，隨著越來越多的經濟活動上鏈，跨越多個網路的交易將消耗ETH，進一步鞏固其作為「信任商品」的地位，並可能賦予其貨幣屬性。<br><br><strong>【市場影響】</strong><br>此觀點對加密貨幣市場，特別是以太坊（ETH）而言，具有正面預示意義。若經濟全面代幣化得以實現，將大幅增加對區塊鏈基礎設施的需求，其中以太坊作為領先的智能合約平台，有望成為主要受益者，可能推升ETH的價值與應用場景。長期來看，這將促進產業生態的蓬勃發展，吸引更多傳統資金與人才進入，並可能重塑現有的金融市場結構。然而，技術的成熟度、監管的清晰度以及DeFi的穩定性仍是關鍵影響因素，任何負面發展都可能削弱投資人信心，並引發市場波動。<br><br><strong>【後續觀察重點】</strong><br>1.  <strong>TradFi資產上鏈進度：</strong> 持續關注傳統金融機構將更多現實世界資產（如證券、房地產等）代幣化並部署於以太坊或其他區塊鏈的實際案例與規模。<br>2.  <strong>Layer-2解決方案的採用與效率：</strong> 監測以太坊Layer-2解決方案的交易量、費用降低程度以及用戶體驗的改善，以評估其擴展能力是否能支撐大規模經濟活動。<br>3.  <strong>監管框架的發展：</strong> 密切關注全球主要經濟體對代幣化資產和區塊鏈應用的監管政策，清晰的監管指引將是推動大規模採用的關鍵。<br><br>---<br><strong>專有名詞註釋：</strong><br><br>*   <strong>代幣化 (Tokenization)：</strong> 指將資產（如股票、債券、房地產、藝術品等）的所有權或權益轉換為區塊鏈上的數字代幣。這些代幣代表資產的某種形式，可以在區塊鏈上進行交易、轉讓和管理。<br>*   <strong>以太坊 (Ethereum)：</strong> 一個開源的、去中心化的區塊鏈網路，以其智能合約功能而聞名，允許開發者構建和部署去中心化應用程式（dApps）。<br>*   <strong>Consensys：</strong> 一家專注於構建以太坊基礎設施、開發者工具和去中心化應用程式的區塊鏈軟體公司。<br>*   <strong>Consensus Miami 2026：</strong> 一個加密貨幣和區塊鏈行業的大型年度會議。<br>*   <strong>現實世界資產 (Real-World Assets, RWA)：</strong> 指存在於傳統經濟中的實體或金融資產，例如房地產、商品、股票、債券、藝術品等，透過代幣化技術被引入區塊鏈。<br>*   <strong>穩定幣 (Stablecoins)：</strong> 一種加密貨幣，其價值與另一種資產（通常是法定貨幣，如美元）掛鉤，旨在減少加密貨幣市場的價格波動性。<br>*   <strong>國庫券 (Treasuries)：</strong> 由政府發行的債務證券，代表政府借入的資金，通常被視為較安全的投資。<br>*   <strong>Layer-2 擴展方案 (Layer-2 Scaling Solutions)：</strong> 指建立在現有區塊鏈（如以太坊）之上的第二層技術，旨在提高交易速度、降低交易費用並增加整體網路的可擴展性，而無需修改底層區塊鏈。<br>*   <strong>同步可組合性 (Synchronous Composability)：</strong> 在區塊鏈領域，指不同智能合約或去中心化應用程式之間能夠即時、無縫地互動和協同工作的能力，尤其是在多個網路之間。<br>*   <strong>信任商品 (Trust Commodity)：</strong> Lubin在此語境下用來形容ETH，意指其作為區塊鏈網路安全和交易結算的核心資產，因其稀缺性和在生態系統中的關鍵作用，具備類似商品（如黃金）的價值儲存和信任基礎屬性。<br>*   <strong>去中心化金融 (Decentralized Finance, DeFi)：</strong> 指建立在區塊鏈技術上的金融應用和服務，旨在提供無需傳統金融中介機構的金融服務，如借貸、交易、保險等。<br>*   <strong>智能合約 (Smart Contracts)：</strong> 儲存在區塊鏈上的程式碼，當預設條件滿足時，合約條款將自動執行。<br>*   <strong>去中心化應用程式 (Decentralized Applications, dApps)：</strong> 運行在區塊鏈網路上的應用程式，其後端代碼運行在去中心化的點對點網路而非單一伺服器上。</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">CoinDesk</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>06:06（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://www.coindesk.com/business/2026/05/05/the-world-s-entire-economy-will-be-tokenized-says-consensys-joseph-lubin" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-211dfc7f3febc03a"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;
+                                
+                                background-color:#e67e22;
+                                
+                              ">6</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Bitcoin tops $80,000 as Iran attacks escalate in Gulf</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <!-- 重要度 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <!-- 分類 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            市場行情
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 情緒 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <!-- 相關代幣 -->
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">BTC</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 分析重點 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 分析重點</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">比特幣價格突破八萬美元，主因是伊朗在波斯灣發動新一輪攻擊，導致荷姆茲海峽的商業航運面臨嚴重威脅，伊朗並警告可能扣押船隻。此地緣政治緊張局勢升級，促使比特幣作為避險資產的吸引力增強，推動其價格上漲。市場正密切關注此事件對加密貨幣市場的後續影響。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 深度分析報告 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:16px 0;">
+                      <tr>
+                        <td style="background-color:#0d1117;border:1px solid #30363d;border-left:4px solid #f39c12;border-radius:0 12px 12px 0;padding:28px 32px;">
+                          <p style="margin:0 0 16px 0;font-size:11px;font-weight:700;color:#f39c12;letter-spacing:2px;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid #21262d;">AI 深度分析報告（基於原文）</p>
+                          <div data-tts="deep-analysis" style="font-size:15px;line-height:2;color:#c9d1d9;white-space:pre-line;"><strong>【事件概述】</strong><br>伊朗近期在波斯灣地區發動新一輪軍事行動，對荷姆茲海峽的商業航運構成嚴重威脅，並警告可能扣押船隻。此地緣政治緊張局勢升級，促使比特幣價格突破 8 萬美元大關，顯示其作為避險資產的吸引力增強。<br><br><strong>【深度解析】</strong><br>此次比特幣價格飆升至 8 萬美元以上，其核心驅動力為伊朗在地緣政治上的升級行動。文章指出，伊朗在波斯灣地區的軍事活動，加上與美國談判的停滯，加劇了地區的不穩定性。特別是伊朗革命衛隊發出的警告，若有船隻違反荷姆茲海峽的規定將被攔截，這直接威脅到全球重要的能源運輸通道。這種地緣政治風險的升高，連帶影響了全球金融市場，油價維持在三位數區間，黃金及數位資產也受到波及。文章中提到，美國國防部證實成功攔截了來自伊朗的三枚飛彈，而富傑拉（Fudayre）地區的石油設施發生火災，這些事件都加劇了市場的焦慮情緒。此外，美元指數（DXY）上漲至 98.42，標準普爾 500 指數測試 7,200 點，以及美國原油（USOIL）上漲約 1.50 美元，都反映了市場對此地緣政治事件的廣泛反應。<br><br><strong>【市場影響】</strong><br>短期來看，地緣政治緊張局勢的升級，為比特幣（BTC）等風險資產帶來了避險需求，推動其價格上漲。然而，這種上漲的持續性將取決於事態的進一步發展。中長期而言，若衝突持續或升級，可能引發更廣泛的市場恐慌，導致風險規避情緒蔓延，進而影響包括加密貨幣在內的多種資產類別。此外，持續的商品價格上漲可能迫使各國央行重新評估其貨幣政策，從預期的降息轉向進一步的緊縮，這將對整體市場流動性產生影響。<br><br><strong>【後續觀察重點】</strong><br>1.  <strong>地緣政治局勢發展：</strong> 密切關注伊朗與相關國家之間的軍事和外交動態，特別是荷姆茲海峽的航運安全情況。<br>2.  <strong>央行貨幣政策走向：</strong> 觀察主要央行（特別是美國聯準會）是否因通膨壓力及地緣政治風險而調整其利率政策預期。<br>3.  <strong>比特幣價格與市場情緒：</strong> 追蹤比特幣價格對地緣政治事件的反應，以及整體加密貨幣市場的投資者情緒變化。<br><br>---<br><strong>專有名詞註釋：</strong><br><br>*   <strong>比特幣 (Bitcoin, BTC)：</strong> 一種去中心化的數位加密貨幣，被視為一種點對點的電子現金系統，也是市值最大的加密貨幣。<br>*   <strong>荷姆茲海峽 (Strait of Hormuz)：</strong> 位於波斯灣口，是連接波斯灣與阿曼灣及印度洋的唯一水道，是全球最重要的石油運輸通道之一。<br>*   <strong>避險資產 (Safe-haven asset)：</strong> 指在經濟或政治不確定時期，價值相對穩定或可能上漲的資產，例如黃金、瑞士法郎等。<br>*   <strong>美元指數 (US Dollar Index, DXY)：</strong> 一種衡量美元對一籃子六種主要國際貨幣（歐元、日圓、英鎊、加拿大元、瑞典克朗、瑞士法郎）匯率的指標。<br>*   <strong>標準普爾 500 指數 (S&P 500)：</strong> 美國一家領先的股票市場指數，包含美國 500 家大型上市公司，被視為衡量美國股市表現的重要指標。<br>*   <strong>美國原油 (USOIL)：</strong> 指美國生產的原油，通常以西德州中級原油 (WTI) 作為代表，是國際原油市場的重要基準。<br>*   <strong>去中心化 (Decentralized)：</strong> 指系統不受單一中央機構控制，而是由分散在多個節點上的參與者共同維護和運行。<br>*   <strong>點對點 (Peer-to-peer, P2P)：</strong> 指參與者之間直接進行通信或交易，無需經過中央伺服器或中介機構。<br>*   <strong>加密貨幣 (Cryptocurrency)：</strong> 一種使用密碼學技術來確保交易安全並控制新單位創建的數位或虛擬貨幣。<br>*   <strong>美國聯準會 (Federal Reserve, Fed)：</strong> 美國的中央銀行，負責制定和實施貨幣政策。</div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">CoinTurk News</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>00:13（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://en.coin-turk.com/bitcoin-tops-80000-as-iran-attacks-escalate-in-gulf/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- ═══ 其他重要新聞 ═══ -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:48px 0 24px 0;">
+                <tr>
+                  <td style="width:4px;min-width:4px;background-color:#3498db;border-radius:2px;">&nbsp;</td>
+                  <td style="padding-left:12px;">
+                    <h2 style="margin:0;font-size:22px;font-weight:700;color:#ffffff;">其他重要新聞</h2>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-fdfd36dd041fe495"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;background-color:#3498db;">1</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Malicious SAP npm packages target crypto wallet data</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            
+                            
+                            
+                            
+                            
+                            安全事件
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            
+                            background-color:#2e0e0e;color:#e74c3c;
+                            
+                          ">
+                            
+                            &#8681; 負向
+                            
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 摘要 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 摘要</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">四個與 SAP Cloud Application Programming Model 相關的 npm 套件遭惡意攻擊，駭客植入可竊取開發者加密貨幣錢包、雲端憑證及 SSH 金鑰的程式碼。受影響的套件版本包括 mbt@1.2.48、@cap-js/db-service@2.10.1、@cap-js/postgres@2.2.2 及 @cap-js/sqlite@2.2.2，這些套件每週下載量合計約 57.2 萬次。攻擊手法為預先安裝腳本，從 GitHub 下載並執行 Bun 運行時二進制文件，再運行一個混淆過的 JavaScript 載荷。此事件可能影響依賴這些套件的 SAP 開發社群，並引發對開源軟體供應鏈安全的擔憂。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">Cryptopolitan</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>03:55（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://www.cryptopolitan.com/crypto-wallets-targeted-isap-npm-attack/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-0c4326c61f1c6eb3"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;background-color:#3498db;">2</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Bitcoin Holds Above $80K As Middle East Tensions Weigh</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            市場行情
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">BTC</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 摘要 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 摘要</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">比特幣價格重返八萬美元關卡，創下三個月新高，近一個月漲幅約百分之十七。此波上漲主要受機構資金流入推動，美國上市比特幣ETF於二零二六年四月錄得約十九點七億至二十四億美元的創紀錄淨流入，與去年四月以來最強勁的月度價格漲幅同步。技術面上，比特幣處於關鍵區域，上升通道支撐約在七萬三千至七萬五千美元，自二月低點六萬二千至六萬四千美元啟動的日線反彈確認看漲結構，但動能相對疲弱。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">Seeking Alpha</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>02:36（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://seekingalpha.com/article/4898709-bitcoin-holds-above-80k-middle-east-tensions-weigh?utm_source&#x3D;cryptocompare.com&amp;utm_medium&#x3D;referral&amp;feed_item_type&#x3D;article" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-1102935a8ccc6a77"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;background-color:#3498db;">3</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">a16z Crypto Closes $2.2B Fund to Back Builders Across All Stages</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            其他
+                          </span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 摘要 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 摘要</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">知名創投公司 Andreessen Horowitz (a16z) 的加密貨幣部門已完成其第五檔加密貨幣基金 Crypto Fund 5 的募資，總金額達 22 億美元。該基金將長期部署資金，投資於各階段的加密貨幣新創公司，特別關注將新基礎設施轉化為日常應用產品。a16z 認為當前加密市場處於週期中較為平靜的階段，投機泡沫已退，市場重心轉向基礎設施與持久性應用。此外，該基金也將重點關注穩定幣，因其在市場波動期間仍持續成長，並被廣泛應用於儲蓄、跨境支付及日常交易。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">Crypto Potato</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>02:24（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://cryptopotato.com/a16z-crypto-closes-2-2b-fund-to-back-builders-across-all-stages/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="story-card"
+                     id="story-85cc142e8c5c206e"
+                     style="background-color:#1c1c2e;border:1px solid #2a2a3e;border-radius:12px;margin-bottom:24px;">
+                <tr>
+                  <td class="card-inner" style="padding:32px;">
+
+                    <!-- 排名圓圈 + 標題 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="width:48px;vertical-align:top;padding-right:16px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="width:40px;height:40px;border-radius:50%;font-size:16px;font-weight:800;color:#ffffff;background-color:#3498db;">4</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align:top;">
+                          <h3 class="story-title-text" style="margin:0;font-size:20px;font-weight:700;color:#ffffff;line-height:1.5;">Polygon puts shielded stablecoin payments on crypto’s radar</h3>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Badge 列 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                      <tr>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#3d2e0a;color:#f39c12;">&#9733; 重要度 8/10</span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1a2a3d;color:#5dade2;">
+                            
+                            
+                            
+                            DeFi
+                            
+                            
+                            
+                            
+                            
+                          </span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                            background-color:#0e2e1a;color:#2ecc71;
+                            
+                            
+                          ">
+                            &#8679; 正向
+                            
+                            
+                          </span>
+                        </td>
+                        <td style="padding-right:8px;padding-bottom:6px;">
+                          <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background-color:#1e1530;color:#bb8fce;">MATIC</span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- AI 摘要 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:16px;">
+                      <tr>
+                        <td style="background-color:#12121e;border-left:3px solid #e74c3c;border-radius:0 8px 8px 0;padding:24px 28px;">
+                          <p style="margin:0 0 10px 0;font-size:10px;font-weight:700;color:#e74c3c;letter-spacing:1.5px;text-transform:uppercase;">AI 摘要</p>
+                          <p data-tts="ai-summary" style="margin:0;font-size:15px;line-height:2;color:#c8c8c8;">Polygon 與 Hinkal 合作推出採用零知識證明技術的穩定幣隱私轉帳功能，旨在保護交易細節於公開帳本上。此舉將有助於企業進行機密且合規的供應商及金庫交易，預示著 DeFi 在機構級隱私方面的潛在轉變。新錢包的「私人發送」選項可隱藏發送者、接收者及金額，並對每次轉帳進行交易了解（KYT）篩查。Polygon Labs 已正式啟用 USDT 和 USDC 的隱私轉帳，以滿足機構及企業用戶需求，同時確保監管合規。鑑於 Polygon 已處理超過 35% 的穩定幣轉帳，此舉將為現有交易量疊加隱私層，使隱私穩定幣轉帳成為主流。</p>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- 來源 + 閱讀原文 -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border-collapse:collapse;">
+                      <tr>
+                        <td style="padding-top:16px;border-top:1px solid #2a2a3e;font-size:12px;color:#7f8fa6;">
+                          <strong style="color:#95a5a6;">Cryptopolitan</strong>
+                          <span style="margin:0 6px;color:#3d3d5e;">&#183;</span>
+                          <span>00:16（台北時間）</span>
+                        </td>
+                        <td align="right" style="padding-top:16px;border-top:1px solid #2a2a3e;">
+                          <a href="https://www.cryptopolitan.com/polygon-pushes-shielded-stablecoin/" target="_blank" rel="noopener noreferrer" class="read-link"
+                             style="font-size:12px;color:#3498db;text-decoration:none;font-weight:600;">閱讀原文 &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+        <!-- ═══════════════════════════════════════
+             FOOTER
+        ═══════════════════════════════════════ -->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#1a1a2e;border-top:1px solid #2a2a3e;margin-top:48px;">
+          <tr>
+            <td align="center" style="padding:32px 24px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="820" class="main-table" style="max-width:820px;width:100%;">
+                <tr>
+                  <td align="center">
+                    <p style="margin:0 0 16px 0;font-size:12px;color:#7f8fa6;">
+                      <strong style="color:#95a5a6;">資料來源：</strong>CoinTurk News、Bitcoin.com、Coin Edition、CoinDesk、Cryptopolitan、Seeking Alpha、Crypto Potato
+                    </p>
+                    <p style="margin:0 0 8px 0;font-size:11px;color:#4a5568;line-height:1.8;">
+                      本報告由 AI 自動生成，僅供參考，不構成投資建議。<br />
+                      加密貨幣投資具有高度風險，請自行評估並謹慎決策。
+                    </p>
+                    <p style="margin:12px 0 0 0;font-size:10px;color:#3d4b5c;">
+                      &copy; 2026-05-06 Crypto Daily News &nbsp;|&nbsp; Powered by AI
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════
+       語音導讀 JavaScript
+  ═══════════════════════════════════════ -->
+  <script>
+  (function () {
+    var audio = document.getElementById('ttsAudio');
+    var speeds = [0.8, 1.0, 1.2, 1.5, 2.0];
+    var speedIdx = 1;
+
+    /* ═══ 模式 A：預產 MP3 音檔 ═══ */
+    if (audio) {
+      audio.addEventListener('play', function () {
+        document.getElementById('ttsPlayBtn').innerHTML = '&#10074;&#10074;';
+        updateStatus('播放中');
+      });
+      audio.addEventListener('pause', function () {
+        document.getElementById('ttsPlayBtn').innerHTML = '&#9654;';
+        if (audio.currentTime > 0 && !audio.ended) updateStatus('已暫停');
+      });
+      audio.addEventListener('ended', function () {
+        document.getElementById('ttsPlayBtn').innerHTML = '&#9654;';
+        updateStatus('語音導讀');
+      });
+      audio.addEventListener('timeupdate', function () {
+        if (audio.duration && !audio.paused) {
+          var pct = Math.round((audio.currentTime / audio.duration) * 100);
+          var cur = formatTime(audio.currentTime);
+          var tot = formatTime(audio.duration);
+          updateStatus(cur + ' / ' + tot + '  (' + pct + '%)');
+        }
+      });
+
+      window.ttsToggle = function () {
+        if (audio.paused) { audio.play(); }
+        else { audio.pause(); }
+      };
+      window.ttsStop = function () {};
+      window.ttsCycleSpeed = function () {
+        speedIdx = (speedIdx + 1) % speeds.length;
+        audio.playbackRate = speeds[speedIdx];
+        document.getElementById('ttsSpeedBtn').textContent = speeds[speedIdx] + 'x';
+      };
+
+      function formatTime(s) {
+        var m = Math.floor(s / 60);
+        var sec = Math.floor(s % 60);
+        return m + ':' + (sec < 10 ? '0' : '') + sec;
+      }
+
+    /* ═══ 模式 B：Web Speech API Fallback ═══ */
+    } else if ('speechSynthesis' in window) {
+      var synth = window.speechSynthesis;
+      var segments = [];
+      var currentIdx = -1;
+      var isPaused = false;
+      var totalSegments = 0;
+
+      function buildSegments() {
+        segments = [];
+        var summaryEl = document.querySelector('[data-tts="summary"]');
+        if (summaryEl) segments.push({ text: '今日市場總覽。' + summaryEl.textContent.trim(), cardId: null });
+        var cards = document.querySelectorAll('.story-card');
+        cards.forEach(function (card, i) {
+          var titleEl = card.querySelector('.story-title-text');
+          var aiEl = card.querySelector('[data-tts="ai-summary"]');
+          var deepEl = card.querySelector('[data-tts="deep-analysis"]');
+          var parts = ['第' + (i + 1) + '則。'];
+          if (titleEl) parts.push(titleEl.textContent.trim() + '。');
+          if (aiEl) parts.push(aiEl.textContent.trim());
+          if (deepEl) parts.push(deepEl.textContent.trim());
+          if (parts.length > 1) segments.push({ text: parts.join(''), cardId: card.id });
+        });
+        totalSegments = segments.length;
+      }
+
+      function speakNext() {
+        currentIdx++;
+        if (currentIdx >= segments.length) { ttsFinished(); return; }
+        var seg = segments[currentIdx];
+        updateStatus('播放中 ' + (currentIdx + 1) + '/' + totalSegments);
+        clearHighlight();
+        if (seg.cardId) {
+          var card = document.getElementById(seg.cardId);
+          if (card) { card.classList.add('tts-active'); card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        }
+        var utter = new SpeechSynthesisUtterance(seg.text);
+        utter.lang = 'zh-TW'; utter.rate = speeds[speedIdx];
+        utter.onend = function () { speakNext(); };
+        utter.onerror = function (e) { if (e.error !== 'canceled') speakNext(); };
+        var voices = synth.getVoices();
+        for (var v = 0; v < voices.length; v++) { if (voices[v].lang.indexOf('zh') === 0) { utter.voice = voices[v]; break; } }
+        synth.speak(utter);
+      }
+
+      window.ttsToggle = function () {
+        if (synth.speaking && !isPaused) { synth.pause(); isPaused = true; document.getElementById('ttsPlayBtn').innerHTML = '&#9654;'; updateStatus('已暫停'); return; }
+        if (isPaused) { synth.resume(); isPaused = false; document.getElementById('ttsPlayBtn').innerHTML = '&#10074;&#10074;'; updateStatus('播放中'); return; }
+        buildSegments(); if (segments.length === 0) return;
+        currentIdx = -1; isPaused = false;
+        document.getElementById('ttsPlayBtn').innerHTML = '&#10074;&#10074;';
+        document.getElementById('ttsStopBtn').style.display = '';
+        speakNext();
+      };
+      window.ttsStop = function () { synth.cancel(); ttsFinished(); };
+      window.ttsCycleSpeed = function () { speedIdx = (speedIdx + 1) % speeds.length; document.getElementById('ttsSpeedBtn').textContent = speeds[speedIdx] + 'x'; };
+
+      function ttsFinished() {
+        currentIdx = -1; isPaused = false; clearHighlight();
+        document.getElementById('ttsPlayBtn').innerHTML = '&#9654;';
+        var stopBtn = document.getElementById('ttsStopBtn');
+        if (stopBtn) stopBtn.style.display = 'none';
+        updateStatus('語音導讀');
+      }
+      function clearHighlight() { var a = document.querySelectorAll('.tts-active'); for (var i = 0; i < a.length; i++) a[i].classList.remove('tts-active'); }
+      if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = function () {};
+
+    } else {
+      /* 瀏覽器不支援任何 TTS */
+      var p = document.getElementById('ttsPanel');
+      if (p) p.style.display = 'none';
+    }
+
+    function updateStatus(msg) { document.getElementById('ttsStatus').textContent = msg; }
+  })();
+  </script>
+
+</body>
+</html>
