@@ -53,21 +53,38 @@ export async function fetchNewsAPI(timeWindow: TimeWindow): Promise<RawNewsItem[
   });
 
   while (hasMore) {
-    const response = await httpClient.get<NewsAPIResponse>(NEWSAPI_ENDPOINT, {
-      timeout: TIMEOUT_MS,
-      headers: {
-        'X-Api-Key': config.sources.newsApiKey,
-      },
-      params: {
-        q: QUERY_KEYWORDS,
-        language: 'en',
-        sortBy: 'publishedAt',
-        pageSize: PAGE_SIZE,
-        page,
-        from: timeWindow.from.toISOString(),
-        to: timeWindow.to.toISOString(),
-      },
-    });
+    let response;
+    try {
+      response = await httpClient.get<NewsAPIResponse>(NEWSAPI_ENDPOINT, {
+        timeout: TIMEOUT_MS,
+        headers: {
+          'X-Api-Key': config.sources.newsApiKey,
+        },
+        params: {
+          q: QUERY_KEYWORDS,
+          language: 'en',
+          sortBy: 'publishedAt',
+          pageSize: PAGE_SIZE,
+          page,
+          from: timeWindow.from.toISOString(),
+          to: timeWindow.to.toISOString(),
+        },
+      });
+    } catch (err: unknown) {
+      // Developer 方案上限 100 筆，超出時回 426 maximumResultsReached
+      // 此時保留已拿到的結果並停止分頁，避免整個來源被視為失敗
+      const status = (err as { response?: { status?: number; data?: { code?: string } } }).response
+        ?.status;
+      const code = (err as { response?: { data?: { code?: string } } }).response?.data?.code;
+      if (status === 426 && code === 'maximumResultsReached') {
+        logger.warn('NewsAPI 達免費方案結果上限，停止分頁', {
+          page,
+          accumulated: results.length,
+        });
+        break;
+      }
+      throw err;
+    }
 
     const { status, articles, totalResults } = response.data;
 

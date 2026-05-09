@@ -115,20 +115,22 @@ export function deduplicateByUrl(items: NewsItem[]): NewsItem[] {
 
 /**
  * 將新聞項目轉為語義比較用的文字
- * 結合標題與內容前 300 字，提供更豐富的語義資訊
+ * 標題重複 3 次以放大語義訊號 — mean-pooling 下，原本標題 token 會被
+ * 較長的內文平均稀釋，使「同事件不同切入」的標題相似度落到閾值以下
  */
 function buildSemanticText(item: NewsItem): string {
-  const contentSnippet = item.content.slice(0, 300).trim();
-  return contentSnippet ? `${item.title} | ${contentSnippet}` : item.title;
+  const contentSnippet = item.content.slice(0, 200).trim();
+  const titleBoosted = `${item.title} ${item.title} ${item.title}`;
+  return contentSnippet ? `${titleBoosted} ${contentSnippet}` : titleBoosted;
 }
 
 /**
  * 第二階段：依語義相似度去重
  * 使用 Transformer embedding 計算 cosine similarity
- * 結合標題與內容摘要進行比較，相似度 > 0.72 視為重複，保留 publishedAt 最早的那筆
+ * 結合標題與內容摘要進行比較，相似度 > 0.62 視為重複，保留 publishedAt 最早的那筆
  */
 export async function deduplicateByTitle(items: NewsItem[]): Promise<NewsItem[]> {
-  const SIMILARITY_THRESHOLD = 0.72;
+  const SIMILARITY_THRESHOLD = 0.62;
 
   if (items.length <= 1) return [...items];
 
@@ -174,7 +176,7 @@ export async function deduplicateByTitle(items: NewsItem[]): Promise<NewsItem[]>
  * 相似度 > HISTORY_THRESHOLD 視為重複，直接移除
  */
 export async function deduplicateByHistory(items: NewsItem[]): Promise<NewsItem[]> {
-  const HISTORY_THRESHOLD = 0.70;
+  const HISTORY_THRESHOLD = 0.58;
 
   const historyTexts = getHistoryTexts();
   if (historyTexts.length === 0 || items.length === 0) return [...items];
@@ -218,6 +220,44 @@ export async function deduplicateByHistory(items: NewsItem[]): Promise<NewsItem[
   }
 
   logger.debug('跨日去重完成', { before: items.length, after: result.length });
+  return result;
+}
+
+// ─── 精選後去重 ───────────────────────────────────────────────────────────────
+
+/**
+ * 第四階段：在 AI ranker 排序後、切前 N 名前再做一次嚴格語義去重
+ * 假定輸入已依評分降序排列；同題項目保留最先出現（即評分最高）的那筆
+ * 閾值較當日去重更嚴 — 補抓 AI 給同題不同版本接近分數導致雙進精選的漏網
+ */
+export async function deduplicateAfterRank(
+  items: NewsItem[],
+  threshold = 0.55,
+): Promise<NewsItem[]> {
+  if (items.length <= 1) return [...items];
+
+  const texts = items.map((item) => buildSemanticText(item));
+  const embeddings = await computeEmbeddings(texts);
+
+  const keptIndices: number[] = [0];
+
+  for (let i = 1; i < items.length; i++) {
+    let isDuplicate = false;
+    for (const keptIdx of keptIndices) {
+      if (cosineSimilarity(embeddings[i], embeddings[keptIdx]) > threshold) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    if (!isDuplicate) keptIndices.push(i);
+  }
+
+  const result = keptIndices.map((idx) => items[idx]);
+  logger.debug('精選後語義去重完成', {
+    before: items.length,
+    after: result.length,
+    threshold,
+  });
   return result;
 }
 

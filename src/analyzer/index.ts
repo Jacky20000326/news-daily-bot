@@ -1,8 +1,12 @@
-import { NewsItem, AnalyzedNewsItem } from '../types';
-import { logger } from '../utils/logger';
-import { rankAndClassify } from './ranker';
-import { summarizeItems, generateExecutiveSummary as generateExecSummary } from './summarizer';
-import { deepAnalyzeItems } from './deep-analyzer';
+import { NewsItem, AnalyzedNewsItem } from "../types";
+import { logger } from "../utils/logger";
+import { deduplicateAfterRank } from "../deduplicator";
+import { rankAndClassify } from "./ranker";
+import {
+  summarizeItems,
+  generateExecutiveSummary as generateExecSummary,
+} from "./summarizer";
+import { deepAnalyzeItems } from "./deep-analyzer";
 
 // ─── 常數 ─────────────────────────────────────────────────────────────────────
 
@@ -25,11 +29,11 @@ const TOP_ITEMS_FOR_DEEP = 6;
  */
 export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
   if (items.length === 0) {
-    logger.info('無新聞待分析，回傳空陣列');
+    logger.info("無新聞待分析，回傳空陣列");
     return [];
   }
 
-  logger.info('開始新聞 AI 分析', { total: items.length });
+  logger.info("開始新聞 AI 分析", { total: items.length });
 
   // ── 步驟 1：批次評分與分類 ──
   const rankingMap = await rankAndClassify(items);
@@ -39,20 +43,34 @@ export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
   const rankedItems = items.map((item) => {
     const ranking = rankingMap.get(item.id) ?? {
       importanceScore: 5,
-      category: 'other' as const,
+      category: "other" as const,
       relatedTickers: [],
-      sentiment: 'neutral' as const,
+      sentiment: "neutral" as const,
     };
     return { item, ranking };
   });
 
   // 依 importanceScore 降序排序（相同分數保持原始順序）
-  rankedItems.sort((a, b) => b.ranking.importanceScore - a.ranking.importanceScore);
+  rankedItems.sort(
+    (a, b) => b.ranking.importanceScore - a.ranking.importanceScore,
+  );
+
+  // ── 步驟 2.4：精選後語義去重 — 防止同題不同改寫版本因評分接近雙進精選 ──
+  const dedupedNewsItems = await deduplicateAfterRank(
+    rankedItems.map((r) => r.item),
+  );
+  const dedupedIdSet = new Set(dedupedNewsItems.map((i) => i.id));
+  const dedupedRanked = rankedItems.filter((r) => dedupedIdSet.has(r.item.id));
+  logger.info("精選前去重完成", {
+    before: rankedItems.length,
+    after: dedupedRanked.length,
+    removed: rankedItems.length - dedupedRanked.length,
+  });
 
   // ── 步驟 2.5：截斷至前 TOP_ITEMS_TO_KEEP 名（丟棄其餘低分新聞）──
-  const keptItems = rankedItems.slice(0, TOP_ITEMS_TO_KEEP);
+  const keptItems = dedupedRanked.slice(0, TOP_ITEMS_TO_KEEP);
 
-  logger.info('開始生成精選新聞摘要', {
+  logger.info("開始生成精選新聞摘要", {
     kept: keptItems.length,
     discarded: rankedItems.length - keptItems.length,
     topScores: keptItems.map((r) => r.ranking.importanceScore),
@@ -64,22 +82,24 @@ export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
   // 建立 id -> aiSummary 的對照表
   const summaryMap = new Map<string, string>();
   for (let i = 0; i < keptItems.length; i++) {
-    summaryMap.set(keptItems[i].item.id, summaries[i] ?? '');
+    summaryMap.set(keptItems[i].item.id, summaries[i] ?? "");
   }
 
   // 組合最終的 AnalyzedNewsItem 陣列（僅保留精選的 TOP_ITEMS_TO_KEEP 筆）
-  const analyzedItems: AnalyzedNewsItem[] = keptItems.map(({ item, ranking }) => ({
-    ...item,
-    importanceScore: ranking.importanceScore,
-    category: ranking.category,
-    relatedTickers: ranking.relatedTickers,
-    sentiment: ranking.sentiment,
-    aiSummary: summaryMap.get(item.id) ?? '',
-  }));
+  const analyzedItems: AnalyzedNewsItem[] = keptItems.map(
+    ({ item, ranking }) => ({
+      ...item,
+      importanceScore: ranking.importanceScore,
+      category: ranking.category,
+      relatedTickers: ranking.relatedTickers,
+      sentiment: ranking.sentiment,
+      aiSummary: summaryMap.get(item.id) ?? "",
+    }),
+  );
 
   // ── 步驟 4：對前 6 筆重點新聞進行深度分析（抓取原文 + AI 分析）──
   const topItemsForDeep = analyzedItems.slice(0, TOP_ITEMS_FOR_DEEP);
-  logger.info('開始重點新聞深度分析（抓取原文）', {
+  logger.info("開始重點新聞深度分析（抓取原文）", {
     count: topItemsForDeep.length,
   });
 
@@ -93,10 +113,12 @@ export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
     }
   }
 
-  logger.info('新聞 AI 分析完成', {
+  logger.info("新聞 AI 分析完成", {
     total: analyzedItems.length,
     withSummary: analyzedItems.filter((i) => i.aiSummary.length > 0).length,
-    withDeepAnalysis: analyzedItems.filter((i) => i.deepAnalysis && i.deepAnalysis.length > 0).length,
+    withDeepAnalysis: analyzedItems.filter(
+      (i) => i.deepAnalysis && i.deepAnalysis.length > 0,
+    ).length,
     topScore: analyzedItems[0]?.importanceScore ?? 0,
   });
 
@@ -110,7 +132,7 @@ export async function analyze(items: NewsItem[]): Promise<AnalyzedNewsItem[]> {
  * 直接代理至 summarizer 的實作
  */
 export async function generateExecutiveSummary(
-  topItems: AnalyzedNewsItem[]
+  topItems: AnalyzedNewsItem[],
 ): Promise<string> {
   return generateExecSummary(topItems);
 }
